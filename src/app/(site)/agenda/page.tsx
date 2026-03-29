@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '@/sanity/lib/live'
-import { upcomingEventosQuery } from '@/sanity/queries/eventos'
+import { getUpcomingEventos } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { EventCard } from '@/components/events/EventCard'
 import type { EventCardProps } from '@/types'
@@ -11,27 +10,22 @@ export const metadata: Metadata = {
 }
 
 export default async function AgendaPage() {
-  const now = new Date().toISOString()
-  const { data } = await sanityFetch({
-    query: upcomingEventosQuery,
-    params: { now, limit: 50 },
-  })
+  const data = await getUpcomingEventos()
 
-  type EventoItem = NonNullable<typeof data>[number]
-  const events: EventCardProps[] = (data ?? []).map((evento: EventoItem) => ({
-    title: evento.title ?? '',
-    slug: evento.slug?.current ?? '',
-    date: evento.date ?? '',
+  const events: EventCardProps[] = data.map((evento) => ({
+    title: evento.title,
+    slug: evento.slug.current,
+    date: evento.date,
     endDate: evento.endDate ?? undefined,
     location: evento.locationName ?? evento.locationText ?? undefined,
     imageUrl: evento.imageUrl ?? undefined,
     imageAlt: evento.imageAlt ?? undefined,
-    isFeatured: evento.isFeatured ?? false,
+    isFeatured: evento.isFeatured,
   }))
 
   // Group featured events first
-  const featured = events.filter((e: EventCardProps) => e.isFeatured)
-  const regular = events.filter((e: EventCardProps) => !e.isFeatured)
+  const featured = events.filter((e) => e.isFeatured)
+  const regular = events.filter((e) => !e.isFeatured)
 
   return (
     <>
@@ -61,7 +55,7 @@ export default async function AgendaPage() {
                     Eventos destacados
                   </h2>
                   <div className="space-y-4">
-                    {featured.map((event: EventCardProps) => (
+                    {featured.map((event) => (
                       <EventCard key={event.slug} {...event} />
                     ))}
                   </div>
@@ -75,7 +69,7 @@ export default async function AgendaPage() {
                     Próximos eventos
                   </h2>
                   <div className="space-y-4">
-                    {regular.map((event: EventCardProps) => (
+                    {regular.map((event) => (
                       <EventCard key={event.slug} {...event} />
                     ))}
                   </div>

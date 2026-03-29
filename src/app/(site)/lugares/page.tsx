@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '@/sanity/lib/live'
-import { allLugaresQuery } from '@/sanity/queries/lugares'
+import { getAllLugares } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
+import type { PlaceCardProps } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Lugares Turísticos',
@@ -10,16 +10,15 @@ export const metadata: Metadata = {
 }
 
 export default async function LugaresPage() {
-  const { data } = await sanityFetch({ query: allLugaresQuery })
+  const data = await getAllLugares()
 
-  type LugarItem = NonNullable<typeof data>[number]
-  const places = (data ?? []).map((lugar: LugarItem) => ({
-    title: lugar.title ?? '',
-    slug: lugar.slug?.current ?? '',
-    category: lugar.category ?? 'Sin categoría',
-    categoryColor: lugar.categoryColor ?? undefined,
-    imageUrl: lugar.imageUrl ?? '',
-    imageAlt: lugar.imageAlt ?? lugar.title ?? '',
+  const places: PlaceCardProps[] = data.map((lugar) => ({
+    title: lugar.title,
+    slug: lugar.slug.current,
+    category: lugar.category,
+    categoryColor: lugar.categoryColor,
+    imageUrl: lugar.imageUrl,
+    imageAlt: lugar.imageAlt,
     excerpt: lugar.address ?? undefined,
   }))
 

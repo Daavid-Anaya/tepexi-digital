@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { PortableText } from '@portabletext/react'
-import { sanityFetch } from '@/sanity/lib/live'
-import { culturaBySlugQuery } from '@/sanity/queries/cultura'
-import { urlFor } from '@/sanity/lib/image'
+import type { PortableTextBlock } from '@portabletext/react'
+import { getCulturaBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 
@@ -31,17 +30,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const { data } = await sanityFetch({ query: culturaBySlugQuery, params: { slug } })
-  if (!data) return { title: 'No encontrado' }
+  const item = await getCulturaBySlug(slug)
+  if (!item) return { title: 'No encontrado' }
   return {
-    title: data.seo?.metaTitle ?? data.title ?? 'Cultura',
-    description: data.seo?.metaDescription ?? undefined,
+    title: item.seo?.metaTitle ?? item.title ?? 'Cultura',
+    description: item.seo?.metaDescription ?? undefined,
   }
 }
 
 export default async function CulturaDetailPage({ params }: Props) {
   const { slug } = await params
-  const { data: item } = await sanityFetch({ query: culturaBySlugQuery, params: { slug } })
+  const item = await getCulturaBySlug(slug)
 
   if (!item) {
     return (
@@ -51,12 +50,10 @@ export default async function CulturaDetailPage({ params }: Props) {
     )
   }
 
-  const images = (item.images ?? [])
-    .filter((img: { asset?: { url?: string }; alt?: string }) => img?.asset?.url)
-    .map((img: { asset?: { url?: string }; alt?: string }) => ({
-      url: urlFor(img).width(1200).url(),
-      alt: img.alt ?? item.title ?? '',
-    }))
+  const images = (item.images ?? []).map((img) => ({
+    url: img.url ?? img.asset?.url ?? '',
+    alt: img.alt ?? item.title ?? '',
+  })).filter((img) => img.url)
 
   const markers = item.coordinates
     ? [
@@ -99,7 +96,7 @@ export default async function CulturaDetailPage({ params }: Props) {
 
               {item.description && (
                 <div className="prose prose-stone max-w-none">
-                  <PortableText value={item.description} />
+                  <PortableText value={item.description as PortableTextBlock[]} />
                 </div>
               )}
 
@@ -108,9 +105,7 @@ export default async function CulturaDetailPage({ params }: Props) {
                   <h2 className="font-heading font-semibold text-primary text-xl mb-3">
                     Recomendaciones
                   </h2>
-                  <div className="prose prose-stone max-w-none">
-                    <PortableText value={item.recommendations} />
-                  </div>
+                  <p className="text-stone">{item.recommendations}</p>
                 </div>
               )}
             </div>

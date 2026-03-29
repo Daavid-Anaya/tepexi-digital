@@ -1,11 +1,7 @@
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
-import { sanityFetch } from '@/sanity/lib/live'
-import { allLugaresMapQuery } from '@/sanity/queries/lugares'
-import { allGastronomiaMapQuery } from '@/sanity/queries/gastronomia'
-import { allCulturaMapQuery } from '@/sanity/queries/cultura'
+import { getAllMapMarkers } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
-import type { MapMarker } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Mapa Interactivo',
@@ -22,45 +18,7 @@ const LeafletMap = dynamic(() => import('@/components/map/LeafletMap'), {
 })
 
 export default async function MapaPage() {
-  const [{ data: lugares }, { data: gastronomia }, { data: cultura }] = await Promise.all([
-    sanityFetch({ query: allLugaresMapQuery }),
-    sanityFetch({ query: allGastronomiaMapQuery }),
-    sanityFetch({ query: allCulturaMapQuery }),
-  ])
-
-  type LugarMapItem = NonNullable<typeof lugares>[number]
-  type GastronomiaMapItem = NonNullable<typeof gastronomia>[number]
-  type CulturaMapItem = NonNullable<typeof cultura>[number]
-
-  const markers: MapMarker[] = [
-    ...(lugares ?? []).map((l: LugarMapItem) => ({
-      id: l._id,
-      title: l.title ?? '',
-      slug: l.slug?.current ?? '',
-      coordinates: { lat: l.coordinates?.lat ?? 0, lng: l.coordinates?.lng ?? 0 },
-      category: l.category ?? '',
-      categoryColor: l.categoryColor ?? '#8B4513',
-      type: 'lugar' as const,
-    })),
-    ...(gastronomia ?? []).map((g: GastronomiaMapItem) => ({
-      id: g._id,
-      title: g.title ?? '',
-      slug: g.slug?.current ?? '',
-      coordinates: { lat: g.coordinates?.lat ?? 0, lng: g.coordinates?.lng ?? 0 },
-      category: g.category ?? '',
-      categoryColor: g.categoryColor ?? '#2E7D32',
-      type: 'gastronomia' as const,
-    })),
-    ...(cultura ?? []).map((c: CulturaMapItem) => ({
-      id: c._id,
-      title: c.title ?? '',
-      slug: c.slug?.current ?? '',
-      coordinates: { lat: c.coordinates?.lat ?? 0, lng: c.coordinates?.lng ?? 0 },
-      category: c.category ?? '',
-      categoryColor: c.categoryColor ?? '#BF360C',
-      type: 'cultura' as const,
-    })),
-  ].filter((m) => m.coordinates.lat !== 0 || m.coordinates.lng !== 0)
+  const markers = await getAllMapMarkers()
 
   return (
     <>

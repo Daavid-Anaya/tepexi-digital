@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '@/sanity/lib/live'
-import { allCulturaQuery } from '@/sanity/queries/cultura'
+import { getAllCultura } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
+import type { PlaceCardProps } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Cultura',
@@ -10,16 +10,15 @@ export const metadata: Metadata = {
 }
 
 export default async function CulturaPage() {
-  const { data } = await sanityFetch({ query: allCulturaQuery })
+  const data = await getAllCultura()
 
-  type CulturaItem = NonNullable<typeof data>[number]
-  const places = (data ?? []).map((item: CulturaItem) => ({
-    title: item.title ?? '',
-    slug: item.slug?.current ?? '',
-    category: item.category ?? 'Sin categoría',
-    categoryColor: item.categoryColor ?? undefined,
-    imageUrl: item.imageUrl ?? '',
-    imageAlt: item.imageAlt ?? item.title ?? '',
+  const places: PlaceCardProps[] = data.map((item) => ({
+    title: item.title,
+    slug: item.slug.current,
+    category: item.category,
+    categoryColor: item.categoryColor,
+    imageUrl: item.imageUrl,
+    imageAlt: item.imageAlt,
     excerpt: item.address ?? undefined,
   }))
 

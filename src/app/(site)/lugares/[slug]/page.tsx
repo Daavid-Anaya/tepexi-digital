@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { PortableText } from '@portabletext/react'
-import { sanityFetch } from '@/sanity/lib/live'
-import { lugarBySlugQuery } from '@/sanity/queries/lugares'
-import { urlFor } from '@/sanity/lib/image'
+import type { PortableTextBlock } from '@portabletext/react'
+import { getLugarBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 
@@ -23,17 +22,17 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
-  if (!data) return { title: 'Lugar no encontrado' }
+  const lugar = await getLugarBySlug(slug)
+  if (!lugar) return { title: 'Lugar no encontrado' }
   return {
-    title: data.seo?.metaTitle ?? data.title ?? 'Lugar turístico',
-    description: data.seo?.metaDescription ?? undefined,
+    title: lugar.seo?.metaTitle ?? lugar.title ?? 'Lugar turístico',
+    description: lugar.seo?.metaDescription ?? undefined,
   }
 }
 
 export default async function LugarDetailPage({ params }: Props) {
   const { slug } = await params
-  const { data: lugar } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
+  const lugar = await getLugarBySlug(slug)
 
   if (!lugar) {
     return (
@@ -43,12 +42,10 @@ export default async function LugarDetailPage({ params }: Props) {
     )
   }
 
-  const images = (lugar.images ?? [])
-    .filter((img: { asset?: { url?: string }; alt?: string }) => img?.asset?.url)
-    .map((img: { asset?: { url?: string }; alt?: string }) => ({
-      url: urlFor(img).width(1200).url(),
-      alt: img.alt ?? lugar.title ?? '',
-    }))
+  const images = (lugar.images ?? []).map((img) => ({
+    url: img.url ?? img.asset?.url ?? '',
+    alt: img.alt ?? lugar.title ?? '',
+  })).filter((img) => img.url)
 
   const markers = lugar.coordinates
     ? [
@@ -92,7 +89,7 @@ export default async function LugarDetailPage({ params }: Props) {
               {/* Description */}
               {lugar.description && (
                 <div className="prose prose-stone max-w-none">
-                  <PortableText value={lugar.description} />
+                  <PortableText value={lugar.description as PortableTextBlock[]} />
                 </div>
               )}
             </div>
