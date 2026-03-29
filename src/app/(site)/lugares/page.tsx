@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { MapPin } from 'lucide-react'
 import { getAllLugares } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
@@ -24,23 +26,70 @@ export default async function LugaresPage() {
 
   return (
     <>
-      <section className="bg-cream py-16">
-        <Container>
-          <h1 className="font-heading font-bold text-4xl text-primary mb-3">
-            Lugares Turísticos
-          </h1>
-          <p className="text-stone text-lg max-w-2xl">
-            Explora los sitios más representativos de Tepexi de Rodríguez.
-          </p>
+      {/* Page hero */}
+      <section className="relative overflow-hidden bg-primary py-20">
+        {/* Decorative background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-primary-light" />
+          <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full bg-primary-dark" />
+        </div>
+
+        <Container className="relative">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
+            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
+            <span>/</span>
+            <span className="text-white/90">Lugares Turísticos</span>
+          </nav>
+
+          <div className="flex items-start gap-5">
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+              <MapPin className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+                Lugares Turísticos
+              </h1>
+              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
+                Explora los sitios más representativos de Tepexi de Rodríguez —
+                desde vestigios prehispánicos hasta miradores y haciendas históricas.
+              </p>
+            </div>
+          </div>
+
+          {/* Stats strip */}
+          <div className="mt-10 flex gap-6 flex-wrap">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+              <div className="text-2xl font-bold font-heading">{places.length}</div>
+              <div className="text-xs text-white/70 uppercase tracking-wide">lugares</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+              <div className="text-2xl font-bold font-heading">Mixteca</div>
+              <div className="text-xs text-white/70 uppercase tracking-wide">región</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+              <div className="text-2xl font-bold font-heading">Puebla</div>
+              <div className="text-xs text-white/70 uppercase tracking-wide">estado</div>
+            </div>
+          </div>
         </Container>
       </section>
 
+      {/* Grid section */}
       <section className="py-16">
         <Container>
           {places.length === 0 ? (
-            <p className="text-stone text-center py-12">
-              No hay lugares disponibles por el momento.
-            </p>
+            <div className="text-center py-20">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                <MapPin className="w-10 h-10 text-primary/50" />
+              </div>
+              <h2 className="font-heading font-semibold text-xl text-primary mb-2">
+                Sin lugares disponibles
+              </h2>
+              <p className="text-stone max-w-sm mx-auto">
+                Pronto encontrarás aquí los sitios más increíbles de Tepexi de Rodríguez.
+              </p>
+            </div>
           ) : (
             <PlaceGrid places={places} basePath="/lugares" />
           )}

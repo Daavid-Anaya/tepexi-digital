@@ -7,9 +7,9 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<NonNullable<BadgeProps['variant']>, string> = {
-  default: 'bg-primary/10 text-primary',
-  secondary: 'bg-secondary/10 text-secondary',
-  accent: 'bg-accent/10 text-accent',
+  default: 'bg-primary/10 text-primary border border-primary/15',
+  secondary: 'bg-secondary/10 text-secondary border border-secondary/15',
+  accent: 'bg-accent/10 text-accent border border-accent/15',
 }
 
 export function Badge({ variant = 'default', className, children }: BadgeProps) {
