@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { MapPin, Share2, AtSign, Mail, Phone } from 'lucide-react'
+import { MapPin, Share2, AtSign, Mail, Phone, Globe } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
+import { getSettings } from '@/lib/data'
 
 const navLinks = [
   { href: '/', label: 'Inicio' },
@@ -13,14 +14,17 @@ const navLinks = [
   { href: '/contacto', label: 'Contacto' },
 ]
 
-const socialLinks = [
-  { label: 'Facebook', icon: Share2, href: '#' },
-  { label: 'Instagram', icon: AtSign, href: '#' },
-  { label: 'Correo', icon: Mail, href: '/contacto' },
-  { label: 'Teléfono', icon: Phone, href: 'tel:+52' },
-]
+function getSocialIcon(platform: string) {
+  const lower = platform.toLowerCase()
+  if (lower.includes('facebook')) return Share2
+  if (lower.includes('instagram')) return AtSign
+  if (lower.includes('tiktok')) return Globe
+  if (lower.includes('twitter') || lower.includes('x')) return Globe
+  return Globe
+}
 
-export function Footer() {
+export async function Footer() {
+  const settings = await getSettings()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -65,16 +69,37 @@ export function Footer() {
 
               {/* Social icons */}
               <div className="flex items-center gap-2">
-                {socialLinks.map(({ label, icon: Icon, href }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    aria-label={label}
+                {settings.socialLinks?.map((social) => {
+                  const Icon = getSocialIcon(social.platform)
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.platform}
+                      className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
+                    >
+                      <Icon size={16} />
+                    </a>
+                  )
+                })}
+                <Link
+                  href="/contacto"
+                  aria-label="Correo"
+                  className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
+                >
+                  <Mail size={16} />
+                </Link>
+                {settings.contactPhone && (
+                  <a
+                    href={`tel:${settings.contactPhone}`}
+                    aria-label="Teléfono"
                     className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                   >
-                    <Icon size={16} />
-                  </Link>
-                ))}
+                    <Phone size={16} />
+                  </a>
+                )}
               </div>
             </div>
 
@@ -107,19 +132,40 @@ export function Footer() {
                 <div className="flex items-start gap-2.5">
                   <MapPin size={15} className="text-primary-400 flex-shrink-0 mt-0.5" />
                   <div className="text-sm text-cream/60 leading-relaxed">
-                    <p>Tepexi de Rodríguez</p>
-                    <p>Puebla, México</p>
+                    {settings.address ? (
+                      settings.address.split(',').map((line, i) => (
+                        <p key={i}>{line.trim()}</p>
+                      ))
+                    ) : (
+                      <>
+                        <p>Tepexi de Rodríguez</p>
+                        <p>Puebla, México</p>
+                      </>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <Mail size={15} className="text-primary-400 flex-shrink-0" />
-                  <Link
-                    href="/contacto"
-                    className="text-sm text-cream/60 hover:text-cream transition-colors duration-200"
-                  >
-                    Enviar mensaje
-                  </Link>
-                </div>
+                {settings.contactEmail && (
+                  <div className="flex items-center gap-2.5">
+                    <Mail size={15} className="text-primary-400 flex-shrink-0" />
+                    <a
+                      href={`mailto:${settings.contactEmail}`}
+                      className="text-sm text-cream/60 hover:text-cream transition-colors duration-200"
+                    >
+                      {settings.contactEmail}
+                    </a>
+                  </div>
+                )}
+                {settings.contactPhone && (
+                  <div className="flex items-center gap-2.5">
+                    <Phone size={15} className="text-primary-400 flex-shrink-0" />
+                    <a
+                      href={`tel:${settings.contactPhone}`}
+                      className="text-sm text-cream/60 hover:text-cream transition-colors duration-200"
+                    >
+                      {settings.contactPhone}
+                    </a>
+                  </div>
+                )}
               </address>
 
               {/* Map CTA */}
@@ -138,7 +184,7 @@ export function Footer() {
           {/* Bottom bar */}
           <div className="mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/40">
             <p>
-              © {currentYear} Tepexi Digital. Todos los derechos reservados.
+              © {currentYear} {settings.siteName}. Todos los derechos reservados.
             </p>
             <p>
               Hecho con cariño para Tepexi de Rodríguez

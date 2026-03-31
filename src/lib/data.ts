@@ -1,8 +1,10 @@
 /**
  * Data abstraction layer.
  *
- * When NEXT_PUBLIC_SANITY_PROJECT_ID is set → use Sanity + GROQ queries.
- * Otherwise → return mock data so all pages render visually without a CMS.
+ * Strategy: Sanity-first with graceful fallback.
+ * - When NEXT_PUBLIC_SANITY_PROJECT_ID is set → try Sanity first.
+ * - If Sanity returns empty results OR throws a network error → fall back to mock data.
+ * - When NEXT_PUBLIC_SANITY_PROJECT_ID is NOT set → use mock data directly.
  */
 
 import type { MapMarker } from '@/types'
@@ -17,9 +19,11 @@ import {
   type MockCultura,
   type MockEvento,
   type MockSettings,
+  type SocialLink,
+  type SeoDefaults,
 } from './mock-data'
 
-const USE_MOCK = !process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const USE_SANITY = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 
 // ---------------------------------------------------------------------------
 // Return-type aliases (so Sanity and mock paths return the same shapes)
@@ -51,7 +55,7 @@ export interface LugarDetail {
   address: string | null
   schedule: string | null
   cost: string | null
-  recommendations: string | null
+  recommendations: unknown[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
@@ -86,7 +90,7 @@ export interface GastronomiaDetail {
   dishType: string | null
   featuredDishes: string[]
   priceRange: string | null
-  recommendations: string | null
+  recommendations: unknown[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
@@ -118,7 +122,7 @@ export interface CulturaDetail {
   schedule: string | null
   cost: string | null
   culturalType: string | null
-  recommendations: string | null
+  recommendations: unknown[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
@@ -154,6 +158,19 @@ function mockToLugarList(l: MockLugar): LugarListItem {
   }
 }
 
+function stringToPortableText(text: string | null): unknown[] | null {
+  if (!text) return null
+  return [
+    {
+      _type: 'block',
+      _key: `mock-rec-${Date.now()}`,
+      style: 'normal',
+      children: [{ _type: 'span', text, marks: [] }],
+      markDefs: [],
+    },
+  ]
+}
+
 function mockToLugarDetail(l: MockLugar): LugarDetail {
   return {
     _id: l._id,
@@ -167,7 +184,7 @@ function mockToLugarDetail(l: MockLugar): LugarDetail {
     address: l.address,
     schedule: l.schedule,
     cost: l.cost,
-    recommendations: l.recommendations,
+    recommendations: stringToPortableText(l.recommendations),
     seo: l.seo,
   }
 }
@@ -204,7 +221,7 @@ function mockToGastronomiaDetail(g: MockGastronomia): GastronomiaDetail {
     dishType: g.dishType,
     featuredDishes: g.featuredDishes,
     priceRange: g.priceRange,
-    recommendations: g.recommendations,
+    recommendations: stringToPortableText(g.recommendations),
     seo: g.seo,
   }
 }
@@ -238,7 +255,7 @@ function mockToCulturaDetail(c: MockCultura): CulturaDetail {
     schedule: c.schedule,
     cost: c.cost,
     culturalType: c.culturalType,
-    recommendations: c.recommendations,
+    recommendations: stringToPortableText(c.recommendations),
     seo: c.seo,
   }
 }
@@ -259,180 +276,263 @@ function mockToEventoList(e: MockEvento): EventoListItem {
 }
 
 // ---------------------------------------------------------------------------
-// Public API
+// Mock fallback helpers
+// ---------------------------------------------------------------------------
+
+function getMockLugaresList(): LugarListItem[] {
+  return mockLugares.map(mockToLugarList)
+}
+
+function getMockGastronomiaList(): GastronomiaListItem[] {
+  return mockGastronomia.map(mockToGastronomiaList)
+}
+
+function getMockCulturaList(): CulturaListItem[] {
+  return mockCultura.map(mockToCulturaList)
+}
+
+function getMockUpcomingEventos(): EventoListItem[] {
+  const now = new Date()
+  return mockEventos
+    .filter((e) => new Date(e.date) >= now)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map(mockToEventoList)
+}
+
+function getMockMapMarkers(): MapMarker[] {
+  const lugarMarkers: MapMarker[] = mockLugares
+    .filter((l) => l.coordinates)
+    .map((l) => ({
+      id: l._id,
+      title: l.title,
+      slug: l.slug.current,
+      coordinates: l.coordinates!,
+      category: l.category,
+      categoryColor: l.categoryColor,
+      type: 'lugar' as const,
+    }))
+
+  const gastronomiaMarkers: MapMarker[] = mockGastronomia
+    .filter((g) => g.coordinates)
+    .map((g) => ({
+      id: g._id,
+      title: g.title,
+      slug: g.slug.current,
+      coordinates: g.coordinates!,
+      category: g.category,
+      categoryColor: g.categoryColor,
+      type: 'gastronomia' as const,
+    }))
+
+  const culturaMarkers: MapMarker[] = mockCultura
+    .filter((c) => c.coordinates)
+    .map((c) => ({
+      id: c._id,
+      title: c.title,
+      slug: c.slug.current,
+      coordinates: c.coordinates!,
+      category: c.category,
+      categoryColor: c.categoryColor,
+      type: 'cultura' as const,
+    }))
+
+  return [...lugarMarkers, ...gastronomiaMarkers, ...culturaMarkers]
+}
+
+// ---------------------------------------------------------------------------
+// Public API — Sanity-first with graceful fallback to mock
 // ---------------------------------------------------------------------------
 
 export async function getAllLugares(): Promise<LugarListItem[]> {
-  if (USE_MOCK) {
-    return mockLugares.map(mockToLugarList)
+  if (!USE_SANITY) return getMockLugaresList()
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { allLugaresQuery } = await import('@/sanity/queries/lugares')
+    const { data } = await sanityFetch({ query: allLugaresQuery })
+    const results = (data ?? []) as LugarListItem[]
+    return results.length > 0 ? results : getMockLugaresList()
+  } catch {
+    return getMockLugaresList()
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { allLugaresQuery } = await import('@/sanity/queries/lugares')
-  const { data } = await sanityFetch({ query: allLugaresQuery })
-  return (data ?? []) as LugarListItem[]
 }
 
 export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> {
-  if (USE_MOCK) {
+  if (!USE_SANITY) {
     const found = mockLugares.find((l) => l.slug.current === slug)
     return found ? mockToLugarDetail(found) : null
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { lugarBySlugQuery } = await import('@/sanity/queries/lugares')
-  const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
-  return (data ?? null) as LugarDetail | null
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { lugarBySlugQuery } = await import('@/sanity/queries/lugares')
+    const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
+    if (data) return data as LugarDetail
+    // Sanity has no match — try mock as fallback
+    const found = mockLugares.find((l) => l.slug.current === slug)
+    return found ? mockToLugarDetail(found) : null
+  } catch {
+    const found = mockLugares.find((l) => l.slug.current === slug)
+    return found ? mockToLugarDetail(found) : null
+  }
 }
 
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
-  if (USE_MOCK) {
-    return mockGastronomia.map(mockToGastronomiaList)
+  if (!USE_SANITY) return getMockGastronomiaList()
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
+    const { data } = await sanityFetch({ query: allGastronomiaQuery })
+    const results = (data ?? []) as GastronomiaListItem[]
+    return results.length > 0 ? results : getMockGastronomiaList()
+  } catch {
+    return getMockGastronomiaList()
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
-  const { data } = await sanityFetch({ query: allGastronomiaQuery })
-  return (data ?? []) as GastronomiaListItem[]
 }
 
 export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDetail | null> {
-  if (USE_MOCK) {
+  if (!USE_SANITY) {
     const found = mockGastronomia.find((g) => g.slug.current === slug)
     return found ? mockToGastronomiaDetail(found) : null
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { gastronomiaBySlugQuery } = await import('@/sanity/queries/gastronomia')
-  const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
-  return (data ?? null) as GastronomiaDetail | null
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { gastronomiaBySlugQuery } = await import('@/sanity/queries/gastronomia')
+    const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
+    if (data) return data as GastronomiaDetail
+    const found = mockGastronomia.find((g) => g.slug.current === slug)
+    return found ? mockToGastronomiaDetail(found) : null
+  } catch {
+    const found = mockGastronomia.find((g) => g.slug.current === slug)
+    return found ? mockToGastronomiaDetail(found) : null
+  }
 }
 
 export async function getAllCultura(): Promise<CulturaListItem[]> {
-  if (USE_MOCK) {
-    return mockCultura.map(mockToCulturaList)
+  if (!USE_SANITY) return getMockCulturaList()
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { allCulturaQuery } = await import('@/sanity/queries/cultura')
+    const { data } = await sanityFetch({ query: allCulturaQuery })
+    const results = (data ?? []) as CulturaListItem[]
+    return results.length > 0 ? results : getMockCulturaList()
+  } catch {
+    return getMockCulturaList()
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { allCulturaQuery } = await import('@/sanity/queries/cultura')
-  const { data } = await sanityFetch({ query: allCulturaQuery })
-  return (data ?? []) as CulturaListItem[]
 }
 
 export async function getCulturaBySlug(slug: string): Promise<CulturaDetail | null> {
-  if (USE_MOCK) {
+  if (!USE_SANITY) {
     const found = mockCultura.find((c) => c.slug.current === slug)
     return found ? mockToCulturaDetail(found) : null
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { culturaBySlugQuery } = await import('@/sanity/queries/cultura')
-  const { data } = await sanityFetch({ query: culturaBySlugQuery, params: { slug } })
-  return (data ?? null) as CulturaDetail | null
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { culturaBySlugQuery } = await import('@/sanity/queries/cultura')
+    const { data } = await sanityFetch({ query: culturaBySlugQuery, params: { slug } })
+    if (data) return data as CulturaDetail
+    const found = mockCultura.find((c) => c.slug.current === slug)
+    return found ? mockToCulturaDetail(found) : null
+  } catch {
+    const found = mockCultura.find((c) => c.slug.current === slug)
+    return found ? mockToCulturaDetail(found) : null
+  }
 }
 
 export async function getUpcomingEventos(): Promise<EventoListItem[]> {
-  if (USE_MOCK) {
-    const now = new Date()
-    return mockEventos
-      .filter((e) => new Date(e.date) >= now)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .map(mockToEventoList)
+  if (!USE_SANITY) return getMockUpcomingEventos()
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { upcomingEventosQuery } = await import('@/sanity/queries/eventos')
+    const now = new Date().toISOString()
+    const { data } = await sanityFetch({ query: upcomingEventosQuery, params: { now, limit: 50 } })
+    const results = (data ?? []) as EventoListItem[]
+    return results.length > 0 ? results : getMockUpcomingEventos()
+  } catch {
+    return getMockUpcomingEventos()
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { upcomingEventosQuery } = await import('@/sanity/queries/eventos')
-  const now = new Date().toISOString()
-  const { data } = await sanityFetch({ query: upcomingEventosQuery, params: { now, limit: 50 } })
-  return (data ?? []) as EventoListItem[]
 }
 
 export async function getAllMapMarkers(): Promise<MapMarker[]> {
-  if (USE_MOCK) {
-    const lugarMarkers: MapMarker[] = mockLugares
-      .filter((l) => l.coordinates)
-      .map((l) => ({
+  if (!USE_SANITY) return getMockMapMarkers()
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { allLugaresMapQuery } = await import('@/sanity/queries/lugares')
+    const { allGastronomiaMapQuery } = await import('@/sanity/queries/gastronomia')
+    const { allCulturaMapQuery } = await import('@/sanity/queries/cultura')
+
+    const [{ data: lugares }, { data: gastronomia }, { data: cultura }] = await Promise.all([
+      sanityFetch({ query: allLugaresMapQuery }),
+      sanityFetch({ query: allGastronomiaMapQuery }),
+      sanityFetch({ query: allCulturaMapQuery }),
+    ])
+
+    // If ALL queries return empty, fall back to mock
+    const hasLugares = (lugares ?? []).length > 0
+    const hasGastronomia = (gastronomia ?? []).length > 0
+    const hasCultura = (cultura ?? []).length > 0
+
+    if (!hasLugares && !hasGastronomia && !hasCultura) {
+      return getMockMapMarkers()
+    }
+
+    type LugarMapItem = NonNullable<typeof lugares>[number]
+    type GastronomiaMapItem = NonNullable<typeof gastronomia>[number]
+    type CulturaMapItem = NonNullable<typeof cultura>[number]
+
+    return [
+      ...(lugares ?? []).map((l: LugarMapItem) => ({
         id: l._id,
-        title: l.title,
-        slug: l.slug.current,
-        coordinates: l.coordinates!,
-        category: l.category,
-        categoryColor: l.categoryColor,
+        title: l.title ?? '',
+        slug: l.slug?.current ?? '',
+        coordinates: { lat: l.coordinates?.lat ?? 0, lng: l.coordinates?.lng ?? 0 },
+        category: l.category ?? '',
+        categoryColor: l.categoryColor ?? '#8B4513',
         type: 'lugar' as const,
-      }))
-
-    const gastronomiaMarkers: MapMarker[] = mockGastronomia
-      .filter((g) => g.coordinates)
-      .map((g) => ({
+      })),
+      ...(gastronomia ?? []).map((g: GastronomiaMapItem) => ({
         id: g._id,
-        title: g.title,
-        slug: g.slug.current,
-        coordinates: g.coordinates!,
-        category: g.category,
-        categoryColor: g.categoryColor,
+        title: g.title ?? '',
+        slug: g.slug?.current ?? '',
+        coordinates: { lat: g.coordinates?.lat ?? 0, lng: g.coordinates?.lng ?? 0 },
+        category: g.category ?? '',
+        categoryColor: g.categoryColor ?? '#2E7D32',
         type: 'gastronomia' as const,
-      }))
-
-    const culturaMarkers: MapMarker[] = mockCultura
-      .filter((c) => c.coordinates)
-      .map((c) => ({
+      })),
+      ...(cultura ?? []).map((c: CulturaMapItem) => ({
         id: c._id,
-        title: c.title,
-        slug: c.slug.current,
-        coordinates: c.coordinates!,
-        category: c.category,
-        categoryColor: c.categoryColor,
+        title: c.title ?? '',
+        slug: c.slug?.current ?? '',
+        coordinates: { lat: c.coordinates?.lat ?? 0, lng: c.coordinates?.lng ?? 0 },
+        category: c.category ?? '',
+        categoryColor: c.categoryColor ?? '#BF360C',
         type: 'cultura' as const,
-      }))
-
-    return [...lugarMarkers, ...gastronomiaMarkers, ...culturaMarkers]
+      })),
+    ].filter((m) => m.coordinates.lat !== 0 || m.coordinates.lng !== 0)
+  } catch {
+    return getMockMapMarkers()
   }
-
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { allLugaresMapQuery } = await import('@/sanity/queries/lugares')
-  const { allGastronomiaMapQuery } = await import('@/sanity/queries/gastronomia')
-  const { allCulturaMapQuery } = await import('@/sanity/queries/cultura')
-
-  const [{ data: lugares }, { data: gastronomia }, { data: cultura }] = await Promise.all([
-    sanityFetch({ query: allLugaresMapQuery }),
-    sanityFetch({ query: allGastronomiaMapQuery }),
-    sanityFetch({ query: allCulturaMapQuery }),
-  ])
-
-  type LugarMapItem = NonNullable<typeof lugares>[number]
-  type GastronomiaMapItem = NonNullable<typeof gastronomia>[number]
-  type CulturaMapItem = NonNullable<typeof cultura>[number]
-
-  return [
-    ...(lugares ?? []).map((l: LugarMapItem) => ({
-      id: l._id,
-      title: l.title ?? '',
-      slug: l.slug?.current ?? '',
-      coordinates: { lat: l.coordinates?.lat ?? 0, lng: l.coordinates?.lng ?? 0 },
-      category: l.category ?? '',
-      categoryColor: l.categoryColor ?? '#8B4513',
-      type: 'lugar' as const,
-    })),
-    ...(gastronomia ?? []).map((g: GastronomiaMapItem) => ({
-      id: g._id,
-      title: g.title ?? '',
-      slug: g.slug?.current ?? '',
-      coordinates: { lat: g.coordinates?.lat ?? 0, lng: g.coordinates?.lng ?? 0 },
-      category: g.category ?? '',
-      categoryColor: g.categoryColor ?? '#2E7D32',
-      type: 'gastronomia' as const,
-    })),
-    ...(cultura ?? []).map((c: CulturaMapItem) => ({
-      id: c._id,
-      title: c.title ?? '',
-      slug: c.slug?.current ?? '',
-      coordinates: { lat: c.coordinates?.lat ?? 0, lng: c.coordinates?.lng ?? 0 },
-      category: c.category ?? '',
-      categoryColor: c.categoryColor ?? '#BF360C',
-      type: 'cultura' as const,
-    })),
-  ].filter((m) => m.coordinates.lat !== 0 || m.coordinates.lng !== 0)
 }
 
+export type { MockSettings as SiteSettings, SocialLink, SeoDefaults }
+
 export async function getSettings(): Promise<MockSettings> {
-  if (USE_MOCK) {
+  if (!USE_SANITY) return mockSettings
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { settingsQuery } = await import('@/sanity/queries/settings')
+    const { data } = await sanityFetch({ query: settingsQuery })
+    // If settings doc doesn't exist yet, use mock
+    if (!data || !data.siteName) return mockSettings
+    return data as MockSettings
+  } catch {
     return mockSettings
   }
-  const { sanityFetch } = await import('@/sanity/lib/live')
-  const { settingsQuery } = await import('@/sanity/queries/settings')
-  const { data } = await sanityFetch({ query: settingsQuery })
-  return (data ?? mockSettings) as MockSettings
 }

@@ -157,7 +157,9 @@ export default async function CulturaDetailPage({ params }: Props) {
                       Recomendaciones
                     </h2>
                   </div>
-                  <p className="text-stone leading-relaxed">{item.recommendations}</p>
+                  <div className="text-stone leading-relaxed prose prose-sm prose-stone max-w-none">
+                    <PortableText value={item.recommendations as PortableTextBlock[]} />
+                  </div>
                 </div>
               )}
             </div>

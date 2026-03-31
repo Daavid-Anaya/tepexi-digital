@@ -3,40 +3,44 @@ import Link from 'next/link'
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import ContactForm from '@/components/contact/ContactForm'
+import { getSettings } from '@/lib/data'
 
 export const metadata: Metadata = {
   title: 'Contacto',
   description: 'Ponte en contacto con el equipo de Tepexi Digital.',
 }
 
-const contactItems = [
-  {
-    icon: MapPin,
-    title: 'Ubicación',
-    content: 'Tepexi de Rodríguez, Puebla, México.',
-    colorClass: 'bg-primary/10',
-    iconColor: 'text-primary',
-    href: null as string | null,
-  },
-  {
-    icon: Mail,
-    title: 'Correo electrónico',
-    content: 'contacto@tepexidigital.com',
-    colorClass: 'bg-secondary/10',
-    iconColor: 'text-secondary',
-    href: 'mailto:contacto@tepexidigital.com',
-  },
-  {
-    icon: Phone,
-    title: 'Redes sociales',
-    content: 'Próximamente en Instagram y Facebook.',
-    colorClass: 'bg-accent/10',
-    iconColor: 'text-accent',
-    href: null,
-  },
-]
+export default async function ContactoPage() {
+  const settings = await getSettings()
 
-export default function ContactoPage() {
+  const contactItems = [
+    {
+      icon: MapPin,
+      title: 'Ubicaci\u00f3n',
+      content: settings.address || 'Tepexi de Rodr\u00edguez, Puebla, M\u00e9xico.',
+      colorClass: 'bg-primary/10',
+      iconColor: 'text-primary',
+      href: null as string | null,
+    },
+    {
+      icon: Mail,
+      title: 'Correo electr\u00f3nico',
+      content: settings.contactEmail || 'contacto@tepexidigital.com',
+      colorClass: 'bg-secondary/10',
+      iconColor: 'text-secondary',
+      href: settings.contactEmail
+        ? `mailto:${settings.contactEmail}`
+        : 'mailto:contacto@tepexidigital.com',
+    },
+    {
+      icon: Phone,
+      title: 'Tel\u00e9fono',
+      content: settings.contactPhone || 'Pr\u00f3ximamente.',
+      colorClass: 'bg-accent/10',
+      iconColor: 'text-accent',
+      href: settings.contactPhone ? `tel:${settings.contactPhone}` : null,
+    },
+  ]
   return (
     <>
       {/* Page hero */}

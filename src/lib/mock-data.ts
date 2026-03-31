@@ -132,16 +132,28 @@ export interface MockEvento {
   isFeatured: boolean
 }
 
+export interface SocialLink {
+  platform: string
+  url: string
+}
+
+export interface SeoDefaults {
+  metaTitle: string | null
+  metaDescription: string | null
+  ogImageUrl: string | null
+}
+
 export interface MockSettings {
   siteName: string
   siteDescription: string
+  heroImageUrl: string | null
   heroTitle: string
   heroSubtitle: string
   contactEmail: string
   contactPhone: string
   address: string
-  socialLinks: null
-  seoDefaults: null
+  socialLinks: SocialLink[] | null
+  seoDefaults: SeoDefaults | null
 }
 
 // ---------------------------------------------------------------------------
@@ -738,6 +750,7 @@ export const mockSettings: MockSettings = {
   siteName: 'Tepexi Digital',
   siteDescription:
     'Plataforma turística e informativa del municipio de Tepexi de Rodríguez, Puebla',
+  heroImageUrl: 'https://picsum.photos/seed/tepexi-nature/1920/1080',
   heroTitle: 'Descubre Tepexi de Rodríguez',
   heroSubtitle:
     'Explora la riqueza turística, cultural y gastronómica de la Mixteca Poblana',
@@ -745,5 +758,10 @@ export const mockSettings: MockSettings = {
   contactPhone: '+52 243 436 0001',
   address: 'Palacio Municipal, Centro, Tepexi de Rodríguez, Puebla, México',
   socialLinks: null,
-  seoDefaults: null,
+  seoDefaults: {
+    metaTitle: 'Tepexi Digital · Turismo, Cultura y Gastronomía de Tepexi de Rodríguez',
+    metaDescription:
+      'Descubre Tepexi de Rodríguez, Puebla: huellas de dinosaurios, manantiales, arquitectura colonial y la gastronomía auténtica de la Mixteca Poblana.',
+    ogImageUrl: 'https://picsum.photos/seed/tepexi-og/1200/630',
+  },
 }

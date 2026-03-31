@@ -1,9 +1,11 @@
 import { defineType, defineField } from 'sanity'
+import {CogIcon} from '@sanity/icons'
 
 export const settings = defineType({
   name: 'settings',
   title: 'Configuración del sitio',
   type: 'document',
+  icon: CogIcon,
   fields: [
     defineField({
       name: 'siteName',

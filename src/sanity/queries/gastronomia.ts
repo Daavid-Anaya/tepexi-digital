@@ -21,7 +21,7 @@ export const gastronomiaBySlugQuery = defineQuery(`*[_type == "gastronomia" && s
   "category": category->name,
   "categoryColor": category->color,
   description,
-  images,
+  "images": images[] { alt, "url": asset->url, "asset": { "url": asset->url } },
   coordinates,
   address,
   schedule,

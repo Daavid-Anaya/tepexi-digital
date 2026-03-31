@@ -181,7 +181,9 @@ export default async function LugarDetailPage({ params }: Props) {
                       </div>
                       <div>
                         <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Recomendaciones</dt>
-                        <dd className="text-sm text-stone leading-snug">{lugar.recommendations}</dd>
+                        <dd className="text-sm text-stone leading-snug prose prose-sm prose-stone max-w-none">
+                          <PortableText value={lugar.recommendations as PortableTextBlock[]} />
+                        </dd>
                       </div>
                     </div>
                   )}

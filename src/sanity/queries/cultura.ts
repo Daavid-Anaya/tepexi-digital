@@ -20,7 +20,7 @@ export const culturaBySlugQuery = defineQuery(`*[_type == "cultura" && slug.curr
   "category": category->name,
   "categoryColor": category->color,
   description,
-  images,
+  "images": images[] { alt, "url": asset->url, "asset": { "url": asset->url } },
   coordinates,
   address,
   schedule,

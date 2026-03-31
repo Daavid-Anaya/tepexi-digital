@@ -1,9 +1,11 @@
 import { defineType, defineField } from 'sanity'
+import { BasketIcon } from '@sanity/icons'
 
 export const gastronomia = defineType({
   name: 'gastronomia',
   title: 'Gastronomía',
   type: 'document',
+  icon: BasketIcon,
   fields: [
     defineField({
       name: 'title',

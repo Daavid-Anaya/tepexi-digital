@@ -5,7 +5,7 @@ const token = process.env.SANITY_API_READ_TOKEN
 
 export const { sanityFetch, SanityLive } = defineLive({
   client: client.withConfig({
-    apiVersion: '2024-01-01',
+    apiVersion: '2025-03-01',
   }),
   serverToken: token,
   browserToken: token,

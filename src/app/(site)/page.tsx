@@ -6,7 +6,7 @@ import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import { EventCard } from '@/components/events/EventCard'
-import { getAllLugares, getAllGastronomia, getUpcomingEventos } from '@/lib/data'
+import { getAllLugares, getAllGastronomia, getUpcomingEventos, getSettings } from '@/lib/data'
 import type { PlaceCardProps, EventCardProps } from '@/types'
 
 export const metadata: Metadata = {
@@ -16,10 +16,11 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [lugaresData, gastronomiaData, eventosData] = await Promise.all([
+  const [lugaresData, gastronomiaData, eventosData, settings] = await Promise.all([
     getAllLugares(),
     getAllGastronomia(),
     getUpcomingEventos(),
+    getSettings(),
   ])
 
   const featuredLugares: PlaceCardProps[] = lugaresData.slice(0, 3).map((l) => ({
@@ -62,8 +63,8 @@ export default async function HomePage() {
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src="https://picsum.photos/seed/tepexi-nature/1920/1080"
-            alt="Paisaje de Tepexi de Rodríguez"
+            src={settings.heroImageUrl ?? 'https://picsum.photos/seed/tepexi-nature/1920/1080'}
+            alt={settings.heroTitle ?? 'Paisaje de Tepexi de Rodríguez'}
             fill
             priority
             sizes="100vw"
@@ -94,9 +95,21 @@ export default async function HomePage() {
             className="font-heading font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.05] mb-6 animate-fade-in-up"
             style={{ textShadow: '0 2px 24px rgba(0,0,0,0.4)' }}
           >
-            Descubre
-            <br />
-            <span className="text-primary-300">Tepexi</span>
+            {settings.heroTitle ? (
+              <>
+                {settings.heroTitle.split(' ').slice(0, 1).join(' ')}
+                <br />
+                <span className="text-primary-300">
+                  {settings.heroTitle.split(' ').slice(1).join(' ')}
+                </span>
+              </>
+            ) : (
+              <>
+                Descubre
+                <br />
+                <span className="text-primary-300">Tepexi</span>
+              </>
+            )}
           </h1>
 
           {/* Subtitle */}
@@ -104,8 +117,8 @@ export default async function HomePage() {
             className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up"
             style={{ animationDelay: '100ms' }}
           >
-            Huellas de dinosaurios, arquitectura colonial, manantiales naturales
-            y la gastronomía única de la Mixteca Poblana
+            {settings.heroSubtitle ??
+              'Huellas de dinosaurios, arquitectura colonial, manantiales naturales y la gastronomía única de la Mixteca Poblana'}
           </p>
 
           {/* CTAs */}
