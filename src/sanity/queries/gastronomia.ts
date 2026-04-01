@@ -27,7 +27,7 @@ export const gastronomiaBySlugQuery = defineQuery(`*[_type == "gastronomia" && s
   schedule,
   cost,
   dishType,
-  featuredDishes,
+  featuredDishes[] { name, description, "imageUrl": image.asset->url },
   priceRange,
   recommendations,
   seo

@@ -30,7 +30,8 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
   title,
   slug,
   description,
-  image,
+  "imageUrl": image.asset->url,
+  "imageAlt": image.alt,
   date,
   endDate,
   "location": location->{

@@ -140,6 +140,28 @@ export interface EventoListItem {
   isFeatured: boolean
 }
 
+// --- Evento detail ---
+export interface EventoDetail {
+  _id: string
+  title: string
+  slug: { current: string }
+  description: unknown[] | null
+  imageUrl: string | null
+  imageAlt: string | null
+  date: string
+  endDate: string | null
+  location: {
+    _id: string
+    title: string
+    slug: { current: string }
+    coordinates: { lat: number; lng: number } | null
+    address: string | null
+  } | null
+  locationText: string | null
+  isFeatured: boolean
+  seo: { metaTitle: string | null; metaDescription: string | null } | null
+}
+
 // ---------------------------------------------------------------------------
 // Mock-to-interface mappers
 // ---------------------------------------------------------------------------
@@ -272,6 +294,31 @@ function mockToEventoList(e: MockEvento): EventoListItem {
     locationName: e.locationName,
     locationText: e.locationText,
     isFeatured: e.isFeatured,
+  }
+}
+
+function mockToEventoDetail(e: MockEvento): EventoDetail {
+  return {
+    _id: e._id,
+    title: e.title,
+    slug: e.slug,
+    description: e.description ?? null,
+    imageUrl: e.imageUrl,
+    imageAlt: e.imageAlt,
+    date: e.date,
+    endDate: e.endDate,
+    location: e.locationCoordinates
+      ? {
+          _id: `mock-loc-${e._id}`,
+          title: e.locationName ?? e.locationText ?? '',
+          slug: { current: '' },
+          coordinates: e.locationCoordinates,
+          address: e.locationAddress,
+        }
+      : null,
+    locationText: e.locationText,
+    isFeatured: e.isFeatured,
+    seo: e.seo,
   }
 }
 
@@ -455,6 +502,25 @@ export async function getUpcomingEventos(): Promise<EventoListItem[]> {
     return results.length > 0 ? results : getMockUpcomingEventos()
   } catch {
     return getMockUpcomingEventos()
+  }
+}
+
+export async function getEventoBySlug(slug: string): Promise<EventoDetail | null> {
+  if (!USE_SANITY) {
+    const found = mockEventos.find((e) => e.slug.current === slug)
+    return found ? mockToEventoDetail(found) : null
+  }
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { eventoBySlugQuery } = await import('@/sanity/queries/eventos')
+    const { data } = await sanityFetch({ query: eventoBySlugQuery, params: { slug } })
+    if (data) return data as EventoDetail
+    const found = mockEventos.find((e) => e.slug.current === slug)
+    return found ? mockToEventoDetail(found) : null
+  } catch {
+    const found = mockEventos.find((e) => e.slug.current === slug)
+    return found ? mockToEventoDetail(found) : null
   }
 }
 

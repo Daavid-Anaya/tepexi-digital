@@ -63,8 +63,7 @@ export async function Footer() {
               </Link>
 
               <p className="text-cream/70 text-sm leading-relaxed max-w-xs">
-                Plataforma turística, cultural y gastronómica del municipio de
-                Tepexi de Rodríguez, Puebla, México. Patrimonio vivo de la Mixteca Poblana.
+                {settings.siteDescription}
               </p>
 
               {/* Social icons */}

@@ -123,13 +123,17 @@ export interface MockEvento {
   _id: string
   title: string
   slug: { current: string }
+  description: ReturnType<typeof portableTextMulti> | null
   imageUrl: string | null
   imageAlt: string | null
   date: string
   endDate: string | null
   locationName: string | null
   locationText: string | null
+  locationCoordinates: MockCoordinates | null
+  locationAddress: string | null
   isFeatured: boolean
+  seo: MockSeo
 }
 
 export interface SocialLink {
@@ -684,61 +688,108 @@ export const mockEventos: MockEvento[] = [
     _id: 'evento-1',
     title: 'Feria de Tepexi 2026',
     slug: { current: 'feria-de-tepexi-2026' },
+    description: portableTextMulti(
+      'La Feria de Tepexi es la celebración anual más importante del municipio, donde se reúnen tradiciones, gastronomía, música y cultura de la Mixteca Poblana.',
+      'Durante casi una semana, la Plaza Principal se transforma con juegos mecánicos, puestos de comida tradicional, exposiciones artesanales y presentaciones de danza de los Tecuanes.',
+    ),
     imageUrl: 'https://picsum.photos/seed/feria-tepexi-2026/800/600',
     imageAlt: 'Feria anual de Tepexi de Rodríguez 2026',
     date: '2026-04-15T00:00:00.000Z',
     endDate: '2026-04-20T00:00:00.000Z',
     locationName: null,
     locationText: 'Plaza Principal, Tepexi de Rodríguez',
+    locationCoordinates: { lat: 18.5794, lng: -97.9231 },
+    locationAddress: 'Plaza Principal, Centro, Tepexi de Rodríguez, Puebla',
     isFeatured: true,
+    seo: {
+      metaTitle: 'Feria de Tepexi 2026 — Celebración anual',
+      metaDescription: 'La Feria de Tepexi 2026 reúne tradiciones, gastronomía y cultura de la Mixteca Poblana del 15 al 20 de abril.',
+    },
   },
   {
     _id: 'evento-2',
     title: 'Festival del Mole de Caderas',
     slug: { current: 'festival-del-mole-de-caderas-2026' },
+    description: portableTextMulti(
+      'El Festival del Mole de Caderas celebra uno de los platillos más emblemáticos de la Mixteca Poblana: el mole de caderas, preparado con chivo criollo de la región.',
+      'Cocineras tradicionales, productores locales y visitantes se reúnen para degustar, aprender y celebrar esta tradición culinaria ancestral.',
+    ),
     imageUrl: 'https://picsum.photos/seed/festival-mole-2026/800/600',
     imageAlt: 'Festival Gastronómico del Mole de Caderas 2026',
     date: '2026-10-20T00:00:00.000Z',
     endDate: '2026-10-22T00:00:00.000Z',
     locationName: null,
     locationText: 'Mercado Municipal, Tepexi de Rodríguez',
+    locationCoordinates: { lat: 18.5786, lng: -97.9225 },
+    locationAddress: 'Mercado Municipal, Centro, Tepexi de Rodríguez, Puebla',
     isFeatured: true,
+    seo: {
+      metaTitle: 'Festival del Mole de Caderas 2026 — Tepexi',
+      metaDescription: 'Festival gastronómico del Mole de Caderas en Tepexi de Rodríguez, octubre 2026.',
+    },
   },
   {
     _id: 'evento-3',
     title: 'Noche de Museos 2026',
     slug: { current: 'noche-de-museos-2026' },
+    description: portableTextMulti(
+      'Noche de Museos es un evento especial donde el Museo Comunitario de Tepexi abre sus puertas en horario nocturno con visitas guiadas y actividades culturales.',
+    ),
     imageUrl: 'https://picsum.photos/seed/noche-museos-2026/800/600',
     imageAlt: 'Noche de Museos en el Museo Comunitario de Tepexi',
     date: '2026-05-18T00:00:00.000Z',
     endDate: null,
     locationName: null,
     locationText: 'Museo Comunitario de Tepexi de Rodríguez',
+    locationCoordinates: null,
+    locationAddress: null,
     isFeatured: false,
+    seo: {
+      metaTitle: 'Noche de Museos 2026 — Tepexi',
+      metaDescription: 'Visitas guiadas nocturnas en el Museo Comunitario de Tepexi de Rodríguez.',
+    },
   },
   {
     _id: 'evento-4',
     title: 'Taller de Alfarería Artesanal',
     slug: { current: 'taller-de-alfareria-artesanal-2026' },
+    description: portableTextMulti(
+      'Taller práctico de alfarería artesanal impartido por maestros artesanos de la región. Aprende técnicas ancestrales de la cerámica mixteca.',
+    ),
     imageUrl: 'https://picsum.photos/seed/taller-alfareria-2026/800/600',
     imageAlt: 'Taller de alfarería artesanal en Tepexi',
     date: '2026-06-05T00:00:00.000Z',
     endDate: null,
     locationName: null,
     locationText: 'Centro Cultural, Tepexi de Rodríguez',
+    locationCoordinates: null,
+    locationAddress: null,
     isFeatured: false,
+    seo: {
+      metaTitle: 'Taller de Alfarería Artesanal 2026 — Tepexi',
+      metaDescription: 'Aprende alfarería artesanal con maestros de la Mixteca Poblana en Tepexi de Rodríguez.',
+    },
   },
   {
     _id: 'evento-5',
     title: 'Día del Mezcal Artesanal de Tepexi',
     slug: { current: 'dia-del-mezcal-artesanal-2026' },
+    description: portableTextMulti(
+      'Celebración dedicada al mezcal artesanal de la región. Degustaciones, exposiciones de productores locales y talleres sobre el proceso de elaboración del mezcal mixteco.',
+    ),
     imageUrl: 'https://picsum.photos/seed/dia-mezcal-2026/800/600',
     imageAlt: 'Degustación de mezcales artesanales de Tepexi',
     date: '2026-08-12T00:00:00.000Z',
     endDate: null,
     locationName: null,
     locationText: 'Plaza Principal y Mercado Municipal, Tepexi de Rodríguez',
+    locationCoordinates: { lat: 18.5794, lng: -97.9231 },
+    locationAddress: 'Plaza Principal, Centro, Tepexi de Rodríguez, Puebla',
     isFeatured: true,
+    seo: {
+      metaTitle: 'Día del Mezcal Artesanal 2026 — Tepexi',
+      metaDescription: 'Degustación de mezcales artesanales de la Mixteca Poblana en Tepexi de Rodríguez.',
+    },
   },
 ]
 
