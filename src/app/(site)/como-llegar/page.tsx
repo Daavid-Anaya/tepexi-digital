@@ -23,7 +23,7 @@ const centerMarker: MapMarker = {
 const routes = [
   {
     from: 'Ciudad de Puebla',
-    duration: '1h 30min',
+    duration: '2h 00min',
     distance: '~95 km',
     description:
       'Tomar la autopista Puebla-Tehuacán (México 150D) y continuar por la carretera Tepexi de Rodríguez. La ruta es por carretera libre siguiendo las señalizaciones hacia Tepexi.',
@@ -34,7 +34,7 @@ const routes = [
   },
   {
     from: 'Ciudad de México (CDMX)',
-    duration: '3h 00min',
+    duration: '3h 50min',
     distance: '~230 km',
     description:
       'Tomar la autopista México-Puebla (ARCO NORTE o México-Puebla 150D), llegar a Puebla y continuar hacia Tepexi de Rodríguez por la carretera Puebla-Tehuacán.',
@@ -45,8 +45,8 @@ const routes = [
   },
   {
     from: 'Oaxaca de Juárez',
-    duration: '3h 30min',
-    distance: '~240 km',
+    duration: '4h 50min',
+    distance: '~290 km',
     description:
       'Tomar la autopista Oaxaca-Puebla (México 131 / 190) hacia el norte hasta Tehuacán y continuar por la carretera libre hacia Tepexi de Rodríguez.',
     icon: Bus,

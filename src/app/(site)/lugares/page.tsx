@@ -52,7 +52,7 @@ export default async function LugaresPage() {
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
                 Explora los sitios más representativos de Tepexi de Rodríguez —
-                desde vestigios prehispánicos hasta miradores y haciendas históricas.
+                desde vestigios prehispánicos hasta miradores y Ex Conventos.
               </p>
             </div>
           </div>

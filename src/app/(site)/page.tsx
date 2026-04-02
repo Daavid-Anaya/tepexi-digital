@@ -295,9 +295,9 @@ export default async function HomePage() {
 
           {/* Warm introduction paragraph */}
           <p className="text-stone/80 text-base leading-relaxed max-w-2xl mb-10 border-l-2 border-primary/30 pl-4">
-            La cocina de la Mixteca Poblana es un tesoro vivo: mole negro, tasajo, tlayudas y
-            el mezcal artesanal conviven con recetas indígenas transmitidas de generación en
-            generación. Cada platillo es una historia de la tierra.
+            La cocina de la Mixteca Poblana es un tesoro vivo: huaxmole, chileatole, tlacoyos y
+            el mezcal artesanal, recetas transmitidas de generación en generación. Cada
+            platillo es una historia de la tierra.
           </p>
 
           {featuredGastronomia.length > 0 && (
@@ -316,13 +316,13 @@ export default async function HomePage() {
               {
                 icon: Landmark,
                 title: 'Cultura e Historia',
-                description: 'Arte rupestre, templos coloniales y tradiciones vivas',
+                description: 'Un recorrido por zonas arqueológicas, templos coloniales y tradiciones vivas',
                 href: '/cultura',
               },
               {
                 icon: Map,
                 title: 'Mapa Interactivo',
-                description: 'Navega todos los puntos de interés del municipio',
+                description: 'Navega por todos los puntos de interés del municipio',
                 href: '/mapa',
               },
               {
