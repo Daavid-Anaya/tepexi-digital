@@ -5,7 +5,6 @@ import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from
 import { getAllCultura } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
-import { PlaceGrid } from '@/components/places/PlaceGrid'
 import type { PlaceCardProps } from '@/types'
 
 export const metadata: Metadata = {
@@ -385,45 +384,6 @@ export default async function CulturaPage() {
         </Container>
       </section>
 
-      {/* ── 6. Grid section ─────────────────────────────────────────────── */}
-      <section className="py-20">
-        <Container>
-          {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
-              <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#7B3FA0' }}>
-                Patrimonio Cultural
-              </span>
-            </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
-              Sitios Culturales
-            </h2>
-            <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
-              Explora en detalle los sitios que conforman la riqueza cultural de nuestra región.
-            </p>
-          </div>
-
-          {places.length === 0 ? (
-            <div className="text-center py-20">
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ backgroundColor: 'rgba(74,29,110,0.1)' }}
-              >
-                <Palette className="w-10 h-10" style={{ color: 'rgba(74,29,110,0.4)' }} />
-              </div>
-              <h2 className="font-heading font-semibold text-xl text-primary mb-2">
-                Sin sitios culturales disponibles
-              </h2>
-              <p className="text-stone max-w-sm mx-auto">
-                Pronto encontrarás aquí el rico patrimonio cultural de Tepexi de Rodríguez.
-              </p>
-            </div>
-          ) : (
-            <PlaceGrid places={places} basePath="/cultura" />
-          )}
-        </Container>
-      </section>
     </>
   )
 }
