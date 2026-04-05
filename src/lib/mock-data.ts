@@ -174,11 +174,12 @@ function img(seed: string, alt: string, width = 800, height = 600): MockImage {
 // ---------------------------------------------------------------------------
 
 export const mockCategories: MockCategory[] = [
-  { _id: 'cat-naturaleza', name: 'Naturaleza', color: '#2E7D32', icon: 'leaf' },
-  { _id: 'cat-historia', name: 'Historia', color: '#8B4513', icon: 'landmark' },
-  { _id: 'cat-gastronomia', name: 'Gastronomía', color: '#BF360C', icon: 'utensils' },
-  { _id: 'cat-cultura', name: 'Cultura', color: '#7B1FA2', icon: 'palette' },
-  { _id: 'cat-aventura', name: 'Aventura', color: '#1565C0', icon: 'mountain' },
+  { _id: 'cat-ecoturismo', name: 'Ecoturismo y Naturaleza', color: '#2E7D32', icon: 'leaf' },
+  { _id: 'cat-historia', name: 'Historia y Arqueología', color: '#8B4513', icon: 'landmark' },
+  { _id: 'cat-paleontologia', name: 'Paleontología', color: '#00838F', icon: 'bone' },
+  { _id: 'cat-hospedaje', name: 'Hospedaje', color: '#1565C0', icon: 'bed' },
+  { _id: 'cat-gastronomia', name: 'Gastronomía y Comercio Local', color: '#E65100', icon: 'utensils' },
+  { _id: 'cat-cultura', name: 'Cultura y Espacios Públicos', color: '#7B1FA2', icon: 'palette' },
 ]
 
 // ---------------------------------------------------------------------------
@@ -190,8 +191,8 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-1',
     title: 'Huellas de Dinosaurio',
     slug: { current: 'huellas-de-dinosaurio' },
-    category: 'Naturaleza',
-    categoryColor: '#2E7D32',
+    category: 'Paleontología',
+    categoryColor: '#00838F',
     imageUrl: 'https://picsum.photos/seed/huellas-dino-main/800/600',
     imageAlt: 'Huellas fósiles de dinosaurio en Tepexi de Rodríguez',
     description: portableTextMulti(
@@ -220,7 +221,7 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-2',
     title: 'Ex-Convento de San Francisco',
     slug: { current: 'ex-convento-de-san-francisco' },
-    category: 'Historia',
+    category: 'Historia y Arqueología',
     categoryColor: '#8B4513',
     imageUrl: 'https://picsum.photos/seed/convento-sf-main/800/600',
     imageAlt: 'Fachada del Ex-Convento de San Francisco en Tepexi',
@@ -250,7 +251,7 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-3',
     title: 'Manantiales de Axamilpa',
     slug: { current: 'manantiales-de-axamilpa' },
-    category: 'Naturaleza',
+    category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
     imageUrl: 'https://picsum.photos/seed/manantiales-main/800/600',
     imageAlt: 'Manantiales de aguas cristalinas de Axamilpa',
@@ -280,7 +281,7 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-4',
     title: 'Cerro de Nopala',
     slug: { current: 'cerro-de-nopala' },
-    category: 'Naturaleza',
+    category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
     imageUrl: 'https://picsum.photos/seed/cerro-nopala-main/800/600',
     imageAlt: 'Vista panorámica desde el Cerro de Nopala',
@@ -309,8 +310,8 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-5',
     title: 'Museo Comunitario de Tepexi',
     slug: { current: 'museo-comunitario-de-tepexi' },
-    category: 'Historia',
-    categoryColor: '#8B4513',
+    category: 'Cultura y Espacios Públicos',
+    categoryColor: '#7B1FA2',
     imageUrl: 'https://picsum.photos/seed/museo-tepexi-main/800/600',
     imageAlt: 'Sala de exposición del Museo Comunitario de Tepexi',
     description: portableTextMulti(
@@ -339,7 +340,7 @@ export const mockLugares: MockLugar[] = [
     _id: 'lugar-6',
     title: 'Puente de Dios',
     slug: { current: 'puente-de-dios' },
-    category: 'Naturaleza',
+    category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
     imageUrl: 'https://picsum.photos/seed/puente-dios-main/800/600',
     imageAlt: 'Formación rocosa del Puente de Dios con río',

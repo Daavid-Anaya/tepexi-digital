@@ -34,5 +34,6 @@ export const allLugaresMapQuery = defineQuery(`*[_type == "lugar" && defined(coo
   slug,
   "category": category->name,
   "categoryColor": category->color,
+  "categoryType": category->type,
   coordinates
 }`)

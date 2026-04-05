@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Map, MapPin, Utensils, Palette, Info } from 'lucide-react'
+import { Map, MapPin, Utensils, Palette, ConciergeBell, Info, type LucideIcon } from 'lucide-react'
 import { getAllMapMarkers } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
@@ -10,36 +10,58 @@ export const metadata: Metadata = {
   description: 'Mapa interactivo de los atractivos de Tepexi de Rodríguez, Puebla.',
 }
 
-const LEGEND_ITEMS = [
+interface LegendCategory {
+  label: string
+  color: string
+}
+
+interface LegendType {
+  label: string
+  icon: LucideIcon
+  showCounter: boolean
+  categories: LegendCategory[]
+}
+
+const LEGEND_TYPES: LegendType[] = [
   {
-    label: 'Lugares turísticos',
-    description: 'Sitios naturales e históricos',
-    colorClass: 'bg-primary',
+    label: 'Lugares',
     icon: MapPin,
-    href: '/lugares',
+    showCounter: true,
+    categories: [
+      { label: 'Ecoturismo y Naturaleza', color: '#2E7D32' },
+      { label: 'Historia y Arqueología', color: '#8B4513' },
+      { label: 'Paleontología', color: '#00838F' },
+    ],
   },
   {
     label: 'Gastronomía',
-    description: 'Restaurantes y puestos típicos',
-    colorClass: 'bg-secondary',
     icon: Utensils,
-    href: '/gastronomia',
+    showCounter: true,
+    categories: [
+      { label: 'Gastronomía y Comercio Local', color: '#E65100' },
+    ],
   },
   {
     label: 'Cultura',
-    description: 'Sitios arqueológicos y museos',
-    colorClass: 'bg-accent',
     icon: Palette,
-    href: '/cultura',
+    showCounter: true,
+    categories: [
+      { label: 'Cultura y Espacios Públicos', color: '#7B1FA2' },
+    ],
+  },
+  {
+    label: 'Servicios',
+    icon: ConciergeBell,
+    showCounter: false,
+    categories: [
+      { label: 'Hospedaje', color: '#5D4037' }, 
+      { label: 'Banco', color: '#37474F' },
+    ],
   },
 ]
 
 export default async function MapaPage() {
   const markers = await getAllMapMarkers()
-
-  const lugaresCount = markers.filter((m) => m.type === 'lugar').length
-  const gastronomiaCount = markers.filter((m) => m.type === 'gastronomia').length
-  const culturaCount = markers.filter((m) => m.type === 'cultura').length
 
   return (
     <>
@@ -79,18 +101,18 @@ export default async function MapaPage() {
               <div className="text-2xl font-bold font-heading">{markers.length}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">puntos</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{lugaresCount}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">lugares</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{gastronomiaCount}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">gastro</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{culturaCount}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">cultura</div>
-            </div>
+            {LEGEND_TYPES.filter((type) => type.showCounter).map((type) => {
+              const count = type.categories.reduce(
+                (sum, cat) => sum + markers.filter((m) => m.category === cat.label).length,
+                0,
+              )
+              return (
+                <div key={type.label} className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+                  <div className="text-2xl font-bold font-heading">{count}</div>
+                  <div className="text-xs text-white/70 uppercase tracking-wide">{type.label}</div>
+                </div>
+              )
+            })}
           </div>
         </Container>
       </section>
@@ -104,25 +126,36 @@ export default async function MapaPage() {
                 Categorías
               </h2>
 
-              <div className="space-y-3">
-                {LEGEND_ITEMS.map((item) => {
-                  const Icon = item.icon
+              <div className="space-y-2">
+                {LEGEND_TYPES.map((type) => {
+                  const Icon = type.icon
                   return (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="flex items-start gap-3 bg-cream rounded-xl border border-stone/10 p-4 hover:border-stone/25 hover:shadow-sm transition-all group"
+                    <div
+                      key={type.label}
+                      className="bg-cream rounded-xl border border-stone/10 overflow-hidden"
                     >
-                      <div className={`flex-shrink-0 w-9 h-9 rounded-lg ${item.colorClass} flex items-center justify-center`}>
-                        <Icon className="w-4.5 h-4.5 text-white" />
+                      {/* Type header */}
+                      <div className="flex items-center gap-2.5 px-4 py-3 border-b border-stone/10">
+                        <Icon className="w-4 h-4 text-primary/70 flex-shrink-0" />
+                        <span className="font-heading font-semibold text-sm text-primary">
+                          {type.label}
+                        </span>
                       </div>
-                      <div>
-                        <div className="font-medium text-sm text-primary group-hover:text-primary-dark transition-colors">
-                          {item.label}
-                        </div>
-                        <div className="text-xs text-stone mt-0.5">{item.description}</div>
-                      </div>
-                    </Link>
+                      {/* Categories */}
+                      <ul className="px-4 py-2.5 space-y-2">
+                        {type.categories.map((cat) => (
+                          <li key={cat.label} className="flex items-center gap-2.5">
+                            <span
+                              className="flex-shrink-0 w-2.5 h-2.5 rounded-full"
+                              style={{ backgroundColor: cat.color }}
+                            />
+                            <span className="text-xs text-stone/80 leading-snug">
+                              {cat.label}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )
                 })}
               </div>
@@ -154,7 +187,7 @@ export default async function MapaPage() {
                 <DynamicLeafletMap
                   markers={markers}
                   center={{ lat: 18.5793, lng: -97.9218 }}
-                  zoom={14}
+                  zoom={13}
                 />
               </div>
             </div>

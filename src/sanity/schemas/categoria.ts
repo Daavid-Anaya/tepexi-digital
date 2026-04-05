@@ -29,6 +29,7 @@ export const categoria = defineType({
           { title: 'Lugar', value: 'lugar' },
           { title: 'Gastronomía', value: 'gastronomia' },
           { title: 'Cultura', value: 'cultura' },
+          { title: 'Servicios', value: 'servicios' },
         ],
         layout: 'radio',
       },

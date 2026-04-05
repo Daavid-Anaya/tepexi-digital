@@ -346,8 +346,19 @@ function getMockUpcomingEventos(): EventoListItem[] {
     .map(mockToEventoList)
 }
 
+const CATEGORY_TYPE_MAP: Record<string, 'lugar' | 'gastronomia' | 'cultura' | 'servicios'> = {
+  'Ecoturismo y Naturaleza': 'lugar',
+  'Historia y Arqueología': 'lugar',
+  'Paleontología': 'lugar',
+  'Hospedaje': 'lugar',
+  'Gastronomía y Comercio Local': 'gastronomia',
+  'Cultura y Espacios Públicos': 'cultura',
+  'Hotel': 'servicios',
+  'Banco': 'servicios',
+}
+
 function getMockMapMarkers(): MapMarker[] {
-  const lugarMarkers: MapMarker[] = mockLugares
+  return mockLugares
     .filter((l) => l.coordinates)
     .map((l) => ({
       id: l._id,
@@ -356,34 +367,8 @@ function getMockMapMarkers(): MapMarker[] {
       coordinates: l.coordinates!,
       category: l.category,
       categoryColor: l.categoryColor,
-      type: 'lugar' as const,
+      type: CATEGORY_TYPE_MAP[l.category] ?? 'lugar',
     }))
-
-  const gastronomiaMarkers: MapMarker[] = mockGastronomia
-    .filter((g) => g.coordinates)
-    .map((g) => ({
-      id: g._id,
-      title: g.title,
-      slug: g.slug.current,
-      coordinates: g.coordinates!,
-      category: g.category,
-      categoryColor: g.categoryColor,
-      type: 'gastronomia' as const,
-    }))
-
-  const culturaMarkers: MapMarker[] = mockCultura
-    .filter((c) => c.coordinates)
-    .map((c) => ({
-      id: c._id,
-      title: c.title,
-      slug: c.slug.current,
-      coordinates: c.coordinates!,
-      category: c.category,
-      categoryColor: c.categoryColor,
-      type: 'cultura' as const,
-    }))
-
-  return [...lugarMarkers, ...gastronomiaMarkers, ...culturaMarkers]
 }
 
 // ---------------------------------------------------------------------------
@@ -530,57 +515,30 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allLugaresMapQuery } = await import('@/sanity/queries/lugares')
-    const { allGastronomiaMapQuery } = await import('@/sanity/queries/gastronomia')
-    const { allCulturaMapQuery } = await import('@/sanity/queries/cultura')
+    const { data } = await sanityFetch({ query: allLugaresMapQuery })
+    const results = (data ?? []) as Array<{
+      _id: string
+      title: string | null
+      slug: { current: string } | null
+      category: string | null
+      categoryColor: string | null
+      categoryType: string | null
+      coordinates: { lat: number; lng: number } | null
+    }>
 
-    const [{ data: lugares }, { data: gastronomia }, { data: cultura }] = await Promise.all([
-      sanityFetch({ query: allLugaresMapQuery }),
-      sanityFetch({ query: allGastronomiaMapQuery }),
-      sanityFetch({ query: allCulturaMapQuery }),
-    ])
+    if (results.length === 0) return getMockMapMarkers()
 
-    // If ALL queries return empty, fall back to mock
-    const hasLugares = (lugares ?? []).length > 0
-    const hasGastronomia = (gastronomia ?? []).length > 0
-    const hasCultura = (cultura ?? []).length > 0
-
-    if (!hasLugares && !hasGastronomia && !hasCultura) {
-      return getMockMapMarkers()
-    }
-
-    type LugarMapItem = NonNullable<typeof lugares>[number]
-    type GastronomiaMapItem = NonNullable<typeof gastronomia>[number]
-    type CulturaMapItem = NonNullable<typeof cultura>[number]
-
-    return [
-      ...(lugares ?? []).map((l: LugarMapItem) => ({
+    return results
+      .filter((l) => l.coordinates && (l.coordinates.lat !== 0 || l.coordinates.lng !== 0))
+      .map((l) => ({
         id: l._id,
         title: l.title ?? '',
         slug: l.slug?.current ?? '',
-        coordinates: { lat: l.coordinates?.lat ?? 0, lng: l.coordinates?.lng ?? 0 },
+        coordinates: { lat: l.coordinates!.lat, lng: l.coordinates!.lng },
         category: l.category ?? '',
         categoryColor: l.categoryColor ?? '#8B4513',
-        type: 'lugar' as const,
-      })),
-      ...(gastronomia ?? []).map((g: GastronomiaMapItem) => ({
-        id: g._id,
-        title: g.title ?? '',
-        slug: g.slug?.current ?? '',
-        coordinates: { lat: g.coordinates?.lat ?? 0, lng: g.coordinates?.lng ?? 0 },
-        category: g.category ?? '',
-        categoryColor: g.categoryColor ?? '#2E7D32',
-        type: 'gastronomia' as const,
-      })),
-      ...(cultura ?? []).map((c: CulturaMapItem) => ({
-        id: c._id,
-        title: c.title ?? '',
-        slug: c.slug?.current ?? '',
-        coordinates: { lat: c.coordinates?.lat ?? 0, lng: c.coordinates?.lng ?? 0 },
-        category: c.category ?? '',
-        categoryColor: c.categoryColor ?? '#BF360C',
-        type: 'cultura' as const,
-      })),
-    ].filter((m) => m.coordinates.lat !== 0 || m.coordinates.lng !== 0)
+        type: (l.categoryType as 'lugar' | 'gastronomia' | 'cultura') ?? 'lugar',
+      }))
   } catch {
     return getMockMapMarkers()
   }

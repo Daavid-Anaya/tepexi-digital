@@ -31,7 +31,7 @@ export interface MapMarker {
   coordinates: Coordinates
   category: string
   categoryColor: string
-  type: 'lugar' | 'gastronomia' | 'cultura'
+  type: 'lugar' | 'gastronomia' | 'cultura' | 'servicios'
 }
 
 export interface EventCardProps {
