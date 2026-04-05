@@ -16,7 +16,7 @@ const centerMarker: MapMarker = {
   slug: '',
   coordinates: { lat: 18.5793, lng: -97.9218 },
   category: 'Municipio',
-  categoryColor: '#8B4513',
+  categoryColor: '#0c3ca1',
   type: 'lugar',
 }
 
@@ -90,7 +90,7 @@ export default function ComoLlegarPage() {
                 Cómo Llegar
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                Tepexi de Rodríguez se ubica en el sur del estado de Puebla, a menos de
+                Tepexi de Rodríguez se ubica en el sur del estado de Puebla, aproximadamente a
                 2 horas de la capital poblana.
               </p>
             </div>
