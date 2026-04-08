@@ -45,18 +45,22 @@ const exploraCards = [
   {
     title: 'Cantera Tlayúa',
     description: 'Fósiles de peces y plantas con 100 millones de años de antigüedad.',
+    image: '/images/cultura/cantera-tlayua.jpg',
   },
   {
     title: 'Pie de Vaca',
     description: 'Huellas petrificadas de camélidos y felinos del Pleistoceno.',
+    image: '/images/cultura/pie-de-vaca.jpg',
   },
   {
     title: 'Tepexi el Viejo',
     description: 'Imponente zona arqueológica de la antigua fortaleza popoloca.',
+    image: '/images/cultura/tepexi-el-viejo.jpg',
   },
   {
     title: 'Ex-convento de Santo Domingo',
     description: 'Joya de la arquitectura religiosa del siglo XVI.',
+    image: '/images/cultura/iglesia.jpg',
   },
 ] as const
 
@@ -172,7 +176,7 @@ export default async function CulturaPage() {
               </p>
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md">
                 <Image
-                  src="/images/cultura/prueba.jpg"
+                  src="/images/cultura/palacio-municipal.jpg"
                   alt="Crónicas históricas de Tepexi"
                   fill
                   className="object-cover"
@@ -235,12 +239,12 @@ export default async function CulturaPage() {
 
           {/* 4-col grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
-            {exploraCards.map(({ title, description }) => (
+            {exploraCards.map(({ title, description, image }) => (
               <Card key={title} className="flex flex-col">
                 {/* Card image */}
                 <div className="relative w-full aspect-square overflow-hidden">
                   <Image
-                    src="/images/cultura/prueba.jpg"
+                    src={image}
                     alt={title}
                     fill
                     className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
