@@ -57,6 +57,9 @@ export interface LugarDetail {
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
+// --- Servicio detail (same shape as Lugar) ---
+export type ServicioDetail = LugarDetail
+
 // --- Gastronomia list item ---
 export interface GastronomiaListItem {
   _id: string
@@ -337,6 +340,20 @@ export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> 
   }
 }
 
+export async function getServicioBySlug(slug: string): Promise<ServicioDetail | null> {
+  if (!USE_SANITY) return null
+
+  try {
+    const { sanityFetch } = await import('@/sanity/lib/live')
+    const { servicioBySlugQuery } = await import('@/sanity/queries/servicios')
+    const { data } = await sanityFetch({ query: servicioBySlugQuery, params: { slug } })
+    if (data) return data as ServicioDetail
+    return null
+  } catch {
+    return null
+  }
+}
+
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
   if (!USE_SANITY) return getMockGastronomiaList()
 
@@ -404,36 +421,50 @@ export async function getEventoBySlug(slug: string): Promise<EventoDetail | null
   }
 }
 
+type SanityMapRow = {
+  _id: string
+  title: string | null
+  slug: { current: string } | null
+  category: string | null
+  categoryColor: string | null
+  categoryType: string | null
+  coordinates: { lat: number; lng: number } | null
+}
+
+function sanityRowsToMarkers(rows: SanityMapRow[]): MapMarker[] {
+  return rows
+    .filter((r) => r.coordinates && (r.coordinates.lat !== 0 || r.coordinates.lng !== 0))
+    .map((r) => ({
+      id: r._id,
+      title: r.title ?? '',
+      slug: r.slug?.current ?? '',
+      coordinates: { lat: r.coordinates!.lat, lng: r.coordinates!.lng },
+      category: r.category ?? '',
+      categoryColor: r.categoryColor ?? '#8B4513',
+      type: (r.categoryType as MapMarker['type']) ?? 'lugar',
+    }))
+}
+
 export async function getAllMapMarkers(): Promise<MapMarker[]> {
   if (!USE_SANITY) return getMockMapMarkers()
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allLugaresMapQuery } = await import('@/sanity/queries/lugares')
-    const { data } = await sanityFetch({ query: allLugaresMapQuery })
-    const results = (data ?? []) as Array<{
-      _id: string
-      title: string | null
-      slug: { current: string } | null
-      category: string | null
-      categoryColor: string | null
-      categoryType: string | null
-      coordinates: { lat: number; lng: number } | null
-    }>
+    const { allServiciosMapQuery } = await import('@/sanity/queries/servicios')
 
-    if (results.length === 0) return getMockMapMarkers()
+    const [lugaresRes, serviciosRes] = await Promise.all([
+      sanityFetch({ query: allLugaresMapQuery }),
+      sanityFetch({ query: allServiciosMapQuery }),
+    ])
 
-    return results
-      .filter((l) => l.coordinates && (l.coordinates.lat !== 0 || l.coordinates.lng !== 0))
-      .map((l) => ({
-        id: l._id,
-        title: l.title ?? '',
-        slug: l.slug?.current ?? '',
-        coordinates: { lat: l.coordinates!.lat, lng: l.coordinates!.lng },
-        category: l.category ?? '',
-        categoryColor: l.categoryColor ?? '#8B4513',
-        type: (l.categoryType as 'lugar' | 'gastronomia' | 'cultura') ?? 'lugar',
-      }))
+    const lugarRows = (lugaresRes.data ?? []) as SanityMapRow[]
+    const servicioRows = (serviciosRes.data ?? []) as SanityMapRow[]
+    const allRows = [...lugarRows, ...servicioRows]
+
+    if (allRows.length === 0) return getMockMapMarkers()
+
+    return sanityRowsToMarkers(allRows)
   } catch {
     return getMockMapMarkers()
   }

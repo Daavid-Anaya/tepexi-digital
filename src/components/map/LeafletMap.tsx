@@ -31,6 +31,7 @@ const TYPE_PATHS: Record<string, string> = {
   lugar: '/lugares',
   gastronomia: '/gastronomia',
   cultura: '/cultura',
+  servicios: '/servicios',
 }
 
 export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
