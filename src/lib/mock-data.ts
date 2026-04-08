@@ -79,6 +79,12 @@ export interface MockLugar {
   seo: MockSeo
 }
 
+export interface MockFeaturedDish {
+  name: string
+  description: string | null
+  imageUrl: string | null
+}
+
 export interface MockGastronomia {
   _id: string
   title: string
@@ -94,8 +100,17 @@ export interface MockGastronomia {
   schedule: string | null
   cost: string | null
   dishType: string
-  featuredDishes: string[]
+  featuredDishes: MockFeaturedDish[]
   priceRange: string
+  origin: string | null
+  season: string | null
+  ingredients: string[] | null
+  pairings: string[] | null
+  history: ReturnType<typeof portableTextMulti> | null
+  quote: { text: string; author: string } | null
+  preparationTime: string | null
+  difficulty: string | null
+  servings: string | null
   recommendations: string | null
   seo: MockSeo
 }
@@ -395,8 +410,41 @@ export const mockGastronomia: MockGastronomia[] = [
     schedule: 'Disponible de octubre a noviembre (temporada)',
     cost: '$80–$120 MXN por porción',
     dishType: 'platillo-tipico',
-    featuredDishes: ['Mole de Caderas con tortillas', 'Caldo de caderas', 'Tasajo de chivo'],
+    featuredDishes: [
+      { name: 'Mole de Caderas con tortillas', description: 'La preparación clásica: caldo espeso de chivo servido en cazuela de barro acompañado de tortillas de maíz criollo recién hechas.', imageUrl: null },
+      { name: 'Caldo de caderas', description: 'Versión más ligera, el caldo de caderas sirve como entrada caliente con hierbas de monte y chile verde.', imageUrl: null },
+      { name: 'Tasajo de chivo', description: 'Carne de chivo curada al sol y asada en comal, acompañamiento tradicional durante la matanza.', imageUrl: null },
+    ],
     priceRange: 'medio',
+    origin: 'Mixteca Poblana, Puebla',
+    season: 'Octubre – Noviembre',
+    ingredients: [
+      'Caderas de chivo criollo',
+      'Chile costeño',
+      'Chile guajillo',
+      'Jitomate',
+      'Ejotes',
+      'Chipotles',
+      'Hierba santa',
+      'Aguacate',
+    ],
+    pairings: [
+      'Tortillas de maíz criollo',
+      'Mezcal artesanal',
+      'Frijoles negros de olla',
+      'Agua de chía con limón',
+    ],
+    history: portableTextMulti(
+      'La matanza del chivo en la Mixteca Poblana es uno de los rituales gastronómicos y culturales más antiguos del sur de Puebla. Cada octubre, cuando los chivos criollos criados durante el año alcanzan su punto de sazón, las familias mixtecas se reúnen para la matanza —un acto comunitario que no es solo económico, sino profundamente simbólico: marca el final del ciclo de crianza y el inicio del tiempo de abundancia compartida.',
+      'El Mole de Caderas nació de la necesidad de aprovechar los cortes menos valorados comercialmente, transformándolos con la alquimia de los chiles secos y las hierbas del monte en un platillo de una complejidad aromática extraordinaria. Hoy es el platillo identitario de Tepexi de Rodríguez y la Mixteca Poblana entera; su temporada convoca a la diáspora mixteca radicada en Puebla, la Ciudad de México y el norte del país. Quien nació en estas tierras reconoce el olor del mole de caderas como el olor del hogar.',
+    ),
+    quote: {
+      text: 'El mole de caderas no es solo un platillo, es el alma de la Mixteca que regresa cada otoño.',
+      author: 'Tradición oral de Tepexi de Rodríguez',
+    },
+    preparationTime: '3-4 horas',
+    difficulty: 'avanzado',
+    servings: '6-8 personas',
     recommendations:
       'Solo disponible en temporada otoñal (octubre-noviembre). Se recomienda reservar en restaurantes locales durante el Festival del Mole.',
     seo: {
@@ -429,13 +477,22 @@ export const mockGastronomia: MockGastronomia[] = [
     cost: 'Menú promedio $120–$180 MXN por persona',
     dishType: 'restaurante',
     featuredDishes: [
-      'Mole de Caderas (temporada)',
-      'Barbacoa de Chivo',
-      'Tamales de Tesmole',
-      'Caldo Tlalpeño de Chivo',
-      'Memelas con frijoles y queso',
+      { name: 'Mole de Caderas (temporada)', description: null, imageUrl: null },
+      { name: 'Barbacoa de Chivo', description: null, imageUrl: null },
+      { name: 'Tamales de Tesmole', description: null, imageUrl: null },
+      { name: 'Caldo Tlalpeño de Chivo', description: null, imageUrl: null },
+      { name: 'Memelas con frijoles y queso', description: null, imageUrl: null },
     ],
     priceRange: 'medio',
+    origin: null,
+    season: null,
+    ingredients: null,
+    pairings: null,
+    history: null,
+    quote: null,
+    preparationTime: null,
+    difficulty: null,
+    servings: null,
     recommendations:
       'Reservar en temporada de Mole de Caderas (octubre-noviembre). Probar los tamales de tesmole por la mañana.',
     seo: {
@@ -467,12 +524,21 @@ export const mockGastronomia: MockGastronomia[] = [
     cost: 'Antojitos desde $20 MXN, comida corrida $50–$80 MXN',
     dishType: 'mercado',
     featuredDishes: [
-      'Enchiladas verdes con pollo',
-      'Memelas con frijoles y queso',
-      'Tamales de rajas con queso',
-      'Comida corrida (mediodia)',
+      { name: 'Enchiladas verdes con pollo', description: null, imageUrl: null },
+      { name: 'Memelas con frijoles y queso', description: null, imageUrl: null },
+      { name: 'Tamales de rajas con queso', description: null, imageUrl: null },
+      { name: 'Comida corrida (mediodía)', description: null, imageUrl: null },
     ],
     priceRange: 'bajo',
+    origin: null,
+    season: null,
+    ingredients: null,
+    pairings: null,
+    history: null,
+    quote: null,
+    preparationTime: null,
+    difficulty: null,
+    servings: null,
     recommendations:
       'Ir temprano (antes de las 9 am) para encontrar los mejores tamales. Los domingos hay más variedad y ambiente.',
     seo: {
@@ -503,8 +569,21 @@ export const mockGastronomia: MockGastronomia[] = [
     schedule: 'Venta en mercado local y palenques (con cita previa)',
     cost: '$150–$350 MXN por botella 750 ml según productor',
     dishType: 'bebida',
-    featuredDishes: ['Mezcal Tobalá', 'Mezcal Espadín', 'Mezcal Cuishe'],
+    featuredDishes: [
+      { name: 'Mezcal Tobalá', description: null, imageUrl: null },
+      { name: 'Mezcal Espadín', description: null, imageUrl: null },
+      { name: 'Mezcal Cuishe', description: null, imageUrl: null },
+    ],
     priceRange: 'medio',
+    origin: null,
+    season: null,
+    ingredients: null,
+    pairings: null,
+    history: null,
+    quote: null,
+    preparationTime: null,
+    difficulty: null,
+    servings: null,
     recommendations:
       'Comprar directamente al productor para precio justo y mezcal auténtico. Preguntar en el mercado municipal por los productores locales.',
     seo: {
@@ -536,11 +615,20 @@ export const mockGastronomia: MockGastronomia[] = [
     cost: '$20–$30 MXN por tamal',
     dishType: 'platillo-tipico',
     featuredDishes: [
-      'Tamal de tesmole con chivo',
-      'Tamal de tesmole con pollo',
-      'Tamal de rajas con queso',
+      { name: 'Tamal de tesmole con chivo', description: null, imageUrl: null },
+      { name: 'Tamal de tesmole con pollo', description: null, imageUrl: null },
+      { name: 'Tamal de rajas con queso', description: null, imageUrl: null },
     ],
     priceRange: 'bajo',
+    origin: null,
+    season: null,
+    ingredients: null,
+    pairings: null,
+    history: null,
+    quote: null,
+    preparationTime: null,
+    difficulty: null,
+    servings: null,
     recommendations:
       'Llegar temprano al mercado para encontrarlos frescos. Ideales para llevar como souvenir gastronómico.',
     seo: {

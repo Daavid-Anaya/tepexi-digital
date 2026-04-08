@@ -89,8 +89,17 @@ export interface GastronomiaDetail {
   schedule: string | null
   cost: string | null
   dishType: string | null
-  featuredDishes: string[]
+  featuredDishes: Array<{ name: string; description: string | null; imageUrl: string | null }> | null
   priceRange: string | null
+  origin: string | null
+  season: string | null
+  ingredients: string[] | null
+  pairings: string[] | null
+  history: unknown[] | null
+  quote: { text: string; author: string } | null
+  preparationTime: string | null
+  difficulty: string | null
+  servings: string | null
   recommendations: unknown[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
@@ -210,8 +219,17 @@ function mockToGastronomiaDetail(g: MockGastronomia): GastronomiaDetail {
     schedule: g.schedule,
     cost: g.cost,
     dishType: g.dishType,
-    featuredDishes: g.featuredDishes,
+    featuredDishes: g.featuredDishes.length > 0 ? g.featuredDishes : null,
     priceRange: g.priceRange,
+    origin: g.origin,
+    season: g.season,
+    ingredients: g.ingredients,
+    pairings: g.pairings,
+    history: g.history ?? null,
+    quote: g.quote,
+    preparationTime: g.preparationTime,
+    difficulty: g.difficulty,
+    servings: g.servings,
     recommendations: stringToPortableText(g.recommendations),
     seo: g.seo,
   }

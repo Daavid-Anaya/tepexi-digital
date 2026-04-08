@@ -141,6 +141,83 @@ export const gastronomia = defineType({
       },
     }),
     defineField({
+      name: 'origin',
+      title: 'Origen del platillo',
+      type: 'string',
+      description: 'Ej: Mixteca Poblana, Puebla',
+    }),
+    defineField({
+      name: 'season',
+      title: 'Temporada',
+      type: 'string',
+      description: 'Ej: Octubre – Noviembre',
+    }),
+    defineField({
+      name: 'ingredients',
+      title: 'Ingredientes principales',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+    }),
+    defineField({
+      name: 'pairings',
+      title: 'Maridaje / Acompañamientos',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+    }),
+    defineField({
+      name: 'history',
+      title: 'Historia y contexto cultural',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
+    defineField({
+      name: 'quote',
+      title: 'Cita destacada',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'text',
+          title: 'Texto de la cita',
+          type: 'text',
+          rows: 3,
+          validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'author',
+          title: 'Autor / Fuente',
+          type: 'string',
+          validation: (rule) => rule.required(),
+        }),
+      ],
+    }),
+    defineField({
+      name: 'preparationTime',
+      title: 'Tiempo de preparación',
+      type: 'string',
+      description: 'Ej: 3-4 horas',
+    }),
+    defineField({
+      name: 'difficulty',
+      title: 'Dificultad',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Fácil', value: 'facil' },
+          { title: 'Medio', value: 'medio' },
+          { title: 'Avanzado', value: 'avanzado' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'servings',
+      title: 'Porciones',
+      type: 'string',
+      description: 'Ej: 4-6 personas',
+    }),
+    defineField({
       name: 'recommendations',
       title: 'Recomendaciones',
       type: 'array',
