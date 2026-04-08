@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
-import { getCulturaBySlug } from '@/lib/data'
+import { mockCultura } from '@/lib/mock-data'
 import { Container } from '@/components/ui/Container'
 import { ArrowLeft, MapPin, Clock, DollarSign, Star, Map, Palette } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
@@ -28,9 +28,26 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
+function findCulturaBySlug(slug: string) {
+  return mockCultura.find((c) => c.slug.current === slug) ?? null
+}
+
+function stringToPortableText(text: string | null): PortableTextBlock[] | null {
+  if (!text) return null
+  return [
+    {
+      _type: 'block',
+      _key: `mock-rec-${Date.now()}`,
+      style: 'normal',
+      children: [{ _type: 'span', text, marks: [] as string[] }],
+      markDefs: [],
+    },
+  ] as unknown as PortableTextBlock[]
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const item = await getCulturaBySlug(slug)
+  const item = findCulturaBySlug(slug)
   if (!item) return { title: 'No encontrado' }
   return {
     title: item.seo?.metaTitle ?? item.title ?? 'Cultura',
@@ -40,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CulturaDetailPage({ params }: Props) {
   const { slug } = await params
-  const item = await getCulturaBySlug(slug)
+  const item = findCulturaBySlug(slug)
 
   if (!item) {
     return (
@@ -158,7 +175,7 @@ export default async function CulturaDetailPage({ params }: Props) {
                     </h2>
                   </div>
                   <div className="text-stone leading-relaxed prose prose-sm prose-stone max-w-none">
-                    <PortableText value={item.recommendations as PortableTextBlock[]} />
+                    <PortableText value={stringToPortableText(item.recommendations)!} />
                   </div>
                 </div>
               )}

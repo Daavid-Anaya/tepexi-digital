@@ -4,8 +4,7 @@ import { defineQuery } from 'next-sanity'
 
 const allSlugsQuery = defineQuery(`{
   "lugares": *[_type == "lugar"]{ "slug": slug.current, _updatedAt },
-  "gastronomia": *[_type == "gastronomia"]{ "slug": slug.current, _updatedAt },
-  "cultura": *[_type == "cultura"]{ "slug": slug.current, _updatedAt }
+  "gastronomia": *[_type == "gastronomia"]{ "slug": slug.current, _updatedAt }
 }`)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -37,10 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(data?.gastronomia ?? []).map((g: SlugEntry) => ({
       url: `${baseUrl}/gastronomia/${g.slug}`,
       lastModified: new Date(g._updatedAt),
-    })),
-    ...(data?.cultura ?? []).map((c: SlugEntry) => ({
-      url: `${baseUrl}/cultura/${c.slug}`,
-      lastModified: new Date(c._updatedAt),
     })),
   ]
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from 'lucide-react'
-import { getAllCultura } from '@/lib/data'
+import { mockCultura } from '@/lib/mock-data'
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import type { PlaceCardProps } from '@/types'
@@ -85,9 +85,7 @@ const tradicionesItems = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function CulturaPage() {
-  const data = await getAllCultura()
-
-  const places: PlaceCardProps[] = data.map((item) => ({
+  const places: PlaceCardProps[] = mockCultura.map((item) => ({
     title: item.title,
     slug: item.slug.current,
     category: item.category,

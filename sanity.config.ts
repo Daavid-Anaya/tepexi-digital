@@ -7,7 +7,6 @@ import {
   CogIcon,
   PinIcon,
   BasketIcon,
-  BookIcon,
   CalendarIcon,
   TagIcon,
 } from '@sanity/icons'
@@ -62,13 +61,6 @@ export default defineConfig({
               .icon(BasketIcon)
               .child(
                 S.documentTypeList('gastronomia').title('Gastronomia'),
-              ),
-
-            S.listItem()
-              .title('Cultura')
-              .icon(BookIcon)
-              .child(
-                S.documentTypeList('cultura').title('Cultura'),
               ),
 
             S.listItem()

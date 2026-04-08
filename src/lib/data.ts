@@ -11,12 +11,10 @@ import type { MapMarker } from '@/types'
 import {
   mockLugares,
   mockGastronomia,
-  mockCultura,
   mockEventos,
   mockSettings,
   type MockLugar,
   type MockGastronomia,
-  type MockCultura,
   type MockEvento,
   type MockSettings,
   type SocialLink,
@@ -90,38 +88,6 @@ export interface GastronomiaDetail {
   dishType: string | null
   featuredDishes: string[]
   priceRange: string | null
-  recommendations: unknown[] | null
-  seo: { metaTitle: string | null; metaDescription: string | null } | null
-}
-
-// --- Cultura list item ---
-export interface CulturaListItem {
-  _id: string
-  title: string
-  slug: { current: string }
-  category: string
-  categoryColor: string
-  imageUrl: string
-  imageAlt: string
-  address: string | null
-  coordinates: { lat: number; lng: number } | null
-  culturalType: string | null
-}
-
-// --- Cultura detail ---
-export interface CulturaDetail {
-  _id: string
-  title: string
-  slug: { current: string }
-  category: string
-  categoryColor: string
-  description: unknown[] | null
-  images: Array<{ url: string; alt: string; asset: { url: string } }>
-  coordinates: { lat: number; lng: number } | null
-  address: string | null
-  schedule: string | null
-  cost: string | null
-  culturalType: string | null
   recommendations: unknown[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
@@ -248,40 +214,6 @@ function mockToGastronomiaDetail(g: MockGastronomia): GastronomiaDetail {
   }
 }
 
-function mockToCulturaList(c: MockCultura): CulturaListItem {
-  return {
-    _id: c._id,
-    title: c.title,
-    slug: c.slug,
-    category: c.category,
-    categoryColor: c.categoryColor,
-    imageUrl: c.imageUrl,
-    imageAlt: c.imageAlt,
-    address: c.address,
-    coordinates: c.coordinates,
-    culturalType: c.culturalType,
-  }
-}
-
-function mockToCulturaDetail(c: MockCultura): CulturaDetail {
-  return {
-    _id: c._id,
-    title: c.title,
-    slug: c.slug,
-    category: c.category,
-    categoryColor: c.categoryColor,
-    description: c.description,
-    images: c.images,
-    coordinates: c.coordinates,
-    address: c.address,
-    schedule: c.schedule,
-    cost: c.cost,
-    culturalType: c.culturalType,
-    recommendations: stringToPortableText(c.recommendations),
-    seo: c.seo,
-  }
-}
-
 function mockToEventoList(e: MockEvento): EventoListItem {
   return {
     _id: e._id,
@@ -332,10 +264,6 @@ function getMockLugaresList(): LugarListItem[] {
 
 function getMockGastronomiaList(): GastronomiaListItem[] {
   return mockGastronomia.map(mockToGastronomiaList)
-}
-
-function getMockCulturaList(): CulturaListItem[] {
-  return mockCultura.map(mockToCulturaList)
 }
 
 function getMockUpcomingEventos(): EventoListItem[] {
@@ -439,39 +367,6 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
   } catch {
     const found = mockGastronomia.find((g) => g.slug.current === slug)
     return found ? mockToGastronomiaDetail(found) : null
-  }
-}
-
-export async function getAllCultura(): Promise<CulturaListItem[]> {
-  if (!USE_SANITY) return getMockCulturaList()
-
-  try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { allCulturaQuery } = await import('@/sanity/queries/cultura')
-    const { data } = await sanityFetch({ query: allCulturaQuery })
-    const results = (data ?? []) as CulturaListItem[]
-    return results.length > 0 ? results : getMockCulturaList()
-  } catch {
-    return getMockCulturaList()
-  }
-}
-
-export async function getCulturaBySlug(slug: string): Promise<CulturaDetail | null> {
-  if (!USE_SANITY) {
-    const found = mockCultura.find((c) => c.slug.current === slug)
-    return found ? mockToCulturaDetail(found) : null
-  }
-
-  try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { culturaBySlugQuery } = await import('@/sanity/queries/cultura')
-    const { data } = await sanityFetch({ query: culturaBySlugQuery, params: { slug } })
-    if (data) return data as CulturaDetail
-    const found = mockCultura.find((c) => c.slug.current === slug)
-    return found ? mockToCulturaDetail(found) : null
-  } catch {
-    const found = mockCultura.find((c) => c.slug.current === slug)
-    return found ? mockToCulturaDetail(found) : null
   }
 }
 
