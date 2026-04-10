@@ -69,8 +69,6 @@ export interface GastronomiaListItem {
   categoryColor: string
   imageUrl: string
   imageAlt: string
-  address: string | null
-  coordinates: { lat: number; lng: number } | null
   priceRange: string | null
   dishType: string | null
 }
@@ -82,25 +80,21 @@ export interface GastronomiaDetail {
   slug: { current: string }
   category: string
   categoryColor: string
+  introduction: unknown[] | null
   description: unknown[] | null
   images: Array<{ url: string; alt: string; asset: { url: string } }>
-  coordinates: { lat: number; lng: number } | null
-  address: string | null
-  schedule: string | null
+  descriptionImage: { url: string; alt: string } | null
   cost: string | null
   dishType: string | null
-  featuredDishes: Array<{ name: string; description: string | null; imageUrl: string | null }> | null
   priceRange: string | null
   origin: string | null
   season: string | null
-  ingredients: string[] | null
-  pairings: string[] | null
-  history: unknown[] | null
   quote: { text: string; author: string } | null
   preparationTime: string | null
   difficulty: string | null
   servings: string | null
-  recommendations: unknown[] | null
+  keyIngredients: Array<{ name: string | null; description: string | null; icon: string | null; imageUrl: string | null }> | null
+  preparationSteps: Array<{ title: string; description: string; duration: string | null }> | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
@@ -198,8 +192,6 @@ function mockToGastronomiaList(g: MockGastronomia): GastronomiaListItem {
     categoryColor: g.categoryColor,
     imageUrl: g.imageUrl,
     imageAlt: g.imageAlt,
-    address: g.address,
-    coordinates: g.coordinates,
     priceRange: g.priceRange,
     dishType: g.dishType,
   }
@@ -212,25 +204,21 @@ function mockToGastronomiaDetail(g: MockGastronomia): GastronomiaDetail {
     slug: g.slug,
     category: g.category,
     categoryColor: g.categoryColor,
+    introduction: g.introduction ?? null,
     description: g.description,
     images: g.images,
-    coordinates: g.coordinates,
-    address: g.address,
-    schedule: g.schedule,
+    descriptionImage: g.descriptionImage,
     cost: g.cost,
     dishType: g.dishType,
-    featuredDishes: g.featuredDishes.length > 0 ? g.featuredDishes : null,
     priceRange: g.priceRange,
     origin: g.origin,
     season: g.season,
-    ingredients: g.ingredients,
-    pairings: g.pairings,
-    history: g.history ?? null,
     quote: g.quote,
     preparationTime: g.preparationTime,
     difficulty: g.difficulty,
     servings: g.servings,
-    recommendations: stringToPortableText(g.recommendations),
+    keyIngredients: g.keyIngredients.length > 0 ? g.keyIngredients : null,
+    preparationSteps: g.preparationSteps.length > 0 ? g.preparationSteps : null,
     seo: g.seo,
   }
 }

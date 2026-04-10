@@ -8,8 +8,6 @@ export const allGastronomiaQuery = defineQuery(`*[_type == "gastronomia"] | orde
   "categoryColor": category->color,
   "imageUrl": images[0].asset->url,
   "imageAlt": images[0].alt,
-  coordinates,
-  address,
   priceRange,
   dishType
 }`)
@@ -20,33 +18,20 @@ export const gastronomiaBySlugQuery = defineQuery(`*[_type == "gastronomia" && s
   slug,
   "category": category->name,
   "categoryColor": category->color,
+  introduction,
   description,
   "images": images[] { alt, "url": asset->url, "asset": { "url": asset->url } },
-  coordinates,
-  address,
-  schedule,
+  "descriptionImage": descriptionImage { alt, "url": asset->url },
   cost,
   dishType,
-  featuredDishes[] { name, description, "imageUrl": image.asset->url },
   priceRange,
   origin,
   season,
-  ingredients,
-  pairings,
-  history,
   quote,
   preparationTime,
   difficulty,
   servings,
-  recommendations,
+  keyIngredients[] { name, description, icon, "imageUrl": image.asset->url },
+  preparationSteps[] { title, description, duration },
   seo
-}`)
-
-export const allGastronomiaMapQuery = defineQuery(`*[_type == "gastronomia" && defined(coordinates)] {
-  _id,
-  title,
-  slug,
-  "category": category->name,
-  "categoryColor": category->color,
-  coordinates
 }`)

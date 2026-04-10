@@ -100,7 +100,7 @@ export default async function GastronomiaPage() {
     categoryColor: item.categoryColor,
     imageUrl: item.imageUrl,
     imageAlt: item.imageAlt,
-    excerpt: item.address ?? undefined,
+    excerpt: undefined,
   }))
 
   return (

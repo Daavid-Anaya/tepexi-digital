@@ -79,12 +79,6 @@ export interface MockLugar {
   seo: MockSeo
 }
 
-export interface MockFeaturedDish {
-  name: string
-  description: string | null
-  imageUrl: string | null
-}
-
 export interface MockGastronomia {
   _id: string
   title: string
@@ -93,25 +87,21 @@ export interface MockGastronomia {
   categoryColor: string
   imageUrl: string
   imageAlt: string
+  introduction: ReturnType<typeof portableTextMulti> | null
   description: ReturnType<typeof portableTextMulti>
   images: MockImage[]
-  coordinates: MockCoordinates | null
-  address: string | null
-  schedule: string | null
+  descriptionImage: { url: string; alt: string } | null
   cost: string | null
   dishType: string
-  featuredDishes: MockFeaturedDish[]
   priceRange: string
   origin: string | null
   season: string | null
-  ingredients: string[] | null
-  pairings: string[] | null
-  history: ReturnType<typeof portableTextMulti> | null
   quote: { text: string; author: string } | null
   preparationTime: string | null
   difficulty: string | null
   servings: string | null
-  recommendations: string | null
+  keyIngredients: Array<{ name: string | null; description: string | null; icon: string | null; imageUrl: string | null }>
+  preparationSteps: Array<{ title: string; description: string; duration: string | null }>
   seo: MockSeo
 }
 
@@ -395,6 +385,9 @@ export const mockGastronomia: MockGastronomia[] = [
     categoryColor: '#BF360C',
     imageUrl: 'https://picsum.photos/seed/mole-caderas-main/800/600',
     imageAlt: 'Platillo de Mole de Caderas tradicional de la Mixteca Poblana',
+    introduction: portableTextMulti(
+      'Un ritual gastronómico que marca el inicio del otoño en la Mixteca Poblana. El Mole de Caderas es mucho más que un platillo: es la identidad de un pueblo entero condensada en una cazuela de barro.',
+    ),
     description: portableTextMulti(
       'El Mole de Caderas es el platillo más representativo e identitario de la Mixteca Poblana. Se prepara con las caderas —parte de la cadera y muslo— del chivo criollo, cocidas lentamente en un caldo especiado con chiles secos, jitomate y hierbas de la región. Su preparación es todo un ritual gastronómico que marca el inicio del otoño.',
       'La temporada del Mole de Caderas va de octubre a noviembre, coincidiendo con la matanza tradicional del chivo —una costumbre ancestral que reúne a familias enteras y constituye un evento social y cultural de gran importancia para los pueblos mixtecos.',
@@ -405,39 +398,12 @@ export const mockGastronomia: MockGastronomia[] = [
       img('mole-caderas-2', 'Preparación tradicional del mole de caderas', 1200, 800),
       img('mole-caderas-3', 'Ingredientes del mole de caderas', 1200, 800),
     ],
-    coordinates: null,
-    address: null,
-    schedule: 'Disponible de octubre a noviembre (temporada)',
+    descriptionImage: { url: 'https://picsum.photos/seed/mole-desc/600/800', alt: 'Detalle del mole de caderas' },
     cost: '$80–$120 MXN por porción',
     dishType: 'platillo-tipico',
-    featuredDishes: [
-      { name: 'Mole de Caderas con tortillas', description: 'La preparación clásica: caldo espeso de chivo servido en cazuela de barro acompañado de tortillas de maíz criollo recién hechas.', imageUrl: null },
-      { name: 'Caldo de caderas', description: 'Versión más ligera, el caldo de caderas sirve como entrada caliente con hierbas de monte y chile verde.', imageUrl: null },
-      { name: 'Tasajo de chivo', description: 'Carne de chivo curada al sol y asada en comal, acompañamiento tradicional durante la matanza.', imageUrl: null },
-    ],
     priceRange: 'medio',
     origin: 'Mixteca Poblana, Puebla',
     season: 'Octubre – Noviembre',
-    ingredients: [
-      'Caderas de chivo criollo',
-      'Chile costeño',
-      'Chile guajillo',
-      'Jitomate',
-      'Ejotes',
-      'Chipotles',
-      'Hierba santa',
-      'Aguacate',
-    ],
-    pairings: [
-      'Tortillas de maíz criollo',
-      'Mezcal artesanal',
-      'Frijoles negros de olla',
-      'Agua de chía con limón',
-    ],
-    history: portableTextMulti(
-      'La matanza del chivo en la Mixteca Poblana es uno de los rituales gastronómicos y culturales más antiguos del sur de Puebla. Cada octubre, cuando los chivos criollos criados durante el año alcanzan su punto de sazón, las familias mixtecas se reúnen para la matanza —un acto comunitario que no es solo económico, sino profundamente simbólico: marca el final del ciclo de crianza y el inicio del tiempo de abundancia compartida.',
-      'El Mole de Caderas nació de la necesidad de aprovechar los cortes menos valorados comercialmente, transformándolos con la alquimia de los chiles secos y las hierbas del monte en un platillo de una complejidad aromática extraordinaria. Hoy es el platillo identitario de Tepexi de Rodríguez y la Mixteca Poblana entera; su temporada convoca a la diáspora mixteca radicada en Puebla, la Ciudad de México y el norte del país. Quien nació en estas tierras reconoce el olor del mole de caderas como el olor del hogar.',
-    ),
     quote: {
       text: 'El mole de caderas no es solo un platillo, es el alma de la Mixteca que regresa cada otoño.',
       author: 'Tradición oral de Tepexi de Rodríguez',
@@ -445,8 +411,20 @@ export const mockGastronomia: MockGastronomia[] = [
     preparationTime: '3-4 horas',
     difficulty: 'avanzado',
     servings: '6-8 personas',
-    recommendations:
-      'Solo disponible en temporada otoñal (octubre-noviembre). Se recomienda reservar en restaurantes locales durante el Festival del Mole.',
+    keyIngredients: [
+      { name: 'Caderas de Chivo Criollo', description: 'La pieza central del platillo. El chivo criollo de la Mixteca se cría en libertad entre mezquites y nopales, lo que le da un sabor inigualable, terroso y concentrado.', icon: 'utensils', imageUrl: null },
+      { name: 'Chile Costeño', description: null, icon: 'grain', imageUrl: null },
+      { name: 'Fuego de Leña', description: null, icon: 'flame', imageUrl: null },
+      { name: null, description: null, icon: null, imageUrl: 'https://picsum.photos/seed/ingredient-mix/600/400' },
+      { name: 'Hierba Santa', description: 'Hoja aromática endémica de la región que aporta un perfume anisado sutil. Se añade en los últimos minutos de cocción para preservar su esencia.', icon: 'leaf', imageUrl: null },
+    ],
+    preparationSteps: [
+      { title: 'Selección y limpieza', description: 'Se seleccionan las caderas del chivo criollo, se lavan cuidadosamente y se dejan reposar con sal gruesa y hierbas de monte.', duration: '30 minutos' },
+      { title: 'Tostado de chiles', description: 'Los chiles costeño y guajillo se tuestan en comal de barro a fuego medio hasta que sueltan su aroma, sin quemarse. Se hidratan en agua caliente.', duration: '20 minutos' },
+      { title: 'Preparación del recaudo', description: 'Los chiles hidratados se muelen en molcajete con jitomate asado, ajo y especias hasta obtener una pasta espesa y aromática.', duration: '45 minutos' },
+      { title: 'Cocción lenta', description: 'Las caderas se cocinan a fuego bajo en cazuela de barro con el recaudo, ejotes y chipotles. El fuego debe ser constante pero suave para que la carne se desprenda del hueso.', duration: '2-3 horas' },
+      { title: 'Reposo y servicio', description: 'Se deja reposar 15 minutos fuera del fuego. Se sirve en plato hondo de barro con caldo abundante, hierba santa fresca por encima y tortillas de maíz criollo recién hechas.', duration: '15 minutos' },
+    ],
     seo: {
       metaTitle: 'Mole de Caderas – Gastronomía Típica de Tepexi de Rodríguez',
       metaDescription:
@@ -461,6 +439,7 @@ export const mockGastronomia: MockGastronomia[] = [
     categoryColor: '#BF360C',
     imageUrl: 'https://picsum.photos/seed/rest-mixteca-main/800/600',
     imageAlt: 'Interior del Restaurante La Mixteca en Tepexi de Rodríguez',
+    introduction: null,
     description: portableTextMulti(
       'Restaurante La Mixteca es el establecimiento gastronómico más reconocido de Tepexi de Rodríguez. Fundado en 1989 por la familia Flores, ha mantenido la tradición culinaria mixteco-poblana a través de tres generaciones, siendo el lugar de referencia para conocer la cocina auténtica de la región.',
       'Su menú destaca por el Mole de Caderas en temporada —el más solicitado de la región—, la Barbacoa de Chivo preparada en horno de tierra con magueyes, y los Tamales de Tesmole rellenos de chivo con salsa de tomatillo verde y epazote. Todo elaborado con productos locales y técnicas tradicionales.',
@@ -471,30 +450,18 @@ export const mockGastronomia: MockGastronomia[] = [
       img('rest-mixteca-2', 'Platillos típicos en La Mixteca', 1200, 800),
       img('rest-mixteca-3', 'Cocina tradicional en Restaurante La Mixteca', 1200, 800),
     ],
-    coordinates: { lat: 18.579, lng: -97.921 },
-    address: 'Calle Independencia 45, Centro, Tepexi de Rodríguez, Puebla',
-    schedule: 'Lunes a domingo, 8:00 am – 9:00 pm',
+    descriptionImage: null,
     cost: 'Menú promedio $120–$180 MXN por persona',
     dishType: 'restaurante',
-    featuredDishes: [
-      { name: 'Mole de Caderas (temporada)', description: null, imageUrl: null },
-      { name: 'Barbacoa de Chivo', description: null, imageUrl: null },
-      { name: 'Tamales de Tesmole', description: null, imageUrl: null },
-      { name: 'Caldo Tlalpeño de Chivo', description: null, imageUrl: null },
-      { name: 'Memelas con frijoles y queso', description: null, imageUrl: null },
-    ],
     priceRange: 'medio',
     origin: null,
     season: null,
-    ingredients: null,
-    pairings: null,
-    history: null,
     quote: null,
     preparationTime: null,
     difficulty: null,
     servings: null,
-    recommendations:
-      'Reservar en temporada de Mole de Caderas (octubre-noviembre). Probar los tamales de tesmole por la mañana.',
+    keyIngredients: [],
+    preparationSteps: [],
     seo: {
       metaTitle: 'Restaurante La Mixteca – Cocina Regional en Tepexi de Rodríguez',
       metaDescription:
@@ -509,6 +476,7 @@ export const mockGastronomia: MockGastronomia[] = [
     categoryColor: '#BF360C',
     imageUrl: 'https://picsum.photos/seed/mercado-tepexi-main/800/600',
     imageAlt: 'Puestos de comida en el Mercado Municipal de Tepexi',
+    introduction: null,
     description: portableTextMulti(
       'El Mercado Municipal de Tepexi de Rodríguez es el corazón culinario del municipio. En su planta baja se concentran los puestos de comida tradicional donde las cocineras locales —principalmente mujeres mayores— sirven los antojitos y platillos de la Mixteca Poblana desde las primeras horas de la mañana.',
       'El desayuno en el mercado es una experiencia imperdible: enchiladas verdes, memelas con frijoles, tamales de rajas y tostadas de tinga de chivo. Al mediodía se sirven comidas corridas de tres tiempos con sopas de fideo, guisados de la región y arroz rojo al estilo mixteco.',
@@ -518,29 +486,18 @@ export const mockGastronomia: MockGastronomia[] = [
       img('mercado-1', 'Vista del mercado municipal de Tepexi', 1200, 800),
       img('mercado-2', 'Cocinera tradicional en el mercado', 1200, 800),
     ],
-    coordinates: { lat: 18.5792, lng: -97.922 },
-    address: 'Av. Juárez s/n, Centro, Tepexi de Rodríguez, Puebla',
-    schedule: 'Todos los días, 7:00 am – 3:00 pm (domingos hasta las 5:00 pm)',
+    descriptionImage: null,
     cost: 'Antojitos desde $20 MXN, comida corrida $50–$80 MXN',
     dishType: 'mercado',
-    featuredDishes: [
-      { name: 'Enchiladas verdes con pollo', description: null, imageUrl: null },
-      { name: 'Memelas con frijoles y queso', description: null, imageUrl: null },
-      { name: 'Tamales de rajas con queso', description: null, imageUrl: null },
-      { name: 'Comida corrida (mediodía)', description: null, imageUrl: null },
-    ],
     priceRange: 'bajo',
     origin: null,
     season: null,
-    ingredients: null,
-    pairings: null,
-    history: null,
     quote: null,
     preparationTime: null,
     difficulty: null,
     servings: null,
-    recommendations:
-      'Ir temprano (antes de las 9 am) para encontrar los mejores tamales. Los domingos hay más variedad y ambiente.',
+    keyIngredients: [],
+    preparationSteps: [],
     seo: {
       metaTitle: 'Mercado Municipal – Gastronomía de Tepexi de Rodríguez',
       metaDescription:
@@ -555,6 +512,7 @@ export const mockGastronomia: MockGastronomia[] = [
     categoryColor: '#BF360C',
     imageUrl: 'https://picsum.photos/seed/mezcal-tepexi-main/800/600',
     imageAlt: 'Mezcal artesanal de Tepexi servido en jícara',
+    introduction: null,
     description: portableTextMulti(
       'El mezcal artesanal de Tepexi de Rodríguez es una bebida con historia y terroir propios. Elaborado principalmente con agave tobalá y agave espadín que crecen en forma silvestre en las laderas de la Mixteca, su producción sigue métodos ancestrales que no han cambiado en siglos: cocción en horno de tierra, molienda en tahona y fermentación en tinas de madera.',
       'Los papalometeros —productores de mezcal— de Tepexi y sus comunidades vecinas elaboran pequeñas partidas de mezcal que se distinguen por su complejidad aromática: notas de tierra húmeda, miel de agave, hierbas silvestres y un ligero ahumado característico del maguey mixteco.',
@@ -564,28 +522,18 @@ export const mockGastronomia: MockGastronomia[] = [
       img('mezcal-1', 'Producción artesanal de mezcal en Tepexi', 1200, 800),
       img('mezcal-2', 'Agave silvestre en la Mixteca Poblana', 1200, 800),
     ],
-    coordinates: null,
-    address: 'Varios productores en Tepexi de Rodríguez y comunidades',
-    schedule: 'Venta en mercado local y palenques (con cita previa)',
+    descriptionImage: null,
     cost: '$150–$350 MXN por botella 750 ml según productor',
     dishType: 'bebida',
-    featuredDishes: [
-      { name: 'Mezcal Tobalá', description: null, imageUrl: null },
-      { name: 'Mezcal Espadín', description: null, imageUrl: null },
-      { name: 'Mezcal Cuishe', description: null, imageUrl: null },
-    ],
     priceRange: 'medio',
     origin: null,
     season: null,
-    ingredients: null,
-    pairings: null,
-    history: null,
     quote: null,
     preparationTime: null,
     difficulty: null,
     servings: null,
-    recommendations:
-      'Comprar directamente al productor para precio justo y mezcal auténtico. Preguntar en el mercado municipal por los productores locales.',
+    keyIngredients: [],
+    preparationSteps: [],
     seo: {
       metaTitle: 'Mezcal Artesanal – Tepexi de Rodríguez, Puebla',
       metaDescription:
@@ -600,6 +548,7 @@ export const mockGastronomia: MockGastronomia[] = [
     categoryColor: '#BF360C',
     imageUrl: 'https://picsum.photos/seed/tamales-tesmole-main/800/600',
     imageAlt: 'Tamales de tesmole tradicionales de Tepexi',
+    introduction: null,
     description: portableTextMulti(
       'Los Tamales de Tesmole son un platillo emblemático de la gastronomía de Tepexi de Rodríguez y la Mixteca Poblana en general. El tesmole es una salsa espesa preparada con chiles ancho y mulato, tomate verde, pepita de calabaza molida, epazote y especias, que da un sabor único e inconfundible al relleno de chivo o pollo del tamal.',
       'La masa de los tamales es de maíz criollo nixtamalizado, extendida sobre hoja de milpa o totomoxtle. Su textura es más densa que los tamales del centro de México, con un sabor profundo que refleja la identidad culinaria de la Mixteca.',
@@ -609,28 +558,18 @@ export const mockGastronomia: MockGastronomia[] = [
       img('tamales-1', 'Tamales de tesmole recién salidos del vaporero', 1200, 800),
       img('tamales-2', 'Preparación de tamales en familia', 1200, 800),
     ],
-    coordinates: null,
-    address: 'Disponible en el Mercado Municipal y restaurantes locales',
-    schedule: 'Mañanas en el mercado (7:00 am – 12:00 pm), todo el día en restaurantes',
+    descriptionImage: null,
     cost: '$20–$30 MXN por tamal',
     dishType: 'platillo-tipico',
-    featuredDishes: [
-      { name: 'Tamal de tesmole con chivo', description: null, imageUrl: null },
-      { name: 'Tamal de tesmole con pollo', description: null, imageUrl: null },
-      { name: 'Tamal de rajas con queso', description: null, imageUrl: null },
-    ],
     priceRange: 'bajo',
     origin: null,
     season: null,
-    ingredients: null,
-    pairings: null,
-    history: null,
     quote: null,
     preparationTime: null,
     difficulty: null,
     servings: null,
-    recommendations:
-      'Llegar temprano al mercado para encontrarlos frescos. Ideales para llevar como souvenir gastronómico.',
+    keyIngredients: [],
+    preparationSteps: [],
     seo: {
       metaTitle: 'Tamales de Tesmole – Gastronomía de Tepexi de Rodríguez',
       metaDescription:

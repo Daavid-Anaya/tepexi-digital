@@ -40,7 +40,7 @@ export default async function HomePage() {
     categoryColor: g.categoryColor,
     imageUrl: g.imageUrl,
     imageAlt: g.imageAlt,
-    excerpt: g.address ?? undefined,
+    excerpt: undefined,
   }))
 
   const upcomingEvents: EventCardProps[] = eventosData.slice(0, 3).map((e) => ({

@@ -28,6 +28,12 @@ export const gastronomia = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'introduction',
+      title: 'Introducción',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
+    defineField({
       name: 'description',
       title: 'Descripción',
       type: 'array',
@@ -52,33 +58,101 @@ export const gastronomia = defineType({
       ],
     }),
     defineField({
-      name: 'coordinates',
-      title: 'Coordenadas',
-      type: 'object',
+      name: 'descriptionImage',
+      title: 'Imagen de descripción',
+      type: 'image',
+      options: { hotspot: true },
       fields: [
-        defineField({
-          name: 'lat',
-          title: 'Latitud',
-          type: 'number',
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: 'lng',
-          title: 'Longitud',
-          type: 'number',
-          validation: (rule) => rule.required(),
-        }),
+        {
+          name: 'alt',
+          title: 'Texto alternativo',
+          type: 'string',
+        },
       ],
+      description: 'Imagen que acompaña la descripción del platillo',
     }),
     defineField({
-      name: 'address',
-      title: 'Dirección',
-      type: 'string',
+      name: 'keyIngredients',
+      title: 'Ingredientes clave',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Nombre',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'description',
+              title: 'Descripción',
+              type: 'text',
+              rows: 3,
+            }),
+            defineField({
+              name: 'icon',
+              title: 'Ícono',
+              type: 'string',
+              description: 'Nombre del ícono: utensils, flame, leaf, grain (semillas/puntos)',
+              options: {
+                list: [
+                  { title: 'Cubiertos', value: 'utensils' },
+                  { title: 'Llama', value: 'flame' },
+                  { title: 'Hoja', value: 'leaf' },
+                  { title: 'Grano/Semillas', value: 'grain' },
+                ],
+              },
+            }),
+            defineField({
+              name: 'image',
+              title: 'Imagen (para tarjeta tipo imagen)',
+              type: 'image',
+              options: { hotspot: true },
+            }),
+          ],
+          preview: {
+            select: { title: 'name' },
+          },
+        },
+      ],
+      description: 'Ingredientes clave con ícono. Para el grid: tarjeta 1 (2col), tarjeta 2 (1col cuadrada), tarjeta 3 (1col cuadrada), tarjeta 4 (imagen 2col), tarjeta 5 (2col)',
     }),
     defineField({
-      name: 'schedule',
-      title: 'Horario',
-      type: 'string',
+      name: 'preparationSteps',
+      title: 'Pasos de preparación',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Título del paso',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'description',
+              title: 'Descripción',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'duration',
+              title: 'Duración',
+              type: 'string',
+              description: 'Ej: 30 minutos, 2 horas',
+            }),
+          ],
+          preview: {
+            select: { title: 'title', subtitle: 'duration' },
+          },
+        },
+      ],
+      description: 'Pasos de preparación para la línea de tiempo',
     }),
     defineField({
       name: 'cost',
@@ -94,38 +168,6 @@ export const gastronomia = defineType({
       options: {
         layout: 'tags',
       },
-    }),
-    defineField({
-      name: 'featuredDishes',
-      title: 'Platillos destacados',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'name',
-              title: 'Nombre del platillo',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'description',
-              title: 'Descripción',
-              type: 'text',
-            }),
-            defineField({
-              name: 'image',
-              title: 'Imagen',
-              type: 'image',
-              options: { hotspot: true },
-            }),
-          ],
-          preview: {
-            select: { title: 'name', media: 'image' },
-          },
-        },
-      ],
     }),
     defineField({
       name: 'priceRange',
@@ -152,26 +194,7 @@ export const gastronomia = defineType({
       type: 'string',
       description: 'Ej: Octubre – Noviembre',
     }),
-    defineField({
-      name: 'ingredients',
-      title: 'Ingredientes principales',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: { layout: 'tags' },
-    }),
-    defineField({
-      name: 'pairings',
-      title: 'Maridaje / Acompañamientos',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: { layout: 'tags' },
-    }),
-    defineField({
-      name: 'history',
-      title: 'Historia y contexto cultural',
-      type: 'array',
-      of: [{ type: 'block' }],
-    }),
+
     defineField({
       name: 'quote',
       title: 'Cita destacada',
@@ -217,12 +240,7 @@ export const gastronomia = defineType({
       type: 'string',
       description: 'Ej: 4-6 personas',
     }),
-    defineField({
-      name: 'recommendations',
-      title: 'Recomendaciones',
-      type: 'array',
-      of: [{ type: 'block' }],
-    }),
+
     defineField({
       name: 'seo',
       title: 'SEO',

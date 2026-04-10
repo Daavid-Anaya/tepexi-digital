@@ -6,19 +6,17 @@ import { getGastronomiaBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import {
   ArrowLeft,
-  MapPin,
-  Clock,
   Utensils,
-  Map,
   Flame,
   Leaf,
   Users,
   Timer,
   CalendarDays,
   Globe,
+  CircleDot,
+  Clock,
 } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
-import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -57,20 +55,6 @@ const DISH_TYPE_LABELS: Record<string, string> = {
 // Sub-components (all server-side — no client hooks)
 // ---------------------------------------------------------------------------
 
-function DividerOrnamental() {
-  return (
-    <div className="flex items-center gap-4 my-10">
-      <div className="flex-1 h-px bg-stone/20" />
-      <div className="flex items-center gap-1.5 text-accent opacity-60">
-        <span className="text-xs">✦</span>
-        <span className="text-xs">✦</span>
-        <span className="text-xs">✦</span>
-      </div>
-      <div className="flex-1 h-px bg-stone/20" />
-    </div>
-  )
-}
-
 function DifficultyFlames({ difficulty }: { difficulty: string }) {
   const filled = DIFFICULTY_FLAMES[difficulty] ?? 1
   return (
@@ -102,6 +86,14 @@ function PriceSymbols({ priceRange }: { priceRange: string }) {
       ))}
     </div>
   )
+}
+
+function IngredientIcon({ icon }: { icon: string | null }) {
+  if (icon === 'utensils') return <Utensils className="w-5 h-5" style={{ color: '#BF360C' }} />
+  if (icon === 'flame') return <Flame className="w-5 h-5" style={{ color: '#BF360C' }} />
+  if (icon === 'leaf') return <Leaf className="w-5 h-5" style={{ color: '#BF360C' }} />
+  if (icon === 'grain') return <CircleDot className="w-5 h-5" style={{ color: '#BF360C' }} />
+  return <Utensils className="w-5 h-5" style={{ color: '#BF360C' }} />
 }
 
 // ---------------------------------------------------------------------------
@@ -155,20 +147,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
   const heroImageUrl = images[0]?.url ?? null
 
-  const markers = item.coordinates
-    ? [
-        {
-          id: item._id,
-          title: item.title ?? '',
-          slug: item.slug?.current ?? slug,
-          coordinates: { lat: item.coordinates.lat, lng: item.coordinates.lng },
-          category: item.category ?? '',
-          categoryColor: item.categoryColor ?? '#BF360C',
-          type: 'gastronomia' as const,
-        },
-      ]
-    : []
-
   const dishTypeLabel = item.dishType ? (DISH_TYPE_LABELS[item.dishType] ?? item.dishType) : null
 
   // Article metadata strip values
@@ -177,11 +155,11 @@ export default async function GastronomiaDetailPage({ params }: Props) {
     item.season ||
     item.preparationTime ||
     item.difficulty ||
-    item.servings ||
-    item.ingredients?.length ||
-    item.pairings?.length ||
-    item.history
+    item.servings
   )
+
+  const hasKeyIngredients = !!(item.keyIngredients && item.keyIngredients.length > 0)
+  const hasPreparationSteps = !!(item.preparationSteps && item.preparationSteps.length > 0)
 
   return (
     <>
@@ -225,7 +203,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
           </Container>
         </div>
 
-        {/* Hero content */}
+        {/* Hero content — aligned left */}
         <Container className="relative z-10 pb-10 pt-24">
           {/* Category + dish type */}
           <div className="flex flex-wrap items-center gap-2 mb-5">
@@ -245,7 +223,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             )}
           </div>
 
-          {/* Title */}
+          {/* Title — white for maximum legibility */}
           <h1 className="font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white leading-none mb-6 max-w-4xl">
             {item.title}
           </h1>
@@ -262,12 +240,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               <span className="flex items-center gap-2 text-white/70 text-sm">
                 <CalendarDays className="w-3.5 h-3.5 text-accent/80" />
                 Temporada: {item.season}
-              </span>
-            )}
-            {item.address && (
-              <span className="flex items-center gap-2 text-white/70 text-sm">
-                <MapPin className="w-3.5 h-3.5 text-accent/80" />
-                {item.address}
               </span>
             )}
           </div>
@@ -290,57 +262,71 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       </section>
 
       {/* ================================================================ */}
-      {/* 2. ARTICLE LEAD — intro & description                            */}
+      {/* 2. ARTICLE LEAD — intro & description (two-column with image)    */}
       {/* ================================================================ */}
       <section className="py-14 bg-cream">
         <Container>
-          <div className="max-w-3xl mx-auto">
-            {/* Section label */}
-            <p
-              className="text-xs font-semibold tracking-[0.25em] uppercase mb-4"
-              style={{ color: '#BF360C' }}
-            >
-              Gastronomía de la Mixteca
-            </p>
-
-            {/* Dish name as editorial lead-in */}
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight mb-8">
-              {item.title}
-            </h2>
-
-            {/* Dish type tags as elegant pills */}
-            {item.dishType && (
-              <div className="flex flex-wrap gap-2 mb-8">
-                <span
-                  className="inline-flex items-center gap-1.5 text-white text-xs font-semibold px-4 py-1.5 rounded-full"
-                  style={{ background: '#BF360C' }}
-                >
-                  <Utensils className="w-3 h-3" />
-                  {dishTypeLabel}
-                </span>
-                {item.season && (
-                  <span
-                    className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-1.5 rounded-full border"
-                    style={{ color: '#BF360C', borderColor: '#BF360C30', background: '#BF360C0A' }}
-                  >
-                    <CalendarDays className="w-3 h-3" />
-                    {item.season}
-                  </span>
-                )}
-              </div>
-            )}
-
-            {/* Main description as magazine body text */}
-            {item.description && (
-              <div
-                className="prose max-w-none"
-                style={{
-                  lineHeight: '1.9',
-                  fontSize: '1.0625rem',
-                  color: '#4a4a4a',
-                }}
+          <div className={item.descriptionImage ? 'grid grid-cols-1 lg:grid-cols-2 gap-12 items-start' : ''}>
+            {/* Left column: description content */}
+            <div className={item.descriptionImage ? '' : 'max-w-3xl mx-auto'}>
+              {/* Section label */}
+              <p
+                className="text-xs font-semibold tracking-[0.25em] uppercase mb-4"
+                style={{ color: '#BF360C' }}
               >
-                <PortableText value={item.description as PortableTextBlock[]} />
+                Gastronomía de la Mixteca
+              </p>
+
+              {/* Dish name as editorial lead-in */}
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight mb-8">
+                Historia y contexto cultural
+              </h2>
+
+              {/* Introduction — shown before description */}
+              {item.introduction && (
+                <div
+                  className="prose max-w-none mb-8"
+                  style={{
+                    lineHeight: '1.9',
+                    fontSize: '1.0500rem',
+                    color: '#3a3a3a',
+                    fontWeight: 500,
+                  }}
+                >
+                  <PortableText value={item.introduction as PortableTextBlock[]} />
+                </div>
+              )}
+
+              {/* Main description as magazine body text */}
+              {item.description && (
+                <div
+                  className="prose max-w-none"
+                  style={{
+                    lineHeight: '1.9',
+                    fontSize: '1.0625rem',
+                    color: '#4a4a4a',
+                  }}
+                >
+                  <PortableText value={item.description as PortableTextBlock[]} />
+                </div>
+              )}
+            </div>
+
+            {/* Right column: description image (only if present) */}
+            {item.descriptionImage && (
+              <div className="relative">
+                <div className="w-full rounded-2xl overflow-hidden shadow-lg">
+                  <img
+                    src={item.descriptionImage.url}
+                    alt={item.descriptionImage.alt ?? item.title ?? ''}
+                    className="w-full h-auto rounded-2xl object-cover"
+                  />
+                </div>
+                {/* Decorative terracotta accent */}
+                <div
+                  className="absolute -bottom-3 -right-3 w-24 h-24 rounded-xl -z-10"
+                  style={{ background: '#BF360C15' }}
+                />
               </div>
             )}
           </div>
@@ -348,73 +334,154 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       </section>
 
       {/* ================================================================ */}
-      {/* 3. INGREDIENTS & PAIRINGS STRIP — warm terracotta band           */}
+      {/* 3. INGREDIENTES CLAVE — editorial ingredient grid                */}
       {/* ================================================================ */}
-      {(item.ingredients?.length || item.pairings?.length) && (
-        <section className="py-14" style={{ background: '#FBF5F0' }}>
+      {hasKeyIngredients && (
+        <section className="py-16" style={{ background: '#FBF5F0' }}>
           <Container>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-              {/* Ingredients */}
-              {item.ingredients && item.ingredients.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-5">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ background: '#BF360C15' }}
-                    >
-                      <Leaf className="w-4 h-4" style={{ color: '#BF360C' }} />
-                    </div>
-                    <h3 className="font-heading font-semibold text-primary text-lg">
-                      Ingredientes principales
+            {/* Section header */}
+            <div className="flex items-center gap-3 mb-10">
+              <span
+                className="w-1 h-8 rounded-full inline-block"
+                style={{ background: '#BF360C' }}
+              />
+              <h2 className="font-heading font-bold text-primary text-2xl md:text-3xl">
+                Ingredientes Clave
+              </h2>
+            </div>
+
+            {/* Grid: mobile=1col, md=2col, lg=4col */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Card 1 — spans 2 cols, large with icon + title + description */}
+              {item.keyIngredients![0] && (
+                <div
+                  className="group lg:col-span-2 rounded-xl p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
+                    style={{ background: '#BF360C10' }}
+                  >
+                    <IngredientIcon icon={item.keyIngredients![0].icon} />
+                  </div>
+                  {item.keyIngredients![0].name && (
+                    <h3 className="font-heading font-bold text-primary text-xl">
+                      {item.keyIngredients![0].name}
                     </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {item.ingredients.map((ingredient) => (
-                      <span
-                        key={ingredient}
-                        className="text-sm font-medium px-3 py-1.5 rounded-full border"
-                        style={{
-                          color: '#5a2e0c',
-                          background: '#FFF8F5',
-                          borderColor: '#BF360C25',
-                        }}
-                      >
-                        {ingredient}
-                      </span>
-                    ))}
-                  </div>
+                  )}
+                  {item.keyIngredients![0].description && (
+                    <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                      {item.keyIngredients![0].description}
+                    </p>
+                  )}
                 </div>
               )}
 
-              {/* Pairings */}
-              {item.pairings && item.pairings.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-5">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ background: '#2E7D3215' }}
-                    >
-                      <Utensils className="w-4 h-4" style={{ color: '#2E7D32' }} />
-                    </div>
-                    <h3 className="font-heading font-semibold text-primary text-lg">
-                      Maridaje &amp; Acompañamientos
+              {/* Card 2 — 1 col square, icon centered + title + subtitle */}
+              {item.keyIngredients![1] && (
+                <div
+                  className="group rounded-xl p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
+                    style={{ background: '#BF360C10' }}
+                  >
+                    <IngredientIcon icon={item.keyIngredients![1].icon} />
+                  </div>
+                  {item.keyIngredients![1].name && (
+                    <h3 className="font-heading font-semibold text-primary text-base">
+                      {item.keyIngredients![1].name}
                     </h3>
+                  )}
+                  {item.keyIngredients![1].description && (
+                    <p
+                      className="text-xs font-medium tracking-widest uppercase"
+                      style={{ color: '#9e7b6b' }}
+                    >
+                      {item.keyIngredients![1].description}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Card 3 — 1 col square, small flame icon + title + subtitle */}
+              {item.keyIngredients![2] && (
+                <div
+                  className="group rounded-xl p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
+                    style={{ background: '#BF360C10' }}
+                  >
+                    <IngredientIcon icon={item.keyIngredients![2].icon} />
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {item.pairings.map((pairing) => (
-                      <span
-                        key={pairing}
-                        className="text-sm font-medium px-3 py-1.5 rounded-full border"
-                        style={{
-                          color: '#1a4a1c',
-                          background: '#F5FBF5',
-                          borderColor: '#2E7D3225',
-                        }}
-                      >
-                        {pairing}
-                      </span>
-                    ))}
+                  {item.keyIngredients![2].name && (
+                    <h3 className="font-heading font-semibold text-primary text-base">
+                      {item.keyIngredients![2].name}
+                    </h3>
+                  )}
+                  {item.keyIngredients![2].description && (
+                    <p
+                      className="text-xs font-medium tracking-widest uppercase"
+                      style={{ color: '#9e7b6b' }}
+                    >
+                      {item.keyIngredients![2].description}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Card 4 — spans 2 cols, full image */}
+              {item.keyIngredients![3] && (
+                <div
+                  className="group lg:col-span-2 rounded-xl overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  style={{ minHeight: '200px' }}
+                >
+                  {item.keyIngredients![3].imageUrl ? (
+                    <img
+                      src={item.keyIngredients![3].imageUrl}
+                      alt={item.keyIngredients![3].name ?? 'Ingrediente'}
+                      className="w-full h-full object-cover"
+                      style={{ minHeight: '200px' }}
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(135deg, #FBF5F0 0%, #F5EAE0 100%)',
+                        minHeight: '200px',
+                      }}
+                    >
+                      <Utensils className="w-10 h-10" style={{ color: '#BF360C30' }} />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Card 5 — spans 2 cols, leaf icon + title + description, text left */}
+              {item.keyIngredients![4] && (
+                <div
+                  className="group lg:col-span-2 rounded-xl p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
+                    style={{ background: '#BF360C10' }}
+                  >
+                    <IngredientIcon icon={item.keyIngredients![4].icon} />
                   </div>
+                  {item.keyIngredients![4].name && (
+                    <h3 className="font-heading font-bold text-primary text-xl">
+                      {item.keyIngredients![4].name}
+                    </h3>
+                  )}
+                  {item.keyIngredients![4].description && (
+                    <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                      {item.keyIngredients![4].description}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -423,7 +490,84 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       )}
 
       {/* ================================================================ */}
-      {/* 4. MAIN CONTENT — two-column editorial layout                    */}
+      {/* 4. PROCESO DE PREPARACIÓN — alternating vertical timeline        */}
+      {/* ================================================================ */}
+      {hasPreparationSteps && (
+        <section className="py-16 bg-white">
+          <Container>
+            {/* Section header */}
+            <div className="flex items-center gap-3 mb-12">
+              <span
+                className="w-1 h-8 rounded-full inline-block"
+                style={{ background: '#BF360C' }}
+              />
+              <h2 className="font-heading font-bold text-primary text-2xl md:text-3xl">
+                Proceso de Preparación
+              </h2>
+            </div>
+
+            {/* Timeline — alternating left/right on desktop, stacked on mobile */}
+            <div className="relative max-w-6xl mx-auto">
+              {/* Central vertical line (desktop only) */}
+              <div
+                className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
+                style={{ background: '#BF360C20' }}
+              />
+
+              {item.preparationSteps!.map((step, index) => {
+                const isLeft = index % 2 === 0
+                return (
+                  <div key={index} className="relative mb-12 last:mb-0">
+                    {/* Step circle — centered on the line (desktop), left-aligned (mobile) */}
+                    <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-white text-sm shadow-md"
+                        style={{ background: '#BF360C' }}
+                      >
+                        {index + 1}
+                      </div>
+                    </div>
+
+                    {/* Content card — alternates sides on desktop */}
+                    <div
+                      className={[
+                        'ml-14 md:ml-0 md:w-[calc(50%-2rem)]',
+                        isLeft ? 'md:mr-auto md:pr-4' : 'md:ml-auto md:pl-4',
+                      ].join(' ')}
+                    >
+                      <div
+                        className="rounded-xl p-5 border hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                        style={{ background: '#FDFAF8', borderColor: '#E8DDD5' }}
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                          <h3 className="font-heading font-bold text-primary text-lg leading-snug">
+                            {step.title}
+                          </h3>
+                          {step.duration && (
+                            <span
+                              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border flex-shrink-0"
+                              style={{ color: '#BF360C', borderColor: '#BF360C30', background: '#BF360C08' }}
+                            >
+                              <Clock className="w-3 h-3" />
+                              {step.duration}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* ================================================================ */}
+      {/* 6. MAIN CONTENT — two-column editorial layout                    */}
       {/* ================================================================ */}
       <section className="py-14 bg-white">
         <Container>
@@ -431,93 +575,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
             {/* ------- LEFT: main editorial content ------- */}
             <div className="lg:col-span-2 space-y-14">
-
-              {/* Featured Dishes Gallery */}
-              {item.featuredDishes && item.featuredDishes.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <span
-                      className="w-0.5 h-6 rounded-full inline-block"
-                      style={{ background: '#BF360C' }}
-                    />
-                    <h2 className="font-heading font-bold text-primary text-2xl">
-                      Platillos destacados
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {item.featuredDishes.map((dish, i) => (
-                      <div
-                        key={i}
-                        className="rounded-xl overflow-hidden border"
-                        style={{ borderColor: '#E8DDD5' }}
-                      >
-                        {/* Image or warm placeholder */}
-                        {dish.imageUrl ? (
-                          <div
-                            className="h-44 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${dish.imageUrl})` }}
-                          />
-                        ) : (
-                          <div
-                            className="h-36 flex items-center justify-center"
-                            style={{ background: 'linear-gradient(135deg, #FBF5F0 0%, #F5EAE0 100%)' }}
-                          >
-                            <Utensils className="w-8 h-8" style={{ color: '#BF360C40' }} />
-                          </div>
-                        )}
-
-                        <div className="p-4" style={{ background: '#FDFAF8' }}>
-                          <h3 className="font-heading font-semibold text-primary text-base mb-1">
-                            {dish.name}
-                          </h3>
-                          {dish.description && (
-                            <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
-                              {dish.description}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* History / Cultural Context */}
-              {item.history && (
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <span
-                      className="w-0.5 h-6 rounded-full inline-block"
-                      style={{ background: '#BF360C' }}
-                    />
-                    <h2 className="font-heading font-bold text-primary text-2xl">
-                      Historia y contexto cultural
-                    </h2>
-                  </div>
-
-                  {/* Large decorative opening quote mark */}
-                  <div className="relative">
-                    <span
-                      className="absolute -top-8 -left-3 font-heading text-8xl leading-none select-none pointer-events-none"
-                      style={{ color: '#BF360C12' }}
-                      aria-hidden="true"
-                    >
-                      &ldquo;
-                    </span>
-                    <div
-                      className="relative prose max-w-none"
-                      style={{
-                        lineHeight: '1.9',
-                        fontSize: '1.0625rem',
-                        color: '#4a4a4a',
-                      }}
-                    >
-                      <PortableText value={item.history as PortableTextBlock[]} />
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Image Gallery */}
               {images.length > 0 && (
@@ -533,24 +590,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   </div>
                   <div className="rounded-2xl overflow-hidden shadow-md border" style={{ borderColor: '#E8DDD5' }}>
                     <DynamicImageCarousel images={images} />
-                  </div>
-                </div>
-              )}
-
-              {/* Recommendations */}
-              {item.recommendations && (
-                <div
-                  className="rounded-2xl p-6 border-l-4"
-                  style={{ background: '#FFF8F5', borderLeftColor: '#BF360C' }}
-                >
-                  <p
-                    className="text-xs font-semibold tracking-widest uppercase mb-3"
-                    style={{ color: '#BF360C' }}
-                  >
-                    Recomendaciones del experto
-                  </p>
-                  <div className="prose max-w-none text-stone leading-relaxed">
-                    <PortableText value={item.recommendations as PortableTextBlock[]} />
                   </div>
                 </div>
               )}
@@ -702,50 +741,12 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                         </div>
                       </div>
                     )}
-                  </div>
-                </div>
-              )}
 
-              {/* Practical Info Card */}
-              {(item.schedule || item.cost || item.address) && (
-                <div
-                  className="rounded-2xl overflow-hidden shadow-sm border"
-                  style={{ borderColor: '#E8DDD5' }}
-                >
-                  <div
-                    className="px-5 py-4 border-b"
-                    style={{ background: '#FDFAF8', borderColor: '#E8DDD5' }}
-                  >
-                    <h2 className="font-heading font-semibold text-primary text-sm tracking-widest uppercase">
-                      Información práctica
-                    </h2>
-                  </div>
-
-                  <div className="p-5 space-y-5" style={{ background: '#FFFFFF' }}>
-                    {item.schedule && (
-                      <div className="flex gap-3">
-                        <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-                          style={{ background: '#BF360C15' }}
-                        >
-                          <Clock className="w-4 h-4" style={{ color: '#BF360C' }} />
-                        </div>
-                        <div>
-                          <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
-                          >
-                            Horario
-                          </dt>
-                          <dd className="text-sm text-stone leading-snug">{item.schedule}</dd>
-                        </div>
-                      </div>
-                    )}
-
+                    {/* Cost */}
                     {item.cost && (
-                      <div className="flex gap-3">
+                      <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           style={{ background: '#BF360C15' }}
                         >
                           <span className="text-sm font-bold" style={{ color: '#BF360C' }}>$</span>
@@ -758,26 +759,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                             Precio aproximado
                           </dt>
                           <dd className="text-sm text-stone leading-snug">{item.cost}</dd>
-                        </div>
-                      </div>
-                    )}
-
-                    {item.address && (
-                      <div className="flex gap-3">
-                        <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-                          style={{ background: '#BF360C15' }}
-                        >
-                          <MapPin className="w-4 h-4" style={{ color: '#BF360C' }} />
-                        </div>
-                        <div>
-                          <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
-                          >
-                            Dirección
-                          </dt>
-                          <dd className="text-sm text-stone leading-snug">{item.address}</dd>
                         </div>
                       </div>
                     )}
@@ -813,31 +794,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               )}
             </aside>
           </div>
-
-          {/* Map */}
-          {markers.length > 0 && (
-            <>
-              <DividerOrnamental />
-              <div
-                className="rounded-2xl border overflow-hidden shadow-sm"
-                style={{ borderColor: '#E8DDD5' }}
-              >
-                <div
-                  className="flex items-center gap-3 px-6 py-4 border-b"
-                  style={{ background: '#FDFAF8', borderColor: '#E8DDD5' }}
-                >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ background: '#BF360C15' }}
-                  >
-                    <Map className="w-4 h-4" style={{ color: '#BF360C' }} />
-                  </div>
-                  <h2 className="font-heading font-semibold text-primary text-lg">Ubicación</h2>
-                </div>
-                <DynamicLeafletMap markers={markers} center={markers[0].coordinates} zoom={16} />
-              </div>
-            </>
-          )}
         </Container>
       </section>
     </>
