@@ -53,6 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${plusJakartaSans.variable}`}
     >
       <body className="bg-sand antialiased">{children}</body>

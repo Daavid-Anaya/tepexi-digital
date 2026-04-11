@@ -145,8 +145,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
     .map((img) => ({ url: img.url ?? img.asset?.url ?? '', alt: img.alt ?? item.title ?? '' }))
     .filter((img) => img.url)
 
-  const heroImageUrl = images[0]?.url ?? null
-
   const dishTypeLabel = item.dishType ? (DISH_TYPE_LABELS[item.dishType] ?? item.dishType) : null
 
   // Article metadata strip values
@@ -164,99 +162,61 @@ export default async function GastronomiaDetailPage({ params }: Props) {
   return (
     <>
       {/* ================================================================ */}
-      {/* 1. FULL-BLEED HERO — editorial magazine cover                    */}
+      {/* 1. HERO — solid background, same pattern as /lugares/[slug]       */}
       {/* ================================================================ */}
-      <section className="relative min-h-[70vh] flex flex-col justify-end overflow-hidden bg-primary">
-        {/* Background image */}
-        {heroImageUrl && (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${heroImageUrl})` }}
-          />
-        )}
-
-        {/* Multi-layer gradient for depth and legibility */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(30,14,8,0.25) 0%, rgba(30,14,8,0.1) 30%, rgba(30,14,8,0.75) 65%, rgba(30,14,8,0.97) 100%)',
-          }}
-        />
-
-        {/* Warm terracotta top strip */}
-        <div
-          className="absolute top-0 inset-x-0 h-1"
-          style={{ background: '#BF360C' }}
-        />
-
-        {/* Back link */}
-        <div className="absolute top-6 left-0 right-0 z-20">
-          <Container>
-            <Link
-              href="/gastronomia"
-              className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm group"
-            >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              Gastronomía
-            </Link>
-          </Container>
+      <section className="relative overflow-hidden bg-primary py-14">
+        {/* Decorative circles */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-primary-light" />
+          <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full bg-primary-dark" />
         </div>
 
-        {/* Hero content — aligned left */}
-        <Container className="relative z-10 pb-10 pt-24">
-          {/* Category + dish type */}
-          <div className="flex flex-wrap items-center gap-2 mb-5">
+        <Container className="relative">
+          {/* Back navigation */}
+          <Link
+            href="/gastronomia"
+            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+            Volver a Gastronomía
+          </Link>
+
+          {/* Category + dish type badges */}
+          <div className="flex flex-wrap items-center gap-3 mb-4">
             {item.category && (
-              <span
-                className="inline-flex items-center gap-1.5 text-white text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full border border-white/30"
-                style={{ background: 'rgba(191,54,12,0.75)', backdropFilter: 'blur(4px)' }}
-              >
+              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
                 <Utensils className="w-3 h-3" />
                 {item.category}
               </span>
             )}
             {dishTypeLabel && (
-              <span className="inline-flex items-center text-white/80 text-xs font-medium tracking-wide uppercase px-3 py-1 rounded-full border border-white/20">
+              <span className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
                 {dishTypeLabel}
               </span>
             )}
           </div>
 
-          {/* Title — white for maximum legibility */}
-          <h1 className="font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white leading-none mb-6 max-w-4xl">
+          {/* Title */}
+          <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
             {item.title}
           </h1>
 
           {/* Origin + season meta */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8">
-            {item.origin && (
-              <span className="flex items-center gap-2 text-white/70 text-sm">
-                <Globe className="w-3.5 h-3.5 text-accent/80" />
-                {item.origin}
-              </span>
-            )}
-            {item.season && (
-              <span className="flex items-center gap-2 text-white/70 text-sm">
-                <CalendarDays className="w-3.5 h-3.5 text-accent/80" />
-                Temporada: {item.season}
-              </span>
-            )}
-          </div>
-
-          {/* Pull quote — the soul of this dish, overlaid on the hero */}
-          {item.quote && (
-            <blockquote
-              className="relative border-l-2 pl-6 max-w-2xl"
-              style={{ borderColor: '#BF360C' }}
-            >
-              <p className="font-heading italic text-white/90 text-xl md:text-2xl leading-snug mb-2">
-                &ldquo;{item.quote.text}&rdquo;
-              </p>
-              <footer className="text-white/50 text-xs tracking-widest uppercase">
-                — {item.quote.author}
-              </footer>
-            </blockquote>
+          {(item.origin || item.season) && (
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
+              {item.origin && (
+                <p className="flex items-center gap-2 text-white/70 text-sm">
+                  <Globe className="w-4 h-4 flex-shrink-0" />
+                  <span>{item.origin}</span>
+                </p>
+              )}
+              {item.season && (
+                <p className="flex items-center gap-2 text-white/70 text-sm">
+                  <CalendarDays className="w-4 h-4 flex-shrink-0" />
+                  <span>Temporada: {item.season}</span>
+                </p>
+              )}
+            </div>
           )}
         </Container>
       </section>
@@ -288,7 +248,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   className="prose max-w-none mb-8"
                   style={{
                     lineHeight: '1.9',
-                    fontSize: '1.0500rem',
+                    fontSize: '1.0925rem',
                     color: '#3a3a3a',
                     fontWeight: 500,
                   }}
@@ -766,8 +726,8 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Standalone quote card (if no hero quote was shown above fold) */}
-              {item.quote && !heroImageUrl && (
+              {/* Standalone quote card */}
+              {item.quote && (
                 <figure
                   className="rounded-2xl p-6 border"
                   style={{ background: '#FBF5F0', borderColor: '#E8DDD5' }}

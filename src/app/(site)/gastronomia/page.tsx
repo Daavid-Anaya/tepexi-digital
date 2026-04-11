@@ -140,7 +140,7 @@ export default async function GastronomiaPage() {
           <div className="mt-10 flex gap-6 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">{places.length}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">lugares</div>
+              <div className="text-xs text-white/70 uppercase tracking-wide">Platillos</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">Mixteca</div>

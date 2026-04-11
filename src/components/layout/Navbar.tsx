@@ -18,7 +18,7 @@ export function Navbar() {
   return (
     <>
       {/* Top accent bar */}
-      <div className="h-[3px] bg-primary sticky top-0 z-[51]" aria-hidden="true" />
+      <div className="h-[3px] bg-primary sticky top-0 z-50" aria-hidden="true" />
 
       <header className="sticky top-[3px] z-50 bg-cream/95 backdrop-blur-md border-b border-stone/15 shadow-[0_1px_12px_rgba(139,69,19,0.06)]">
         <nav
