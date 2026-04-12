@@ -106,7 +106,7 @@ export default async function GastronomiaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-accent py-20">
+      <section className="relative overflow-hidden bg-accent py-12 md:py-20">
         {/* Decorative background */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-10 -left-10 w-72 h-72 rounded-full bg-accent-light" />
@@ -122,11 +122,11 @@ export default async function GastronomiaPage() {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
               <Utensils className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
                 Gastronomía
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
@@ -137,7 +137,7 @@ export default async function GastronomiaPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="mt-10 flex gap-6 flex-wrap">
+          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">{places.length}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">Platillos</div>
@@ -155,10 +155,10 @@ export default async function GastronomiaPage() {
       </section>
 
       {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
-      <section className="bg-cream py-20">
+      <section className="bg-cream py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-accent rounded-full" />
               <span className="text-sm font-semibold uppercase tracking-widest text-accent">
@@ -207,7 +207,7 @@ export default async function GastronomiaPage() {
                       <Icon className="w-3.5 h-3.5 text-white" />
                     </div>
 
-                    <div className="bg-primary-50 rounded-xl p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
+                    <div className="bg-primary-50 rounded-xl p-4 sm:p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                       <h3 className="font-heading font-semibold text-lg text-primary mb-2">
                         {title}
                       </h3>
@@ -239,10 +239,10 @@ export default async function GastronomiaPage() {
       </section>
 
       {/* ── 3. Ingredientes Endémicos — Card Grid ───────────────────────── */}
-      <section className="bg-sand py-20">
+      <section className="bg-sand py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-secondary rounded-full" />
               <span className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -271,7 +271,7 @@ export default async function GastronomiaPage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-4 sm:p-5">
                   <h3 className="font-heading font-bold text-primary text-base mb-1.5">
                     {title}
                   </h3>
@@ -286,10 +286,10 @@ export default async function GastronomiaPage() {
       </section>
 
       {/* ── 4. Técnicas Milenarias — Icon Grid ──────────────────────────── */}
-      <section className="bg-cream py-20">
+      <section className="bg-cream py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-primary rounded-full" />
               <span className="text-sm font-semibold uppercase tracking-widest text-primary/70">
@@ -312,7 +312,7 @@ export default async function GastronomiaPage() {
             {ancientTechniques.map(({ icon: Icon, title, description }) => (
               <div
                 key={title}
-                className="group flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-primary-100 bg-primary-50 hover:bg-primary-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                className="group flex flex-col items-center text-center gap-4 p-5 sm:p-8 rounded-2xl border border-primary-100 bg-primary-50 hover:bg-primary-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
               >
                 {/* Large icon in colored circle */}
                 <div className="w-16 h-16 rounded-full bg-accent/15 border-2 border-accent/25 flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300">
@@ -333,10 +333,10 @@ export default async function GastronomiaPage() {
       </section>
 
       {/* ── 5. Grid section ─────────────────────────────────────────────── */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-accent rounded-full" />
               <span className="text-sm font-semibold uppercase tracking-widest text-accent">

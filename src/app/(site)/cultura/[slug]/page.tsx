@@ -102,7 +102,7 @@ export default async function CulturaDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner — purple/violet for cultura */}
-      <section className="relative overflow-hidden py-14" style={{ backgroundColor: '#4A1D6E' }}>
+      <section className="relative overflow-hidden py-10 md:py-14" style={{ backgroundColor: '#4A1D6E' }}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
           <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full" style={{ backgroundColor: '#2D0A46' }} />
@@ -148,7 +148,7 @@ export default async function CulturaDetailPage({ params }: Props) {
 
       <section className="py-12">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
             {/* Main content */}
             <div className="lg:col-span-2 space-y-8">
               {/* Image carousel */}
@@ -167,7 +167,7 @@ export default async function CulturaDetailPage({ params }: Props) {
 
               {/* Recommendations */}
               {item.recommendations && (
-                <div className="bg-cream rounded-xl border border-stone/10 p-6">
+                <div className="bg-cream rounded-xl border border-stone/10 p-4 sm:p-6">
                   <div className="flex items-center gap-2 mb-3">
                     <Star className="w-5 h-5 text-amber-500" />
                     <h2 className="font-heading font-semibold text-primary text-lg">
@@ -185,13 +185,13 @@ export default async function CulturaDetailPage({ params }: Props) {
             <aside className="space-y-4">
               <div className="bg-cream rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
                 {/* Sidebar header */}
-                <div className="px-5 py-4" style={{ backgroundColor: '#4A1D6E' }}>
+                <div className="px-4 sm:px-5 py-4" style={{ backgroundColor: '#4A1D6E' }}>
                   <h2 className="font-heading font-semibold text-white text-sm tracking-wide uppercase">
                     Ficha Técnica
                   </h2>
                 </div>
 
-                <div className="p-5 space-y-5">
+                <div className="p-4 sm:p-5 space-y-5">
                   {item.schedule && (
                     <div className="flex gap-3.5">
                       <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -251,8 +251,8 @@ export default async function CulturaDetailPage({ params }: Props) {
 
           {/* Map section */}
           {markers.length > 0 && (
-            <div className="mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
-              <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-6 py-4">
+            <div className="mt-8 md:mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-4 sm:px-6 py-4">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(74,29,110,0.1)' }}>
                   <Map className="w-4 h-4" style={{ color: '#4A1D6E' }} />
                 </div>

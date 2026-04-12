@@ -65,7 +65,13 @@ export function CategoryNav({ categories }: CategoryNavProps) {
       aria-label="Navegación por categorías"
       className="sticky top-16 z-30 bg-cream/95 backdrop-blur-sm border-b border-primary/10 -mx-4 px-4 md:mx-0 md:px-0"
     >
-      <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none">
+      <div
+        className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none"
+        style={{
+          maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
+        }}
+      >
         {categories.map((cat) => {
           const isActive = activeId === cat.id
           return (
@@ -74,21 +80,21 @@ export function CategoryNav({ categories }: CategoryNavProps) {
               type="button"
               onClick={() => handleClick(cat.id)}
               className={cn(
-                'flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all duration-200',
+                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200',
                 isActive
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-stone hover:bg-primary/10 hover:text-primary'
               )}
             >
               <span
-                className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-inset ring-black/10"
+                className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0 ring-1 ring-inset ring-black/10"
                 style={{ backgroundColor: cat.color }}
                 aria-hidden="true"
               />
               <span>{cat.label}</span>
               <span
                 className={cn(
-                  'text-xs tabular-nums',
+                  'hidden sm:inline text-xs tabular-nums',
                   isActive ? 'text-white/70' : 'text-stone/50'
                 )}
               >

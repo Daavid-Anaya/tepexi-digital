@@ -105,7 +105,7 @@ export default async function LugaresPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="relative overflow-hidden bg-primary py-20">
+      <section className="relative overflow-hidden bg-primary py-12 md:py-20">
         {/* Decorative background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-primary-light" />
@@ -121,11 +121,11 @@ export default async function LugaresPage() {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
               <MapPin className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
                 Lugares Turísticos
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
@@ -136,7 +136,7 @@ export default async function LugaresPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="mt-10 flex gap-6 flex-wrap">
+          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">{totalPlaces}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">lugares</div>
@@ -154,7 +154,7 @@ export default async function LugaresPage() {
       </section>
 
       {/* Category nav + grouped sections */}
-      <section className="py-16">
+      <section className="py-10 md:py-16">
         <Container>
           {totalPlaces === 0 ? (
             <div className="text-center py-20">
@@ -174,7 +174,7 @@ export default async function LugaresPage() {
               <CategoryNav categories={navItems} />
 
               {/* Category sections */}
-              <div className="mt-12 flex flex-col gap-16">
+              <div className="mt-8 md:mt-12 flex flex-col gap-10 md:gap-16">
                 {groups.map((group) => (
                   <CategorySection
                     key={group.sectionId}

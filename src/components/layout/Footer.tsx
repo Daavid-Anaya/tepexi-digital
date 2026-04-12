@@ -47,8 +47,8 @@ export async function Footer() {
 
       {/* Main footer body */}
       <div className="bg-primary-800 text-cream">
-        <Container className="pt-10 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+        <Container className="pt-8 pb-10 md:pt-10 md:pb-12">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             {/* Brand column */}
             <div className="md:col-span-4 space-y-5">
               {/* Logo */}
@@ -181,7 +181,7 @@ export async function Footer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/40">
+          <div className="mt-8 md:mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/40">
             <p>
               © {currentYear} {settings.siteName}. Todos los derechos reservados.
             </p>

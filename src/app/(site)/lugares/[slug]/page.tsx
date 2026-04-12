@@ -68,7 +68,7 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <section className="relative overflow-hidden bg-primary py-14">
+      <section className="relative overflow-hidden bg-primary py-10 md:py-14">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-primary-light" />
           <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full bg-primary-dark" />
@@ -109,7 +109,7 @@ export default async function LugarDetailPage({ params }: Props) {
 
       <section className="py-12">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
             {/* Main content */}
             <div className="lg:col-span-2 space-y-8">
               {/* Image carousel */}
@@ -131,13 +131,13 @@ export default async function LugarDetailPage({ params }: Props) {
             <aside className="space-y-4">
               <div className="bg-cream rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
                 {/* Sidebar header */}
-                <div className="bg-primary px-5 py-4">
+                <div className="bg-primary px-4 sm:px-5 py-4">
                   <h2 className="font-heading font-semibold text-white text-base tracking-wide uppercase text-sm">
                     Ficha Técnica
                   </h2>
                 </div>
 
-                <div className="p-5 space-y-5">
+                <div className="p-4 sm:p-5 space-y-5">
                   {lugar.schedule && (
                     <div className="flex gap-3.5">
                       <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -201,8 +201,8 @@ export default async function LugarDetailPage({ params }: Props) {
 
           {/* Map section */}
           {markers.length > 0 && (
-            <div className="mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
-              <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-6 py-4">
+            <div className="mt-8 md:mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-4 sm:px-6 py-4">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Map className="w-4 h-4 text-primary" />
                 </div>

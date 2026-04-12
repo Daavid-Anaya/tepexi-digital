@@ -32,7 +32,7 @@ export default async function AgendaPage() {
   return (
     <>
       {/* Page hero — calendar inspired */}
-      <section className="relative overflow-hidden bg-secondary py-20">
+      <section className="relative overflow-hidden bg-secondary py-12 md:py-20">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-secondary-light" />
           <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full" style={{ backgroundColor: '#1B5E20' }} />
@@ -47,11 +47,11 @@ export default async function AgendaPage() {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
               <CalendarDays className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
                 Agenda de Eventos
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
@@ -62,7 +62,7 @@ export default async function AgendaPage() {
           </div>
 
           {/* Calendar stats */}
-          <div className="mt-10 flex gap-6 flex-wrap">
+          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">{events.length}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">eventos</div>
@@ -77,7 +77,7 @@ export default async function AgendaPage() {
         </Container>
       </section>
 
-      <section className="py-16">
+      <section className="py-10 md:py-16">
         <Container>
           {events.length === 0 ? (
             /* Empty state */
@@ -98,13 +98,13 @@ export default async function AgendaPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-14">
+            <div className="space-y-8 md:space-y-14">
               {/* Featured events */}
               {featured.length > 0 && (
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-secondary rounded-full" />
-                    <h2 className="font-heading font-semibold text-primary text-2xl">
+                    <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
                       Eventos destacados
                     </h2>
                     <span className="bg-secondary/10 text-secondary text-xs font-semibold px-2.5 py-1 rounded-full">
@@ -113,7 +113,7 @@ export default async function AgendaPage() {
                   </div>
 
                   {/* Featured with subtle background */}
-                  <div className="bg-secondary/5 rounded-2xl border border-secondary/15 p-6 space-y-4">
+                  <div className="bg-secondary/5 rounded-2xl border border-secondary/15 p-4 sm:p-6 space-y-4">
                     {featured.map((event) => (
                       <EventCard key={event.slug} {...event} />
                     ))}
@@ -126,7 +126,7 @@ export default async function AgendaPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-stone/30 rounded-full" />
-                    <h2 className="font-heading font-semibold text-primary text-2xl">
+                    <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
                       Próximos eventos
                     </h2>
                     <span className="bg-stone/10 text-stone text-xs font-semibold px-2.5 py-1 rounded-full">

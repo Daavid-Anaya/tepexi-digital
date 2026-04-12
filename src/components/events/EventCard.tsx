@@ -59,7 +59,7 @@ export function EventCard({
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {location && (
-              <span className="flex items-center gap-1 text-stone text-xs">
+              <span className="flex items-center gap-1 text-stone text-xs max-w-full overflow-hidden">
                 <MapPin size={11} className="text-stone/60 flex-shrink-0" />
                 <span className="truncate">{location}</span>
               </span>

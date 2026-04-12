@@ -164,7 +164,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* ================================================================ */}
       {/* 1. HERO — solid background, same pattern as /lugares/[slug]       */}
       {/* ================================================================ */}
-      <section className="relative overflow-hidden bg-primary py-14">
+      <section className="relative overflow-hidden bg-primary py-10 md:py-14">
         {/* Decorative circles */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-primary-light" />
@@ -224,9 +224,9 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* ================================================================ */}
       {/* 2. ARTICLE LEAD — intro & description (two-column with image)    */}
       {/* ================================================================ */}
-      <section className="py-14 bg-cream">
+      <section className="py-10 md:py-14 bg-cream">
         <Container>
-          <div className={item.descriptionImage ? 'grid grid-cols-1 lg:grid-cols-2 gap-12 items-start' : ''}>
+          <div className={item.descriptionImage ? 'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start' : ''}>
             {/* Left column: description content */}
             <div className={item.descriptionImage ? '' : 'max-w-3xl mx-auto'}>
               {/* Section label */}
@@ -297,10 +297,10 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* 3. INGREDIENTES CLAVE — editorial ingredient grid                */}
       {/* ================================================================ */}
       {hasKeyIngredients && (
-        <section className="py-16" style={{ background: '#FBF5F0' }}>
+        <section className="py-10 md:py-16" style={{ background: '#FBF5F0' }}>
           <Container>
             {/* Section header */}
-            <div className="flex items-center gap-3 mb-10">
+            <div className="flex items-center gap-3 mb-6 md:mb-10">
               <span
                 className="w-1 h-8 rounded-full inline-block"
                 style={{ background: '#BF360C' }}
@@ -315,7 +315,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {/* Card 1 — spans 2 cols, large with icon + title + description */}
               {item.keyIngredients![0] && (
                 <div
-                  className="group lg:col-span-2 rounded-xl p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
                 >
                   <div
@@ -340,7 +340,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {/* Card 2 — 1 col square, icon centered + title + subtitle */}
               {item.keyIngredients![1] && (
                 <div
-                  className="group rounded-xl p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
                 >
                   <div
@@ -368,7 +368,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {/* Card 3 — 1 col square, small flame icon + title + subtitle */}
               {item.keyIngredients![2] && (
                 <div
-                  className="group rounded-xl p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
                 >
                   <div
@@ -423,7 +423,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {/* Card 5 — spans 2 cols, leaf icon + title + description, text left */}
               {item.keyIngredients![4] && (
                 <div
-                  className="group lg:col-span-2 rounded-xl p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                  className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
                 >
                   <div
@@ -453,10 +453,10 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* 4. PROCESO DE PREPARACIÓN — alternating vertical timeline        */}
       {/* ================================================================ */}
       {hasPreparationSteps && (
-        <section className="py-16 bg-white">
+        <section className="py-10 md:py-16 bg-white">
           <Container>
             {/* Section header */}
-            <div className="flex items-center gap-3 mb-12">
+            <div className="flex items-center gap-3 mb-8 md:mb-12">
               <span
                 className="w-1 h-8 rounded-full inline-block"
                 style={{ background: '#BF360C' }}
@@ -529,9 +529,9 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* ================================================================ */}
       {/* 6. MAIN CONTENT — two-column editorial layout                    */}
       {/* ================================================================ */}
-      <section className="py-14 bg-white">
+      <section className="py-10 md:py-14 bg-white">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
 
             {/* ------- LEFT: main editorial content ------- */}
             <div className="lg:col-span-2 space-y-14">
@@ -567,7 +567,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 >
                   {/* Card header */}
                   <div
-                    className="px-5 py-4"
+                    className="px-4 sm:px-5 py-4"
                     style={{ background: '#BF360C' }}
                   >
                     <h2 className="font-heading font-semibold text-white text-sm tracking-widest uppercase">
@@ -575,7 +575,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h2>
                   </div>
 
-                  <div className="p-5 space-y-5" style={{ background: '#FDFAF8' }}>
+                  <div className="p-4 sm:p-5 space-y-5" style={{ background: '#FDFAF8' }}>
                     {/* Difficulty */}
                     {item.difficulty && (
                       <div className="flex items-start gap-3">
@@ -729,7 +729,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {/* Standalone quote card */}
               {item.quote && (
                 <figure
-                  className="rounded-2xl p-6 border"
+                  className="rounded-2xl p-4 sm:p-6 border"
                   style={{ background: '#FBF5F0', borderColor: '#E8DDD5' }}
                 >
                   <span

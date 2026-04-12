@@ -98,7 +98,7 @@ export default async function CulturaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20" style={{ backgroundColor: '#4A1D6E' }}>
+      <section className="relative overflow-hidden py-12 md:py-20" style={{ backgroundColor: '#4A1D6E' }}>
         {/* Decorative background */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-80 h-80 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
@@ -114,11 +114,11 @@ export default async function CulturaPage() {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
               <Palette className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
                 Cultura
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
@@ -129,7 +129,7 @@ export default async function CulturaPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="mt-10 flex gap-6 flex-wrap">
+          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
             <div className="rounded-xl px-5 py-3 text-white" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
               <div className="text-2xl font-bold font-heading">{places.length}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">sitios</div>
@@ -147,10 +147,10 @@ export default async function CulturaPage() {
       </section>
 
       {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
-      <section className="bg-cream py-20">
+      <section className="bg-cream py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
               <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#7B3FA0' }}>
@@ -199,7 +199,7 @@ export default async function CulturaPage() {
                       <Icon className="w-3.5 h-3.5 text-white" />
                     </div>
 
-                    <div className="bg-primary-50 rounded-xl p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
+                    <div className="bg-primary-50 rounded-xl p-4 sm:p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                       <h3 className="font-heading font-semibold text-lg text-primary mb-2">
                         {title}
                       </h3>
@@ -216,10 +216,10 @@ export default async function CulturaPage() {
       </section>
 
       {/* ── 3. Explora Tepexi — Card Grid ───────────────────────────────── */}
-      <section className="bg-sand py-20">
+      <section className="bg-sand py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#9B59B6' }} />
               <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#9B59B6' }}>
@@ -249,7 +249,7 @@ export default async function CulturaPage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-4 sm:p-5">
                   <h3 className="font-heading font-bold text-primary text-base mb-1.5">
                     {title}
                   </h3>
@@ -264,10 +264,10 @@ export default async function CulturaPage() {
       </section>
 
       {/* ── 4. Tradiciones Vivas — Accordion ────────────────────────────── */}
-      <section className="bg-cream py-20">
+      <section className="bg-cream py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
               <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#7B3FA0' }}>
@@ -290,13 +290,13 @@ export default async function CulturaPage() {
                 key={title}
                 className="group rounded-xl border border-primary-100 bg-primary-50 overflow-hidden mb-3"
               >
-                <summary className="p-5 cursor-pointer font-heading font-semibold text-primary hover:bg-primary-100 transition-colors list-none flex items-center justify-between">
+                <summary className="p-4 sm:p-5 cursor-pointer font-heading font-semibold text-primary hover:bg-primary-100 transition-colors list-none flex items-center justify-between">
                   <span>{title}</span>
                   <span className="chevron transition-transform duration-200 group-open:rotate-180 flex-shrink-0 ml-3">
                     <ChevronDown className="w-5 h-5 text-primary/50" />
                   </span>
                 </summary>
-                <div className="p-5 pt-0 text-stone text-sm leading-relaxed">
+                <div className="p-4 sm:p-5 pt-0 text-stone text-sm leading-relaxed">
                   {content}
                 </div>
               </details>
@@ -306,10 +306,10 @@ export default async function CulturaPage() {
       </section>
 
       {/* ── 5. Manos Tepexanas — Two Columns ────────────────────────────── */}
-      <section className="bg-sand py-20">
+      <section className="bg-sand py-12 md:py-20">
         <Container>
           {/* Section header */}
-          <div className="mb-12 animate-fade-in-up">
+          <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#9B59B6' }} />
               <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#9B59B6' }}>
@@ -328,7 +328,7 @@ export default async function CulturaPage() {
           {/* Two equal columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Column 1: El Arte de la Palma */}
-            <div className="rounded-2xl border border-primary-100 bg-primary-50 p-8">
+            <div className="rounded-2xl border border-primary-100 bg-primary-50 p-5 sm:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
@@ -356,7 +356,7 @@ export default async function CulturaPage() {
             </div>
 
             {/* Column 2: Talla en Piedra */}
-            <div className="rounded-2xl border border-primary-100 bg-primary-50 p-8">
+            <div className="rounded-2xl border border-primary-100 bg-primary-50 p-5 sm:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"

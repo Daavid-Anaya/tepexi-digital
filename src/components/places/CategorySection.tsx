@@ -21,13 +21,13 @@ export function CategorySection({
   return (
     <section id={id} className="scroll-mt-28">
       {/* Category header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-4 sm:mb-6">
         <span
           className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-cream"
           style={{ backgroundColor: color, boxShadow: `0 0 0 1px ${color}33` }}
           aria-hidden="true"
         />
-        <h2 className="font-heading font-bold text-2xl text-primary">
+        <h2 className="font-heading font-bold text-xl sm:text-2xl text-primary">
           {label}
         </h2>
         <span className="text-sm text-stone/60 tabular-nums">

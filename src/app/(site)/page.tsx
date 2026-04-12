@@ -59,7 +59,7 @@ export default async function HomePage() {
       {/* ============================================================
           HERO — full-width cinematic
           ============================================================ */}
-      <section className="relative min-h-[88vh] flex flex-col items-center justify-center overflow-hidden bg-primary-900">
+      <section className="relative min-h-[70vh] md:min-h-[88vh] flex flex-col items-center justify-center overflow-hidden bg-primary-900">
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
@@ -77,12 +77,12 @@ export default async function HomePage() {
 
         {/* Decorative top-left diagonal accent */}
         <div
-          className="absolute top-0 left-0 w-64 h-1.5 bg-gradient-to-r from-accent via-primary to-transparent origin-top-left -rotate-[30deg] translate-y-8 -translate-x-4 opacity-60"
+          className="hidden sm:block absolute top-0 left-0 w-64 h-1.5 bg-gradient-to-r from-accent via-primary to-transparent origin-top-left -rotate-[30deg] translate-y-8 -translate-x-4 opacity-60"
           aria-hidden="true"
         />
 
         {/* Content */}
-        <Container className="relative z-10 text-center py-24">
+        <Container className="relative z-10 text-center py-12 md:py-24">
           {/* Eyebrow label */}
           <p className="inline-flex items-center gap-2 text-cream/70 text-sm font-medium uppercase tracking-[0.2em] mb-6 animate-fade-in">
             <span className="w-6 h-px bg-cream/50" />
@@ -114,7 +114,7 @@ export default async function HomePage() {
 
           {/* Subtitle */}
           <p
-            className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up"
+            className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto mb-6 md:mb-10 leading-relaxed animate-fade-in-up"
             style={{ animationDelay: '100ms' }}
           >
             {settings.heroSubtitle ??
@@ -147,7 +147,7 @@ export default async function HomePage() {
 
           {/* Stats strip */}
           <div
-            className="mt-16 flex flex-wrap justify-center gap-8 sm:gap-12 animate-fade-in"
+            className="mt-8 md:mt-16 flex flex-wrap justify-center gap-8 sm:gap-12 animate-fade-in"
             style={{ animationDelay: '400ms' }}
           >
             {[
@@ -164,7 +164,7 @@ export default async function HomePage() {
         </Container>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-cream/50 z-10">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1 text-cream/50 z-10">
           <span className="text-[10px] uppercase tracking-widest">Desliza</span>
           <ChevronDown size={18} className="animate-bounce-slow" />
         </div>
@@ -335,7 +335,7 @@ export default async function HomePage() {
               <Link
                 key={href}
                 href={href}
-                className="group flex items-start gap-4 p-6 rounded-xl bg-cream/5 border border-cream/10 hover:bg-cream/10 hover:border-cream/20 transition-all duration-200"
+                className="group flex items-start gap-4 p-4 sm:p-6 rounded-xl bg-cream/5 border border-cream/10 hover:bg-cream/10 hover:border-cream/20 transition-all duration-200"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-cream/10 text-cream/80 group-hover:bg-primary-400/30 transition-colors duration-200 flex-shrink-0">
                   <Icon size={20} />
@@ -375,7 +375,7 @@ export default async function HomePage() {
             ¿Listo para explorar?
             <span className="w-5 h-px bg-primary/30" />
           </p>
-          <h2 className="font-heading font-bold text-4xl md:text-5xl text-primary leading-tight mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-primary leading-tight mb-4">
             Descubre Tepexi
             <br />
             de Rodríguez

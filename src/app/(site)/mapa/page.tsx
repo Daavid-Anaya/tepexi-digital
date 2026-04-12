@@ -24,7 +24,7 @@ interface LegendType {
 
 const LEGEND_TYPES: LegendType[] = [
   {
-    label: 'Lugares',
+    label: 'Turístico',
     icon: MapPin,
     showCounter: true,
     categories: [
@@ -66,7 +66,7 @@ export default async function MapaPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="relative overflow-hidden bg-primary py-20">
+      <section className="relative overflow-hidden bg-primary py-12 md:py-20">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-primary-light" />
           <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full bg-primary-dark" />
@@ -81,11 +81,11 @@ export default async function MapaPage() {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
               <Map className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-4xl md:text-5xl text-white leading-tight mb-3">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
                 Mapa Interactivo
               </h1>
               <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
@@ -96,7 +96,7 @@ export default async function MapaPage() {
           </div>
 
           {/* Stats */}
-          <div className="mt-10 flex gap-4 flex-wrap">
+          <div className="mt-6 md:mt-10 flex gap-4 flex-wrap">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
               <div className="text-2xl font-bold font-heading">{markers.length}</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">puntos</div>
@@ -121,7 +121,7 @@ export default async function MapaPage() {
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Legend panel */}
-            <aside className="lg:col-span-1 space-y-4">
+            <aside className="lg:col-span-1 space-y-4 order-2 lg:order-none">
               <h2 className="font-heading font-semibold text-primary text-lg">
                 Categorías
               </h2>
@@ -173,7 +173,7 @@ export default async function MapaPage() {
             </aside>
 
             {/* Map card */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 order-1 lg:order-none">
               <div className="rounded-2xl border border-stone/10 overflow-hidden shadow-md">
                 <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-5 py-3">
                   <div className="flex gap-1.5">
