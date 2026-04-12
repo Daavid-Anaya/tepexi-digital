@@ -22,6 +22,30 @@ import {
 } from './mock-data'
 
 const USE_SANITY = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const IS_PROD = process.env.NODE_ENV === 'production'
+
+// ---------------------------------------------------------------------------
+// Mock fallback logging — visibility into when/why mock data is served
+// ---------------------------------------------------------------------------
+
+type FallbackReason = 'no-sanity-config' | 'empty-results' | 'fetch-error'
+
+function logMockFallback(source: string, reason: FallbackReason, error?: unknown): void {
+  const reasons: Record<FallbackReason, string> = {
+    'no-sanity-config': 'NEXT_PUBLIC_SANITY_PROJECT_ID not set',
+    'empty-results': 'Sanity returned empty results',
+    'fetch-error': 'Sanity fetch failed',
+  }
+
+  const message = `[mock-fallback] ${source}: ${reasons[reason]}`
+
+  if (IS_PROD) {
+    // In production, mock data should NEVER be served — treat as an error
+    console.error(message, error ?? '')
+  } else {
+    console.warn(message, error ?? '')
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Return-type aliases (so Sanity and mock paths return the same shapes)
@@ -313,21 +337,28 @@ function getMockMapMarkers(): MapMarker[] {
 // ---------------------------------------------------------------------------
 
 export async function getAllLugares(): Promise<LugarListItem[]> {
-  if (!USE_SANITY) return getMockLugaresList()
+  if (!USE_SANITY) {
+    logMockFallback('getAllLugares', 'no-sanity-config')
+    return getMockLugaresList()
+  }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allLugaresQuery } = await import('@/sanity/queries/lugares')
     const { data } = await sanityFetch({ query: allLugaresQuery })
     const results = (data ?? []) as LugarListItem[]
-    return results.length > 0 ? results : getMockLugaresList()
-  } catch {
+    if (results.length > 0) return results
+    logMockFallback('getAllLugares', 'empty-results')
+    return getMockLugaresList()
+  } catch (err) {
+    logMockFallback('getAllLugares', 'fetch-error', err)
     return getMockLugaresList()
   }
 }
 
 export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> {
   if (!USE_SANITY) {
+    logMockFallback('getLugarBySlug', 'no-sanity-config')
     const found = mockLugares.find((l) => l.slug.current === slug)
     return found ? mockToLugarDetail(found) : null
   }
@@ -337,10 +368,11 @@ export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> 
     const { lugarBySlugQuery } = await import('@/sanity/queries/lugares')
     const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
     if (data) return data as LugarDetail
-    // Sanity has no match — try mock as fallback
+    logMockFallback('getLugarBySlug', 'empty-results')
     const found = mockLugares.find((l) => l.slug.current === slug)
     return found ? mockToLugarDetail(found) : null
-  } catch {
+  } catch (err) {
+    logMockFallback('getLugarBySlug', 'fetch-error', err)
     const found = mockLugares.find((l) => l.slug.current === slug)
     return found ? mockToLugarDetail(found) : null
   }
@@ -361,21 +393,28 @@ export async function getServicioBySlug(slug: string): Promise<ServicioDetail | 
 }
 
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
-  if (!USE_SANITY) return getMockGastronomiaList()
+  if (!USE_SANITY) {
+    logMockFallback('getAllGastronomia', 'no-sanity-config')
+    return getMockGastronomiaList()
+  }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: allGastronomiaQuery })
     const results = (data ?? []) as GastronomiaListItem[]
-    return results.length > 0 ? results : getMockGastronomiaList()
-  } catch {
+    if (results.length > 0) return results
+    logMockFallback('getAllGastronomia', 'empty-results')
+    return getMockGastronomiaList()
+  } catch (err) {
+    logMockFallback('getAllGastronomia', 'fetch-error', err)
     return getMockGastronomiaList()
   }
 }
 
 export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDetail | null> {
   if (!USE_SANITY) {
+    logMockFallback('getGastronomiaBySlug', 'no-sanity-config')
     const found = mockGastronomia.find((g) => g.slug.current === slug)
     return found ? mockToGastronomiaDetail(found) : null
   }
@@ -385,16 +424,21 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
     const { gastronomiaBySlugQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
     if (data) return data as GastronomiaDetail
+    logMockFallback('getGastronomiaBySlug', 'empty-results')
     const found = mockGastronomia.find((g) => g.slug.current === slug)
     return found ? mockToGastronomiaDetail(found) : null
-  } catch {
+  } catch (err) {
+    logMockFallback('getGastronomiaBySlug', 'fetch-error', err)
     const found = mockGastronomia.find((g) => g.slug.current === slug)
     return found ? mockToGastronomiaDetail(found) : null
   }
 }
 
 export async function getUpcomingEventos(): Promise<EventoListItem[]> {
-  if (!USE_SANITY) return getMockUpcomingEventos()
+  if (!USE_SANITY) {
+    logMockFallback('getUpcomingEventos', 'no-sanity-config')
+    return getMockUpcomingEventos()
+  }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
@@ -402,14 +446,18 @@ export async function getUpcomingEventos(): Promise<EventoListItem[]> {
     const now = new Date().toISOString()
     const { data } = await sanityFetch({ query: upcomingEventosQuery, params: { now, limit: 50 } })
     const results = (data ?? []) as EventoListItem[]
-    return results.length > 0 ? results : getMockUpcomingEventos()
-  } catch {
+    if (results.length > 0) return results
+    logMockFallback('getUpcomingEventos', 'empty-results')
+    return getMockUpcomingEventos()
+  } catch (err) {
+    logMockFallback('getUpcomingEventos', 'fetch-error', err)
     return getMockUpcomingEventos()
   }
 }
 
 export async function getEventoBySlug(slug: string): Promise<EventoDetail | null> {
   if (!USE_SANITY) {
+    logMockFallback('getEventoBySlug', 'no-sanity-config')
     const found = mockEventos.find((e) => e.slug.current === slug)
     return found ? mockToEventoDetail(found) : null
   }
@@ -419,9 +467,11 @@ export async function getEventoBySlug(slug: string): Promise<EventoDetail | null
     const { eventoBySlugQuery } = await import('@/sanity/queries/eventos')
     const { data } = await sanityFetch({ query: eventoBySlugQuery, params: { slug } })
     if (data) return data as EventoDetail
+    logMockFallback('getEventoBySlug', 'empty-results')
     const found = mockEventos.find((e) => e.slug.current === slug)
     return found ? mockToEventoDetail(found) : null
-  } catch {
+  } catch (err) {
+    logMockFallback('getEventoBySlug', 'fetch-error', err)
     const found = mockEventos.find((e) => e.slug.current === slug)
     return found ? mockToEventoDetail(found) : null
   }
@@ -452,7 +502,10 @@ function sanityRowsToMarkers(rows: SanityMapRow[]): MapMarker[] {
 }
 
 export async function getAllMapMarkers(): Promise<MapMarker[]> {
-  if (!USE_SANITY) return getMockMapMarkers()
+  if (!USE_SANITY) {
+    logMockFallback('getAllMapMarkers', 'no-sanity-config')
+    return getMockMapMarkers()
+  }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
@@ -468,10 +521,14 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
     const servicioRows = (serviciosRes.data ?? []) as SanityMapRow[]
     const allRows = [...lugarRows, ...servicioRows]
 
-    if (allRows.length === 0) return getMockMapMarkers()
+    if (allRows.length === 0) {
+      logMockFallback('getAllMapMarkers', 'empty-results')
+      return getMockMapMarkers()
+    }
 
     return sanityRowsToMarkers(allRows)
-  } catch {
+  } catch (err) {
+    logMockFallback('getAllMapMarkers', 'fetch-error', err)
     return getMockMapMarkers()
   }
 }
@@ -479,16 +536,22 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
 export type { MockSettings as SiteSettings, SocialLink, SeoDefaults }
 
 export async function getSettings(): Promise<MockSettings> {
-  if (!USE_SANITY) return mockSettings
+  if (!USE_SANITY) {
+    logMockFallback('getSettings', 'no-sanity-config')
+    return mockSettings
+  }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { settingsQuery } = await import('@/sanity/queries/settings')
     const { data } = await sanityFetch({ query: settingsQuery })
-    // If settings doc doesn't exist yet, use mock
-    if (!data || !data.siteName) return mockSettings
+    if (!data || !data.siteName) {
+      logMockFallback('getSettings', 'empty-results')
+      return mockSettings
+    }
     return data as MockSettings
-  } catch {
+  } catch (err) {
+    logMockFallback('getSettings', 'fetch-error', err)
     return mockSettings
   }
 }
