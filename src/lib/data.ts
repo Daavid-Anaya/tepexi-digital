@@ -62,6 +62,7 @@ export interface LugarListItem {
   imageAlt: string
   address: string | null
   coordinates: { lat: number; lng: number } | null
+  isFeatured: boolean
 }
 
 // --- Lugar detail ---
@@ -173,6 +174,7 @@ function mockToLugarList(l: MockLugar): LugarListItem {
     imageAlt: l.imageAlt,
     address: l.address,
     coordinates: l.coordinates,
+    isFeatured: l.isFeatured ?? false,
   }
 }
 

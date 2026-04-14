@@ -77,6 +77,7 @@ export interface MockLugar {
   cost: string
   recommendations: string
   seo: MockSeo
+  isFeatured: boolean
 }
 
 export interface MockGastronomia {
@@ -221,6 +222,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'Visita el sitio paleontológico de Huellas de Dinosaurio en Tepexi de Rodríguez. Fósiles del Cretácico en la Mixteca Poblana.',
     },
+    isFeatured: true,
   },
   {
     _id: 'lugar-2',
@@ -251,6 +253,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'Visita el Ex-Convento de San Francisco del siglo XVI en Tepexi de Rodríguez, Puebla. Patrimonio colonial de la Mixteca.',
     },
+    isFeatured: true,
   },
   {
     _id: 'lugar-3',
@@ -281,6 +284,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'Conoce los Manantiales de Axamilpa, aguas cristalinas naturales en Tepexi de Rodríguez, Puebla.',
     },
+    isFeatured: true,
   },
   {
     _id: 'lugar-4',
@@ -310,6 +314,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'Sube al Cerro de Nopala y disfruta de las vistas panorámicas de Tepexi de Rodríguez y la Mixteca Poblana.',
     },
+    isFeatured: true,
   },
   {
     _id: 'lugar-5',
@@ -340,6 +345,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'El Museo Comunitario de Tepexi de Rodríguez alberga fósiles del Cretácico y piezas arqueológicas de la Mixteca Poblana.',
     },
+    isFeatured: false,
   },
   {
     _id: 'lugar-6',
@@ -369,6 +375,7 @@ export const mockLugares: MockLugar[] = [
       metaDescription:
         'Visita el Puente de Dios, formación rocosa natural con río en Tepexi de Rodríguez, Puebla.',
     },
+    isFeatured: false,
   },
 ]
 

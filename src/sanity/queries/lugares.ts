@@ -1,6 +1,6 @@
 import { defineQuery } from 'next-sanity'
 
-export const allLugaresQuery = defineQuery(`*[_type == "lugar"] | order(_createdAt desc) {
+export const allLugaresQuery = defineQuery(`*[_type == "lugar"] | order(isFeatured desc, _createdAt desc) {
   _id,
   title,
   slug,
@@ -9,7 +9,8 @@ export const allLugaresQuery = defineQuery(`*[_type == "lugar"] | order(_created
   "imageUrl": images[0].asset->url,
   "imageAlt": images[0].alt,
   coordinates,
-  address
+  address,
+  isFeatured
 }`)
 
 export const lugarBySlugQuery = defineQuery(`*[_type == "lugar" && slug.current == $slug][0] {

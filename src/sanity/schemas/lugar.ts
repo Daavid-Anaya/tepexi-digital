@@ -93,6 +93,13 @@ export const lugar = defineType({
       of: [{ type: 'block' }],
     }),
     defineField({
+      name: 'isFeatured',
+      title: 'Destacado',
+      description: 'Mostrar este lugar en la sección de destacados de la página principal',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO',
       type: 'object',

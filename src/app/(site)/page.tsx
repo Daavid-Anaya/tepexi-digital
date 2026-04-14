@@ -23,15 +23,18 @@ export default async function HomePage() {
     getSettings(),
   ])
 
-  const featuredLugares: PlaceCardProps[] = lugaresData.slice(0, 3).map((l) => ({
-    title: l.title,
-    slug: l.slug.current,
-    category: l.category,
-    categoryColor: l.categoryColor,
-    imageUrl: l.imageUrl,
-    imageAlt: l.imageAlt,
-    excerpt: l.address ?? undefined,
-  }))
+  const featuredLugares: PlaceCardProps[] = lugaresData
+    .filter((l) => l.isFeatured)
+    .slice(0, 4)
+    .map((l) => ({
+      title: l.title,
+      slug: l.slug.current,
+      category: l.category,
+      categoryColor: l.categoryColor,
+      imageUrl: l.imageUrl,
+      imageAlt: l.imageAlt,
+      excerpt: l.address ?? undefined,
+    }))
 
   const featuredGastronomia: PlaceCardProps[] = gastronomiaData.slice(0, 3).map((g) => ({
     title: g.title,
