@@ -2,10 +2,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from 'lucide-react'
-import { mockCultura } from '@/lib/mock-data'
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
-import type { PlaceCardProps } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Cultura',
@@ -85,16 +83,6 @@ const tradicionesItems = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function CulturaPage() {
-  const places: PlaceCardProps[] = mockCultura.map((item) => ({
-    title: item.title,
-    slug: item.slug.current,
-    category: item.category,
-    categoryColor: item.categoryColor,
-    imageUrl: item.imageUrl,
-    imageAlt: item.imageAlt,
-    excerpt: item.address ?? undefined,
-  }))
-
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
@@ -131,7 +119,7 @@ export default async function CulturaPage() {
           {/* Stats strip */}
           <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
             <div className="rounded-xl px-5 py-3 text-white" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-              <div className="text-2xl font-bold font-heading">{places.length}</div>
+              <div className="text-2xl font-bold font-heading">4</div>
               <div className="text-xs text-white/70 uppercase tracking-wide">sitios</div>
             </div>
             <div className="rounded-xl px-5 py-3 text-white" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
