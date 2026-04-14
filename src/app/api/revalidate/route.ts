@@ -59,7 +59,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Also revalidate by tag for more granular control
-    revalidateTag('sanity')
+    // Second argument 'max' = invalidate immediately (Next.js 16+)
+    revalidateTag('sanity', 'max')
 
     return NextResponse.json({
       revalidated: true,
