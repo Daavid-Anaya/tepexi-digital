@@ -9,4 +9,8 @@ export const { sanityFetch, SanityLive } = defineLive({
   }),
   serverToken: token,
   browserToken: token,
+  // Tag all Sanity fetches for on-demand revalidation
+  fetchOptions: {
+    next: { tags: ['sanity'] },
+  },
 })
