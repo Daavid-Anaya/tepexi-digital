@@ -25,8 +25,9 @@ export async function sendContactMessage(
   }
 
   try {
+    // TODO: Change to 'Tepexi Digital <noreply@tepexidigital.com>' once domain is verified in Resend
     await resend.emails.send({
-      from: 'Tepexi Digital <noreply@tepexidigital.com>',
+      from: 'Tepexi Digital <onboarding@resend.dev>',
       to: process.env.CONTACT_RECIPIENT_EMAIL!,
       subject: subject ? `Contacto: ${subject}` : `Contacto de ${name}`,
       text: `Nombre: ${name}\nEmail: ${email}\nAsunto: ${subject || 'Sin asunto'}\n\nMensaje:\n${message}`,
