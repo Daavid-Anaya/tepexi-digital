@@ -346,7 +346,7 @@ export default async function CulturaPage() {
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
                 <Image
-                  src="/images/cultura/prueba.jpg"
+                  src="/images/cultura/tejido-palma.jpg"
                   alt="Tejido de palma artesanal"
                   fill
                   className="object-cover"
@@ -365,17 +365,17 @@ export default async function CulturaPage() {
                   <Gem className="w-5 h-5" style={{ color: '#7B3FA0' }} />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-primary">
-                  Talla en Piedra
+                  Corte en Piedra
                 </h3>
               </div>
               <p className="text-stone text-sm leading-relaxed">
-                Piezas de mármol, cantera y ónix extraídas de los cerros locales y labradas
-                por expertos artesanos que dominan una técnica ancestral.
+                Piezas de mármol, cantera y ónix extraídas de los cerros locales y trabajadas
+                por expertos.
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
                 <Image
-                  src="/images/cultura/prueba.jpg"
-                  alt="Talla en piedra artesanal"
+                  src="/images/cultura/pieza-onix.jpg"
+                  alt="Piezas de onix"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"

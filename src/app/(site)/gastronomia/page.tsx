@@ -185,8 +185,8 @@ export default async function GastronomiaPage() {
               </p>
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md">
                 <Image
-                  src="/images/gastronomia/raices-mestizaje.jpg"
-                  alt="Raíces y mestizaje de la gastronomía de Tepexi"
+                  src="/images/gastronomia/ingredientes-representativos.jpg"
+                  alt="Ingredientes representativos de la gastronomía de Tepexi"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 40vw"

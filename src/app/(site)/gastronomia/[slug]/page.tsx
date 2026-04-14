@@ -239,7 +239,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
               {/* Dish name as editorial lead-in */}
               <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight mb-8">
-                Historia y contexto cultural
+                {/*Historia y contexto cultural*/}
               </h2>
 
               {/* Introduction — shown before description */}
