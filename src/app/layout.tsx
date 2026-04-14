@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { getSettings } from '@/lib/data'
+import { SanityLive } from '@/sanity/lib/live'
 import './globals.css'
 
 const inter = Inter({
@@ -56,7 +57,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${plusJakartaSans.variable}`}
     >
-      <body className="bg-sand antialiased">{children}</body>
+      <body className="bg-sand antialiased">
+        {children}
+        <SanityLive />
+      </body>
     </html>
   )
 }
