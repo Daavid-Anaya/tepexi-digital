@@ -193,7 +193,7 @@ export default async function LugarDetailPage({ params }: Props) {
               {/* Quick tip */}
               <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                 <p className="text-sm text-primary/80 leading-relaxed">
-                  💡 Se recomienda visitar en la mañana para aprovechar mejor la luz y evitar el calor del mediodía.
+                  💡 Nuestro equipo se encuentra trabajando para obtener información más completa e imgenes de los lugares más representativos de la región, Gracias por su paciencia! ^^
                 </p>
               </div>
             </aside>

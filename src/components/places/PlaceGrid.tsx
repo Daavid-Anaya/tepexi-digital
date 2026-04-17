@@ -5,7 +5,6 @@ import type { PlaceCardProps } from '@/types'
 interface PlaceGridProps {
   places: PlaceCardProps[]
   basePath?: string
-  /** Enables asymmetric featured layout: first card spans 2 cols on md+ */
   featured?: boolean
 }
 
