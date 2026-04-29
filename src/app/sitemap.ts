@@ -9,7 +9,7 @@ const allSlugsQuery = defineQuery(`{
 }`)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://tepexidigital.com'
+  const baseUrl = 'https://tepexidigital.com.mx'
   const { data } = await sanityFetch({ query: allSlugsQuery })
 
   const staticRoutes = [
