@@ -90,7 +90,7 @@ export default function ComoLlegarPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Route cards */}
             <div className="space-y-6">
-              <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
+              <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Rutas principales
               </h2>
 
@@ -169,7 +169,7 @@ export default function ComoLlegarPage() {
 
             {/* Map */}
             <div className="space-y-4">
-              <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
+              <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Ubicación
               </h2>
               <div className="rounded-2xl border border-stone/10 overflow-hidden shadow-md sticky top-6">

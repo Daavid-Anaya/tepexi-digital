@@ -54,7 +54,7 @@ export default async function AgendaPage() {
                   <span className="text-4xl">📅</span>
                 </div>
               </div>
-              <h2 className="font-heading font-semibold text-xl text-primary mb-2">
+              <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">
                 Sin eventos programados
               </h2>
               <p className="text-stone max-w-sm mx-auto leading-relaxed">
@@ -69,7 +69,7 @@ export default async function AgendaPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-secondary rounded-full" />
-                    <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
+                    <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                       Eventos destacados
                     </h2>
                     <span className="bg-secondary/10 text-secondary text-xs font-semibold px-2.5 py-1 rounded-full">
@@ -91,7 +91,7 @@ export default async function AgendaPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-8 bg-stone/30 rounded-full" />
-                    <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
+                    <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                       Próximos eventos
                     </h2>
                     <span className="bg-stone/10 text-stone text-xs font-semibold px-2.5 py-1 rounded-full">

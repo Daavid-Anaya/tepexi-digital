@@ -27,7 +27,7 @@ export function CategorySection({
           style={{ backgroundColor: color, boxShadow: `0 0 0 1px ${color}33` }}
           aria-hidden="true"
         />
-        <h2 className="font-heading font-bold text-xl sm:text-2xl text-primary">
+        <h2 className="font-heading font-bold text-xl sm:text-2xl text-text-primary">
           {label}
         </h2>
         <span className="text-sm text-stone/60 tabular-nums">

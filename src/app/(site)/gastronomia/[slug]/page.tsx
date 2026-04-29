@@ -238,7 +238,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               </p>
 
               {/* Dish name as editorial lead-in */}
-              <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight mb-8">
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary leading-tight mb-8">
                 {/*Historia y contexto cultural*/}
               </h2>
 
@@ -305,7 +305,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 className="w-1 h-8 rounded-full inline-block"
                 style={{ background: '#BF360C' }}
               />
-              <h2 className="font-heading font-bold text-primary text-2xl md:text-3xl">
+              <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
                 Ingredientes Clave
               </h2>
             </div>
@@ -461,7 +461,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 className="w-1 h-8 rounded-full inline-block"
                 style={{ background: '#BF360C' }}
               />
-              <h2 className="font-heading font-bold text-primary text-2xl md:text-3xl">
+              <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
                 Proceso de Preparación
               </h2>
             </div>
@@ -544,7 +544,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       className="w-0.5 h-6 rounded-full inline-block"
                       style={{ background: '#BF360C' }}
                     />
-                    <h2 className="font-heading font-bold text-primary text-2xl">
+                     <h2 className="font-heading font-bold text-text-primary text-2xl">
                       Galería
                     </h2>
                   </div>

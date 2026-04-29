@@ -227,7 +227,7 @@ export default async function EventoDetailPage({ params }: Props) {
                 <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
                   <Map className="w-4 h-4 text-secondary" />
                 </div>
-                <h2 className="font-heading font-semibold text-primary text-lg">
+                <h2 className="font-heading font-semibold text-text-primary text-lg">
                   Ubicación del evento
                 </h2>
               </div>

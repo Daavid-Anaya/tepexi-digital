@@ -98,7 +98,7 @@ export default async function MapaPage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Legend panel */}
             <aside className="lg:col-span-1 space-y-4 order-2 lg:order-none">
-              <h2 className="font-heading font-semibold text-primary text-lg">
+              <h2 className="font-heading font-semibold text-text-primary text-lg">
                 Categorías
               </h2>
 

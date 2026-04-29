@@ -107,7 +107,7 @@ export default async function CulturaPage() {
                 Historia
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Crónicas en Piedra y Tiempo
             </h2>
           </div>
@@ -176,7 +176,7 @@ export default async function CulturaPage() {
                 Patrimonio Cultural
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Explora Tepexi
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
@@ -224,7 +224,7 @@ export default async function CulturaPage() {
                 Tradiciones
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Tradiciones Vivas
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
@@ -266,7 +266,7 @@ export default async function CulturaPage() {
                 Artesanías
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Manos Tepexanas
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">

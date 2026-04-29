@@ -193,7 +193,7 @@ export default async function LugarDetailPage({ params }: Props) {
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Map className="w-4 h-4 text-primary" />
                 </div>
-                <h2 className="font-heading font-semibold text-primary text-lg">
+                <h2 className="font-heading font-semibold text-text-primary text-lg">
                   Ubicación
                 </h2>
               </div>

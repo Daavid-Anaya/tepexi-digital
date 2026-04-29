@@ -185,7 +185,7 @@ export default async function ServicioDetailPage({ params }: Props) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
                   <Map className="w-4 h-4" style={{ color: '#37474F' }} />
                 </div>
-                <h2 className="font-heading font-semibold text-primary text-lg">
+                <h2 className="font-heading font-semibold text-text-primary text-lg">
                   Ubicacion
                 </h2>
               </div>

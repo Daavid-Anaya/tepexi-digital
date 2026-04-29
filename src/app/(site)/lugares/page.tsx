@@ -123,7 +123,7 @@ export default async function LugaresPage() {
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
                 <MapPin className="w-10 h-10 text-primary/50" />
               </div>
-              <h2 className="font-heading font-semibold text-xl text-primary mb-2">
+              <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">
                 Sin lugares disponibles
               </h2>
               <p className="text-stone max-w-sm mx-auto">

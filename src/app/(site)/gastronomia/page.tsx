@@ -127,7 +127,7 @@ export default async function GastronomiaPage() {
                 Historia
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Raíces y Mestizaje
             </h2>
           </div>
@@ -211,7 +211,7 @@ export default async function GastronomiaPage() {
                 Ingredientes Endémicos
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Los Tesoros de Nuestra Tierra
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
@@ -258,7 +258,7 @@ export default async function GastronomiaPage() {
                 Técnicas Milenarias
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               La Magia Detrás del Plato
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
@@ -305,7 +305,7 @@ export default async function GastronomiaPage() {
                 Muestra Gastronómica
               </span>
             </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
               Platillos Representativos
             </h2>
             <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
@@ -318,7 +318,7 @@ export default async function GastronomiaPage() {
               <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
                 <Utensils className="w-10 h-10 text-accent/50" />
               </div>
-              <h2 className="font-heading font-semibold text-xl text-primary mb-2">
+              <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">
                 Sin platillos disponibles
               </h2>
               <p className="text-stone max-w-sm mx-auto">

@@ -76,7 +76,7 @@ export default async function ContactoPage() {
 
             {/* Contact info */}
             <div className="lg:col-span-2 space-y-5">
-              <h2 className="font-heading font-semibold text-primary text-xl sm:text-2xl">
+              <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Información de contacto
               </h2>
 

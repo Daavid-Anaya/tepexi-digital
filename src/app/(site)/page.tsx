@@ -185,7 +185,7 @@ export default async function HomePage() {
                 <span className="w-5 h-px bg-primary/40" />
                 Destinos
               </p>
-              <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight">
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary leading-tight">
                 Lugares destacados
               </h2>
               <p className="text-stone mt-2 text-base">
@@ -237,7 +237,7 @@ export default async function HomePage() {
                 <span className="w-5 h-px bg-primary/40" />
                 Próximamente
               </p>
-              <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight">
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary leading-tight">
                 Agenda cultural
               </h2>
               <p className="text-stone mt-2 text-base">
@@ -277,7 +277,7 @@ export default async function HomePage() {
                 <span className="w-5 h-px bg-primary/40" />
                 Sabores
               </p>
-              <h2 className="font-heading font-bold text-3xl md:text-4xl text-primary leading-tight">
+              <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary leading-tight">
                 Gastronomía local
               </h2>
               <p className="text-stone mt-2 text-base">
@@ -378,7 +378,7 @@ export default async function HomePage() {
             ¿Listo para explorar?
             <span className="w-5 h-px bg-primary/30" />
           </p>
-          <h2 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-primary leading-tight mb-4">
+          <h2 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-text-primary leading-tight mb-4">
             Descubre Tepexi
             <br />
             de Rodríguez
