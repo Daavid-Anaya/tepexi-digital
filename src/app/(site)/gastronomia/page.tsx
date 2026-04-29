@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Utensils, Leaf, Flame, Hammer, Sun, Wheat } from 'lucide-react'
 import { getAllGastronomia } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import type { PlaceCardProps } from '@/types'
+import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 
 export const metadata: Metadata = {
   title: 'Gastronomía',
@@ -106,53 +106,15 @@ export default async function GastronomiaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-accent py-12 md:py-20">
-        {/* Decorative background */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-10 -left-10 w-72 h-72 rounded-full bg-accent-light" />
-          <div className="absolute bottom-0 right-1/3 w-48 h-48 rounded-full bg-primary" />
-        </div>
-
-        <Container className="relative">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-            <span>/</span>
-            <span className="text-white/90">Gastronomía</span>
-          </nav>
-
-          <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
-              <Utensils className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
-                Gastronomía
-              </h1>
-              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                Descubre los sabores tradicionales de la Mixteca Poblana — Huaxmole,
-                Chilate, Mole, Tlacoyos y los platillos que han alimentado generaciones.
-              </p>
-            </div>
-          </div>
-
-          {/* Stats strip */}
-          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{places.length}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">Platillos</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">Mixteca</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">cocina</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">Artesanal</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">tradición</div>
-            </div>
-          </div>
-        </Container>
-      </section>
+      <PageHero imageUrl="/images/gastronomia/img-hero-gastronomia.jpg" imageAlt="Imagen hero de gastronomía mostrando diferentes platillos">
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} />
+        <PageHeroHeader
+          icon={Utensils}
+          title="Gastronomía"
+          description="Descubre los sabores tradicionales de la Mixteca Poblana — Huaxmole, Chilate, Mole, Tlacoyos y los platillos que han alimentado generaciones."
+        />
+        <PageHeroStats stats={[{ value: places.length, label: 'Platillos' }, { value: 'Mixteca', label: 'cocina' }, { value: 'Artesanal', label: 'tradición' }]} />
+      </PageHero>
 
       {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
       <section className="bg-cream py-12 md:py-20">

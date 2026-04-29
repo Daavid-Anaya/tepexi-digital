@@ -4,6 +4,7 @@ import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import ContactForm from '@/components/contact/ContactForm'
 import { getSettings } from '@/lib/data'
+import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 
 export const metadata: Metadata = {
   title: 'Contacto',
@@ -44,36 +45,14 @@ export default async function ContactoPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="relative overflow-hidden bg-secondary py-12 md:py-20">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-secondary-light" />
-          <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full" style={{ backgroundColor: '#1B5E20' }} />
-        </div>
-
-        <Container className="relative">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-            <span>/</span>
-            <span className="text-white/90">Contacto</span>
-          </nav>
-
-          <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
-              <MessageCircle className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
-                Contacto
-              </h1>
-              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                ¿Tienes preguntas o sugerencias? Escríbenos y te responderemos
-                a la brevedad.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
+      <PageHero imageUrl="/images/contacto/img-hero-contacto.jpg" imageAlt="Imagen hero de contacto">
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} />
+        <PageHeroHeader
+          icon={MessageCircle}
+          title="Contacto"
+          description="¿Tienes preguntas o sugerencias? Escríbenos y te responderemos a la brevedad."
+        />
+      </PageHero>
 
       <section className="py-10 md:py-16">
         <Container>

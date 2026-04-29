@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Navigation, Car, Bus, Clock, Milestone, Lightbulb, ArrowRight } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import type { MapMarker } from '@/types'
+import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 
 export const metadata: Metadata = {
   title: 'Cómo Llegar',
@@ -67,46 +67,23 @@ export default function ComoLlegarPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="relative overflow-hidden bg-primary py-12 md:py-20">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-primary-light" />
-          <div className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full bg-primary-dark" />
+      <PageHero imageUrl="/images/como-llegar/img-hero-como-llegar.jpg" imageAlt="Imagen hero de aplicación google maps">
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} />
+        <PageHeroHeader
+          icon={Navigation}
+          title="Cómo Llegar"
+          description="Tepexi de Rodríguez se ubica en el sur del estado de Puebla, aproximadamente a 2 horas de la capital poblana."
+        />
+        {/* Distance highlights */}
+        <div className="mt-6 md:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-lg">
+          {routes.map((r) => (
+            <div key={r.from} className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-white text-center">
+              <div className="text-xl font-bold font-heading">{r.duration}</div>
+              <div className="text-[11px] text-white/60 leading-tight mt-0.5">desde {r.from.split(' ')[r.from.split(' ').length - 1]}</div>
+            </div>
+          ))}
         </div>
-
-        <Container className="relative">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-            <span>/</span>
-            <span className="text-white/90">Cómo Llegar</span>
-          </nav>
-
-          <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
-              <Navigation className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
-                Cómo Llegar
-              </h1>
-              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                Tepexi de Rodríguez se ubica en el sur del estado de Puebla, aproximadamente a
-                2 horas de la capital poblana.
-              </p>
-            </div>
-          </div>
-
-          {/* Distance highlights */}
-          <div className="mt-6 md:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-lg">
-            {routes.map((r) => (
-              <div key={r.from} className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-white text-center">
-                <div className="text-xl font-bold font-heading">{r.duration}</div>
-                <div className="text-[11px] text-white/60 leading-tight mt-0.5">desde {r.from.split(' ')[r.from.split(' ').length - 1]}</div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+      </PageHero>
 
       <section className="py-10 md:py-16">
         <Container>

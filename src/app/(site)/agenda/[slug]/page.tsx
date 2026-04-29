@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { ArrowLeft, MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
+import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 
 function formatDateFull(dateString: string) {
   return new Date(dateString).toLocaleDateString('es-MX', {
@@ -85,69 +86,55 @@ export default async function EventoDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner — green/calendar accent */}
-      <section className="relative overflow-hidden bg-secondary py-10 md:py-14">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-secondary-light" />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full" style={{ backgroundColor: '#1B5E20' }} />
-        </div>
+      <PageHero imageUrl="/images/agenda/img-hero-agenda.jpg" imageAlt="Imagen hero de la agenda de eventos" size="compact">
+        <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
-        <Container className="relative">
-          {/* Back navigation */}
-          <Link
-            href="/agenda"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-            Volver a Agenda
-          </Link>
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+          {/* Date box */}
+          <div className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/15 backdrop-blur-sm text-white text-center">
+            <span className="text-2xl sm:text-3xl font-bold leading-none tabular-nums">{formatted.day}</span>
+            <span className="text-[10px] uppercase tracking-wider mt-1 opacity-80 font-medium">{formatted.month}</span>
+          </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
-            {/* Date box */}
-            <div className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/15 backdrop-blur-sm text-white text-center">
-              <span className="text-2xl sm:text-3xl font-bold leading-none tabular-nums">{formatted.day}</span>
-              <span className="text-[10px] uppercase tracking-wider mt-1 opacity-80 font-medium">{formatted.month}</span>
+          <div>
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              {evento.isFeatured && (
+                <Badge variant="accent" className="text-xs">
+                  Destacado
+                </Badge>
+              )}
             </div>
 
-            <div>
-              {/* Badges */}
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                {evento.isFeatured && (
-                  <Badge variant="accent" className="text-xs">
-                    Destacado
-                  </Badge>
-                )}
-              </div>
+            <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
+              {evento.title}
+            </h1>
 
-              <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
-                {evento.title}
-              </h1>
-
-              {/* Date info */}
-              <div className="flex flex-wrap items-center gap-4 mt-3">
-                <p className="flex items-center gap-2 text-white/70 text-sm">
-                  <Calendar className="w-4 h-4 flex-shrink-0" />
-                  <span className="capitalize">{formatDateFull(evento.date)}</span>
-                </p>
-                {evento.endDate && (
-                  <p className="flex items-center gap-2 text-white/60 text-sm">
-                    <Clock className="w-4 h-4 flex-shrink-0" />
-                    <span>
-                      Hasta {formatDateFull(evento.endDate)}
-                    </span>
-                  </p>
-                )}
-              </div>
-
-              {locationLabel && (
-                <p className="flex items-center gap-2 text-white/70 mt-2 text-sm">
-                  <MapPin className="w-4 h-4 flex-shrink-0" />
-                  <span>{locationLabel}</span>
+            {/* Date info */}
+            <div className="flex flex-wrap items-center gap-4 mt-3">
+              <p className="flex items-center gap-2 text-white/70 text-sm">
+                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <span className="capitalize">{formatDateFull(evento.date)}</span>
+              </p>
+              {evento.endDate && (
+                <p className="flex items-center gap-2 text-white/60 text-sm">
+                  <Clock className="w-4 h-4 flex-shrink-0" />
+                  <span>
+                    Hasta {formatDateFull(evento.endDate)}
+                  </span>
                 </p>
               )}
             </div>
+
+            {locationLabel && (
+              <p className="flex items-center gap-2 text-white/70 mt-2 text-sm">
+                <MapPin className="w-4 h-4 flex-shrink-0" />
+                <span>{locationLabel}</span>
+              </p>
+            )}
           </div>
-        </Container>
-      </section>
+        </div>
+      </PageHero>
 
       <section className="py-12">
         <Container>
