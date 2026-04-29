@@ -137,11 +137,11 @@ export function PageHeroHeader({ icon: Icon, title, description }: PageHeroHeade
         </div>
       )}
       <div>
-        <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
+        <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-cream leading-tight mb-3">
           {title}
         </h1>
         {description && (
-          <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
+          <p className="text-cream/75 text-lg max-w-2xl leading-relaxed">
             {description}
           </p>
         )}
