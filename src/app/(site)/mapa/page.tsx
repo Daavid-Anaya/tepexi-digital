@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Map, MapPin, Utensils, Palette, ConciergeBell, Info, type LucideIcon } from 'lucide-react'
 import { getAllMapMarkers } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
+import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 
 export const metadata: Metadata = {
   title: 'Mapa Interactivo',
@@ -66,56 +66,32 @@ export default async function MapaPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="relative overflow-hidden bg-primary py-12 md:py-20">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-primary-light" />
-          <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full bg-primary-dark" />
+      <PageHero imageUrl="/images/mapa/img-hero-mapa.jpg" imageAlt="Imagen hero de un mapa">
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} />
+        <PageHeroHeader
+          icon={Map}
+          title="Mapa Interactivo"
+          description="Explora todos los atractivos de Tepexi de Rodríguez en un solo mapa. Haz clic en cada marcador para ver más información."
+        />
+        <div className="mt-6 md:mt-10 flex gap-4 flex-wrap">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+            <div className="text-2xl font-bold font-heading">{markers.length}</div>
+            <div className="text-xs text-white/70 uppercase tracking-wide">puntos</div>
+          </div>
+          {LEGEND_TYPES.filter((type) => type.showCounter).map((type) => {
+            const count = type.categories.reduce(
+              (sum, cat) => sum + markers.filter((m) => m.category === cat.label).length,
+              0,
+            )
+            return (
+              <div key={type.label} className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
+                <div className="text-2xl font-bold font-heading">{count}</div>
+                <div className="text-xs text-white/70 uppercase tracking-wide">{type.label}</div>
+              </div>
+            )
+          })}
         </div>
-
-        <Container className="relative">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-            <span>/</span>
-            <span className="text-white/90">Mapa Interactivo</span>
-          </nav>
-
-          <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
-              <Map className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
-                Mapa Interactivo
-              </h1>
-              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                Explora todos los atractivos de Tepexi de Rodríguez en un solo mapa.
-                Haz clic en cada marcador para ver más información.
-              </p>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-6 md:mt-10 flex gap-4 flex-wrap">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{markers.length}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">puntos</div>
-            </div>
-            {LEGEND_TYPES.filter((type) => type.showCounter).map((type) => {
-              const count = type.categories.reduce(
-                (sum, cat) => sum + markers.filter((m) => m.category === cat.label).length,
-                0,
-              )
-              return (
-                <div key={type.label} className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-                  <div className="text-2xl font-bold font-heading">{count}</div>
-                  <div className="text-xs text-white/70 uppercase tracking-wide">{type.label}</div>
-                </div>
-              )
-            })}
-          </div>
-        </Container>
-      </section>
+      </PageHero>
 
       <section className="py-10">
         <Container>

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { CalendarDays } from 'lucide-react'
-import Link from 'next/link'
 import { getUpcomingEventos } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { EventCard } from '@/components/events/EventCard'
 import type { EventCardProps } from '@/types'
+import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 
 export const metadata: Metadata = {
   title: 'Agenda de Eventos',
@@ -32,50 +32,15 @@ export default async function AgendaPage() {
   return (
     <>
       {/* Page hero — calendar inspired */}
-      <section className="relative overflow-hidden bg-secondary py-12 md:py-20">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full bg-secondary-light" />
-          <div className="absolute bottom-0 left-1/4 w-40 h-40 rounded-full" style={{ backgroundColor: '#1B5E20' }} />
-        </div>
-
-        <Container className="relative">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-white/60 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-            <span>/</span>
-            <span className="text-white/90">Agenda</span>
-          </nav>
-
-          <div className="flex items-start gap-5">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm hidden sm:flex items-center justify-center">
-              <CalendarDays className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-3">
-                Agenda de Eventos
-              </h1>
-              <p className="text-white/75 text-lg max-w-2xl leading-relaxed">
-                Próximos eventos culturales, fiestas patronales y celebraciones
-                de Tepexi de Rodríguez.
-              </p>
-            </div>
-          </div>
-
-          {/* Calendar stats */}
-          <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-              <div className="text-2xl font-bold font-heading">{events.length}</div>
-              <div className="text-xs text-white/70 uppercase tracking-wide">eventos</div>
-            </div>
-            {featured.length > 0 && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 text-white">
-                <div className="text-2xl font-bold font-heading">{featured.length}</div>
-                <div className="text-xs text-white/70 uppercase tracking-wide">destacados</div>
-              </div>
-            )}
-          </div>
-        </Container>
-      </section>
+      <PageHero imageUrl="/images/agenda/img-hero-agenda.jpg" imageAlt="Imagen hero de la agenda de eventos">
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} />
+        <PageHeroHeader
+          icon={CalendarDays}
+          title="Agenda de Eventos"
+          description="Próximos eventos culturales, fiestas patronales y celebraciones de Tepexi de Rodríguez."
+        />
+        <PageHeroStats stats={[{ value: events.length, label: 'eventos' }, ...(featured.length > 0 ? [{ value: featured.length, label: 'destacados' }] : [])]} />
+      </PageHero>
 
       <section className="py-10 md:py-16">
         <Container>

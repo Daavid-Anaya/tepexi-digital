@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge'
 import { ArrowLeft, MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
+import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -68,44 +69,30 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <section className="relative overflow-hidden bg-primary py-10 md:py-14">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-primary-light" />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full bg-primary-dark" />
+      <PageHero imageUrl="/images/lugares/img-hero-lugares.jpg" imageAlt="Imagen hero de una mapa y una camara encima" size="compact">
+        <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
+
+        {/* Category badge */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {lugar.category && (
+            <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
+              <MapPin className="w-3 h-3" />
+              {lugar.category}
+            </span>
+          )}
         </div>
 
-        <Container className="relative">
-          {/* Back navigation */}
-          <Link
-            href="/lugares"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-            Volver a Lugares Turísticos
-          </Link>
+        <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
+          {lugar.title}
+        </h1>
 
-          {/* Category badge */}
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            {lugar.category && (
-              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-                <MapPin className="w-3 h-3" />
-                {lugar.category}
-              </span>
-            )}
-          </div>
-
-          <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
-            {lugar.title}
-          </h1>
-
-          {lugar.address && (
-            <p className="flex items-center gap-2 text-white/70 mt-3">
-              <MapPin className="w-4 h-4 flex-shrink-0" />
-              <span>{lugar.address}</span>
-            </p>
-          )}
-        </Container>
-      </section>
+        {lugar.address && (
+          <p className="flex items-center gap-2 text-white/70 mt-3">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span>{lugar.address}</span>
+          </p>
+        )}
+      </PageHero>
 
       <section className="py-12">
         <Container>

@@ -95,7 +95,7 @@ export default async function HomePage() {
 
           {/* Main headline */}
           <h1
-            className="font-heading font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.05] mb-6 animate-fade-in-up"
+            className="font-heading font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-text-primary leading-[1.05] mb-6 animate-fade-in-up"
             style={{ textShadow: '0 2px 24px rgba(0,0,0,0.4)' }}
           >
             {settings.heroTitle ? (

@@ -7,6 +7,7 @@ import { Container } from '@/components/ui/Container'
 import { ArrowLeft, MapPin, Clock, DollarSign, Star, Map, ConciergeBell } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
+import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -66,45 +67,31 @@ export default async function ServicioDetailPage({ params }: Props) {
 
   return (
     <>
-      {/* Hero banner — dark blue-grey for servicios */}
-      <section className="relative overflow-hidden py-14" style={{ backgroundColor: '#37474F' }}>
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full" style={{ backgroundColor: '#546E7A' }} />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full" style={{ backgroundColor: '#263238' }} />
+      {/* Hero banner */}
+      <PageHero imageUrl="/images/servicios/img-hero-servicios.jpg" imageAlt="Imagen hero de servicio" size="compact">
+        <PageHeroBackLink href="/mapa" label="Volver al Mapa" />
+
+        {/* Category badge */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {servicio.category && (
+            <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
+              <ConciergeBell className="w-3 h-3" />
+              {servicio.category}
+            </span>
+          )}
         </div>
 
-        <Container className="relative">
-          {/* Back navigation */}
-          <Link
-            href="/mapa"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-            Volver al Mapa
-          </Link>
+        <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
+          {servicio.title}
+        </h1>
 
-          {/* Category badge */}
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            {servicio.category && (
-              <span className="inline-flex items-center gap-1.5 text-white text-xs font-medium px-3 py-1.5 rounded-full border" style={{ backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.25)' }}>
-                <ConciergeBell className="w-3 h-3" />
-                {servicio.category}
-              </span>
-            )}
-          </div>
-
-          <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
-            {servicio.title}
-          </h1>
-
-          {servicio.address && (
-            <p className="flex items-center gap-2 text-white/70 mt-3">
-              <MapPin className="w-4 h-4 flex-shrink-0" />
-              <span>{servicio.address}</span>
-            </p>
-          )}
-        </Container>
-      </section>
+        {servicio.address && (
+          <p className="flex items-center gap-2 text-white/70 mt-3">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span>{servicio.address}</span>
+          </p>
+        )}
+      </PageHero>
 
       <section className="py-12">
         <Container>
