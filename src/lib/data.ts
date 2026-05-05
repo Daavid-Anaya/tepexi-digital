@@ -10,12 +10,8 @@
 import type { MapMarker } from '@/types'
 import {
   mockLugares,
-  mockGastronomia,
-  mockEventos,
   mockSettings,
   type MockLugar,
-  type MockGastronomia,
-  type MockEvento,
   type MockSettings,
   type SocialLink,
   type SeoDefaults,
@@ -209,104 +205,12 @@ function mockToLugarDetail(l: MockLugar): LugarDetail {
   }
 }
 
-function mockToGastronomiaList(g: MockGastronomia): GastronomiaListItem {
-  return {
-    _id: g._id,
-    title: g.title,
-    slug: g.slug,
-    category: g.category,
-    categoryColor: g.categoryColor,
-    imageUrl: g.imageUrl,
-    imageAlt: g.imageAlt,
-    priceRange: g.priceRange,
-    dishType: g.dishType,
-  }
-}
-
-function mockToGastronomiaDetail(g: MockGastronomia): GastronomiaDetail {
-  return {
-    _id: g._id,
-    title: g.title,
-    slug: g.slug,
-    category: g.category,
-    categoryColor: g.categoryColor,
-    introduction: g.introduction ?? null,
-    description: g.description,
-    images: g.images,
-    descriptionImage: g.descriptionImage,
-    cost: g.cost,
-    dishType: g.dishType,
-    priceRange: g.priceRange,
-    origin: g.origin,
-    season: g.season,
-    quote: g.quote,
-    preparationTime: g.preparationTime,
-    difficulty: g.difficulty,
-    servings: g.servings,
-    keyIngredients: g.keyIngredients.length > 0 ? g.keyIngredients : null,
-    preparationSteps: g.preparationSteps.length > 0 ? g.preparationSteps : null,
-    seo: g.seo,
-  }
-}
-
-function mockToEventoList(e: MockEvento): EventoListItem {
-  return {
-    _id: e._id,
-    title: e.title,
-    slug: e.slug,
-    imageUrl: e.imageUrl,
-    imageAlt: e.imageAlt,
-    date: e.date,
-    endDate: e.endDate,
-    locationName: e.locationName,
-    locationText: e.locationText,
-    isFeatured: e.isFeatured,
-  }
-}
-
-function mockToEventoDetail(e: MockEvento): EventoDetail {
-  return {
-    _id: e._id,
-    title: e.title,
-    slug: e.slug,
-    description: e.description ?? null,
-    imageUrl: e.imageUrl,
-    imageAlt: e.imageAlt,
-    date: e.date,
-    endDate: e.endDate,
-    location: e.locationCoordinates
-      ? {
-          _id: `mock-loc-${e._id}`,
-          title: e.locationName ?? e.locationText ?? '',
-          slug: { current: '' },
-          coordinates: e.locationCoordinates,
-          address: e.locationAddress,
-        }
-      : null,
-    locationText: e.locationText,
-    isFeatured: e.isFeatured,
-    seo: e.seo,
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Mock fallback helpers
 // ---------------------------------------------------------------------------
 
 function getMockLugaresList(): LugarListItem[] {
   return mockLugares.map(mockToLugarList)
-}
-
-function getMockGastronomiaList(): GastronomiaListItem[] {
-  return mockGastronomia.map(mockToGastronomiaList)
-}
-
-function getMockUpcomingEventos(): EventoListItem[] {
-  const now = new Date()
-  return mockEventos
-    .filter((e) => new Date(e.date) >= now)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .map(mockToEventoList)
 }
 
 const CATEGORY_TYPE_MAP: Record<string, 'lugar' | 'gastronomia' | 'cultura' | 'servicios'> = {
@@ -396,29 +300,25 @@ export async function getServicioBySlug(slug: string): Promise<ServicioDetail | 
 
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
   if (!USE_SANITY) {
-    logMockFallback('getAllGastronomia', 'no-sanity-config')
-    return getMockGastronomiaList()
+    // No Sanity config — return empty list to avoid showing fake gastronomy entries.
+    return []
   }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: allGastronomiaQuery })
-    const results = (data ?? []) as GastronomiaListItem[]
-    if (results.length > 0) return results
-    logMockFallback('getAllGastronomia', 'empty-results')
-    return getMockGastronomiaList()
+    return (data ?? []) as GastronomiaListItem[]
   } catch (err) {
     logMockFallback('getAllGastronomia', 'fetch-error', err)
-    return getMockGastronomiaList()
+    return []
   }
 }
 
 export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDetail | null> {
   if (!USE_SANITY) {
-    logMockFallback('getGastronomiaBySlug', 'no-sanity-config')
-    const found = mockGastronomia.find((g) => g.slug.current === slug)
-    return found ? mockToGastronomiaDetail(found) : null
+    // No Sanity config — return null to avoid serving fake gastronomy detail pages.
+    return null
   }
 
   try {
@@ -426,42 +326,39 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
     const { gastronomiaBySlugQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
     if (data) return data as GastronomiaDetail
-    logMockFallback('getGastronomiaBySlug', 'empty-results')
-    const found = mockGastronomia.find((g) => g.slug.current === slug)
-    return found ? mockToGastronomiaDetail(found) : null
+    return null
   } catch (err) {
     logMockFallback('getGastronomiaBySlug', 'fetch-error', err)
-    const found = mockGastronomia.find((g) => g.slug.current === slug)
-    return found ? mockToGastronomiaDetail(found) : null
+    return null
   }
 }
 
 export async function getUpcomingEventos(): Promise<EventoListItem[]> {
   if (!USE_SANITY) {
-    logMockFallback('getUpcomingEventos', 'no-sanity-config')
-    return getMockUpcomingEventos()
+    // No Sanity config — return empty list instead of mock events to avoid
+    // showing fake events to real users on the deployed site.
+    return []
   }
 
   try {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { upcomingEventosQuery } = await import('@/sanity/queries/eventos')
-    const now = new Date().toISOString()
+    // Use start-of-today so events remain visible all day until midnight.
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const now = today.toISOString()
     const { data } = await sanityFetch({ query: upcomingEventosQuery, params: { now, limit: 50 } })
-    const results = (data ?? []) as EventoListItem[]
-    if (results.length > 0) return results
-    logMockFallback('getUpcomingEventos', 'empty-results')
-    return getMockUpcomingEventos()
+    return (data ?? []) as EventoListItem[]
   } catch (err) {
     logMockFallback('getUpcomingEventos', 'fetch-error', err)
-    return getMockUpcomingEventos()
+    return []
   }
 }
 
 export async function getEventoBySlug(slug: string): Promise<EventoDetail | null> {
   if (!USE_SANITY) {
-    logMockFallback('getEventoBySlug', 'no-sanity-config')
-    const found = mockEventos.find((e) => e.slug.current === slug)
-    return found ? mockToEventoDetail(found) : null
+    // No Sanity config — return null to avoid serving fake event detail pages.
+    return null
   }
 
   try {
@@ -469,13 +366,10 @@ export async function getEventoBySlug(slug: string): Promise<EventoDetail | null
     const { eventoBySlugQuery } = await import('@/sanity/queries/eventos')
     const { data } = await sanityFetch({ query: eventoBySlugQuery, params: { slug } })
     if (data) return data as EventoDetail
-    logMockFallback('getEventoBySlug', 'empty-results')
-    const found = mockEventos.find((e) => e.slug.current === slug)
-    return found ? mockToEventoDetail(found) : null
+    return null
   } catch (err) {
     logMockFallback('getEventoBySlug', 'fetch-error', err)
-    const found = mockEventos.find((e) => e.slug.current === slug)
-    return found ? mockToEventoDetail(found) : null
+    return null
   }
 }
 
