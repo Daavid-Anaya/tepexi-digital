@@ -43,22 +43,22 @@ const exploraCards = [
   {
     title: 'Cantera Tlayúa',
     description: 'Fósiles de peces y plantas con 100 millones de años de antigüedad.',
-    image: '/images/cultura/cantera-tlayua.jpg',
+    image: 'https://cdn.sanity.io/images/45s7lmkb/production/1261bc7e4843023d6f5fd08fb2bd7365a9ab9ede-600x988.jpg',
   },
   {
     title: 'Pie de Vaca',
     description: 'Huellas petrificadas de camélidos y felinos del Pleistoceno.',
-    image: '/images/cultura/pie-de-vaca.jpg',
+    image: 'https://cdn.sanity.io/images/45s7lmkb/production/28f81aed1500762097e2dd35149d4adc88c02b24-243x406.jpg',
   },
   {
     title: 'Tepexi el Viejo',
     description: 'Imponente zona arqueológica de la antigua fortaleza popoloca.',
-    image: '/images/cultura/tepexi-el-viejo.jpg',
+    image: 'https://cdn.sanity.io/images/45s7lmkb/production/444a760a14753174e12fd903fc761a3f302fb550-388x485.jpg',
   },
   {
     title: 'Ex-convento de Santo Domingo',
     description: 'Joya de la arquitectura religiosa del siglo XVI.',
-    image: '/images/cultura/iglesia.jpg',
+    image: 'https://cdn.sanity.io/images/45s7lmkb/production/ebd8da20ffee6a58f859075f7567dd887087bf97-2268x2268.jpg',
   },
 ] as const
 
@@ -124,7 +124,7 @@ export default async function CulturaPage() {
               </p>
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md">
                 <Image
-                  src="/images/cultura/palacio-municipal.jpg"
+                   src="https://cdn.sanity.io/images/45s7lmkb/production/49470ca7b1d24c9be89052657650a0ce7d7ec796-960x1280.jpg"
                   alt="Crónicas históricas de Tepexi"
                   fill
                   className="object-cover"
@@ -296,7 +296,7 @@ export default async function CulturaPage() {
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
                 <Image
-                  src="/images/cultura/tejido-palma.jpg"
+                   src="https://cdn.sanity.io/images/45s7lmkb/production/4cc6ce3015222e89c267ceb0c96e8a39de367157-654x492.jpg"
                   alt="Tejido de palma artesanal"
                   fill
                   className="object-cover"
@@ -324,7 +324,7 @@ export default async function CulturaPage() {
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
                 <Image
-                  src="/images/cultura/pieza-onix.jpg"
+                   src="https://cdn.sanity.io/images/45s7lmkb/production/cc7c743689edf04a4742086ff7829ece7f4fefa4-436x366.jpg"
                   alt="Piezas de onix"
                   fill
                   className="object-cover"
