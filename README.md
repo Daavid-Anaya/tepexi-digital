@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌵 Tepexi Digital
 
-## Getting Started
+> *Donde los fósiles cuentan historias y los sabores no se olvidan.*
 
-First, run the development server:
+Portal de turismo y promoción digital de **Tepexi de Rodríguez**, un municipio enclavado en la Mixteca Poblana — tierra de dinosaurios, mezcal artesanal, arquitectura colonial y cielos que no tienen competencia.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Este proyecto es la ventana digital del municipio: un espacio donde visitantes y locales encuentran todo lo que Tepexi tiene para ofrecer.
+
+---
+
+## ✦ ¿Qué es esto?
+
+Un sitio web completo que cubre:
+
+- 📍 **Lugares** — los rincones que vale la pena conocer
+- 🍜 **Gastronomía** — la cocina que define a Tepexi
+- 🛍️ **Servicios** — lo que el municipio ofrece a quienes lo visitan
+- 🎉 **Eventos** — la agenda que mantiene vivo al pueblo
+- 🗺️ **Mapa interactivo** — para orientarse sin perderse
+- 🏛️ **Cultura** — tradiciones, historia e identidad
+- ✉️ **Contacto** — línea directa con el municipio
+
+El contenido es gestionado por el equipo local desde un **Sanity Studio embebido** (`/studio`) — sin necesidad de tocar código.
+
+---
+
+## ⚙️ Stack técnico
+
+```
+Next.js 15 (App Router)   →  estructura y rendimiento
+Sanity v5                 →  CMS headless con Studio embebido
+Tailwind CSS v4           →  estilos utilitarios
+Leaflet + React Leaflet   →  mapas interactivos
+Resend                    →  emails desde el formulario de contacto
+Vercel Analytics          →  métricas de visitas
+TypeScript 5              →  tipado estricto en todo el proyecto
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗂️ Estructura del proyecto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── (site)/           # Rutas públicas del sitio
+│   │   ├── page.tsx      # Inicio
+│   │   ├── lugares/
+│   │   ├── gastronomia/
+│   │   ├── servicios/
+│   │   ├── agenda/
+│   │   ├── cultura/
+│   │   ├── mapa/
+│   │   ├── como-llegar/
+│   │   └── contacto/
+│   ├── api/              # Route handlers (emails, etc.)
+│   └── studio/           # Sanity Studio
+├── components/           # Componentes reutilizables
+├── sanity/               # Schemas, queries y cliente de Sanity
+├── lib/                  # Utilidades compartidas
+├── actions/              # Server Actions
+└── types/                # Tipos TypeScript globales
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 Contenido en Sanity
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Tipo | Descripción |
+|------|-------------|
+| `lugar` | Puntos de interés con imágenes, descripción y coordenadas |
+| `gastronomia` | Platillos y establecimientos locales |
+| `servicio` | Servicios disponibles para visitantes |
+| `evento` | Agenda de eventos con fecha y lugar |
+| `categoria` | Taxonomía transversal del contenido |
+| `settings` | Singleton — SEO, nombre del sitio, redes sociales |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Hecho con orgullo para Tepexi de Rodríguez, Puebla 🇲🇽*
