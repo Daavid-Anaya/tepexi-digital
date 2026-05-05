@@ -69,7 +69,7 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <PageHero imageUrl="/images/lugares/img-hero-lugares.jpg" imageAlt="Imagen hero de una mapa y una camara encima" size="compact">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/737c94162af932675cbb7eaddf8d63e379404009-1920x1440.jpg" imageAlt="Imagen hero de una mapa y una camara encima" size="compact">
         <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
 
         {/* Category badge */}

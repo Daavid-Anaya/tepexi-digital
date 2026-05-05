@@ -68,7 +68,7 @@ export default async function ServicioDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <PageHero imageUrl="/images/servicios/img-hero-servicios.jpg" imageAlt="Imagen hero de servicio" size="compact">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/fd162108faf44809f73b46edd219740140a8c42c-5472x3648.jpg" imageAlt="Imagen hero de servicio" size="compact">
         <PageHeroBackLink href="/mapa" label="Volver al Mapa" />
 
         {/* Category badge */}

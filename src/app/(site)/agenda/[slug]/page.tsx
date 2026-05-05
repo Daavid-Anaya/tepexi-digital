@@ -86,7 +86,7 @@ export default async function EventoDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner — green/calendar accent */}
-      <PageHero imageUrl="/images/agenda/img-hero-agenda.jpg" imageAlt="Imagen hero de la agenda de eventos" size="compact">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/1207eeb4636baf3a09b4a926173eb07861f3693e-1920x1280.jpg" imageAlt="Imagen hero de la agenda de eventos" size="compact">
         <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
         <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">

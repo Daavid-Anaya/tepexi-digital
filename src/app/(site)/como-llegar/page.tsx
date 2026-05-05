@@ -67,7 +67,7 @@ export default function ComoLlegarPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="/images/como-llegar/img-hero-como-llegar.jpg" imageAlt="Imagen hero de aplicación google maps">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/97ba498893be9fef6e66f00e11b7fe6c19a023d0-4452x2968.jpg" imageAlt="Imagen hero de aplicación google maps">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} />
         <PageHeroHeader
           icon={Navigation}

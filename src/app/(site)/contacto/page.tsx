@@ -45,7 +45,7 @@ export default async function ContactoPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="/images/contacto/img-hero-contacto.jpg" imageAlt="Imagen hero de contacto">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/c792c5f25303c69523311963917babcf56c4c131-3008x2000.jpg" imageAlt="Imagen hero de contacto">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} />
         <PageHeroHeader
           icon={MessageCircle}

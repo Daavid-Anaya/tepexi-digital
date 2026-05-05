@@ -86,7 +86,7 @@ export default async function CulturaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <PageHero imageUrl="/images/cultura/img-hero-cultura.jpg" imageAlt="Imagen hero de cultura">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/7a5100ea170bd307785b455ecfb340bf96036b54-6000x4000.jpg" imageAlt="Imagen hero de cultura">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} />
         <PageHeroHeader
           icon={Palette}

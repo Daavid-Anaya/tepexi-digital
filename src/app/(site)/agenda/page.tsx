@@ -32,7 +32,7 @@ export default async function AgendaPage() {
   return (
     <>
       {/* Page hero — calendar inspired */}
-      <PageHero imageUrl="/images/agenda/img-hero-agenda.jpg" imageAlt="Imagen hero de la agenda de eventos">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/1207eeb4636baf3a09b4a926173eb07861f3693e-1920x1280.jpg" imageAlt="Imagen hero de la agenda de eventos">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} />
         <PageHeroHeader
           icon={CalendarDays}

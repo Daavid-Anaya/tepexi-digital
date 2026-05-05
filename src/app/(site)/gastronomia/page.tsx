@@ -106,7 +106,7 @@ export default async function GastronomiaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <PageHero imageUrl="/images/gastronomia/img-hero-gastronomia.jpg" imageAlt="Imagen hero de gastronomía mostrando diferentes platillos">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/04919ba0ea9ad85fd4f46aea35d7c3a513f4becb-4104x2736.jpg" imageAlt="Imagen hero de gastronomía mostrando diferentes platillos">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} />
         <PageHeroHeader
           icon={Utensils}

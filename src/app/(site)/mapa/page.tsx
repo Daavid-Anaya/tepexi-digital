@@ -66,7 +66,7 @@ export default async function MapaPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="/images/mapa/img-hero-mapa.jpg" imageAlt="Imagen hero de un mapa">
+      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/5770b9cad7f1ad28b453a3ccc9390e4e8962fa25-4928x3264.jpg" imageAlt="Imagen hero de un mapa">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} />
         <PageHeroHeader
           icon={Map}
