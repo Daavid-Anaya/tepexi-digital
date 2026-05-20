@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
-import { getLugarBySlug, getAllLugares } from '@/lib/data'
+import { getLugarBySlug } from '@/lib/data'
+import { client } from '@/sanity/lib/client'
 import { Container } from '@/components/ui/Container'
 import { MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
@@ -14,8 +15,12 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const lugares = await getAllLugares()
-  return lugares.map((l) => ({ slug: l.slug.current }))
+  const slugs = await client.fetch<{ slug: string }[]>(
+    `*[_type == "lugar" && defined(slug.current)]{ "slug": slug.current }`,
+    {},
+    { next: { tags: ['lugar'] } },
+  )
+  return slugs.map((l) => ({ slug: l.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
