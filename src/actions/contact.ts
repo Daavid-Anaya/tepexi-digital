@@ -25,12 +25,22 @@ export async function sendContactMessage(
   }
 
   try {
-    // TODO: Change to 'Tepexi Digital <noreply@tepexidigital.com.mx>' once domain is verified in Resend
     await resend.emails.send({
-      from: 'Tepexi Digital <onboarding@resend.dev>',
+      from: 'Tepexi Digital <noreply@tepexidigital.com.mx>',
       to: process.env.CONTACT_RECIPIENT_EMAIL!,
+      replyTo: `${name} <${email}>`,
       subject: subject ? `Contacto: ${subject}` : `Contacto de ${name}`,
-      text: `Nombre: ${name}\nEmail: ${email}\nAsunto: ${subject || 'Sin asunto'}\n\nMensaje:\n${message}`,
+      text: [
+        `De: ${name} <${email}>`,
+        `Asunto: ${subject || 'Sin asunto'}`,
+        '',
+        '─────────────────────────────',
+        '',
+        message,
+        '',
+        '─────────────────────────────',
+        'Este mensaje fue enviado desde el formulario de contacto de tepexidigital.com.mx',
+      ].join('\n'),
     })
     return { success: true, error: null }
   } catch {
