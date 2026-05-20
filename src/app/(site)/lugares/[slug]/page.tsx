@@ -1,17 +1,21 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
-import { getLugarBySlug } from '@/lib/data'
+import { getLugarBySlug, getAllLugares } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
-import { Badge } from '@/components/ui/Badge'
-import { ArrowLeft, MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
+import { MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 
 interface Props {
   params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+  const lugares = await getAllLugares()
+  return lugares.map((l) => ({ slug: l.slug.current }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -38,29 +42,22 @@ export default async function LugarDetailPage({ params }: Props) {
   const { slug } = await params
   const lugar = await getLugarBySlug(slug)
 
-  if (!lugar) {
-    return (
-      <Container className="py-20 text-center">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-          <MapPin className="w-8 h-8 text-primary/40" />
-        </div>
-        <h1 className="font-heading font-semibold text-xl text-primary mb-2">Lugar no encontrado</h1>
-        <p className="text-stone mb-6">No pudimos encontrar este lugar turístico.</p>
-        <Link
-          href="/lugares"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-medium transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver a Lugares
-        </Link>
-      </Container>
-    )
-  }
+  if (!lugar) notFound()
 
   const images = (lugar.images ?? []).map((img) => ({
     url: img.url ?? img.asset?.url ?? '',
     alt: img.alt ?? lugar.title ?? '',
   })).filter((img) => img.url)
+
+  const HERO_FALLBACK = 'https://cdn.sanity.io/images/45s7lmkb/production/737c94162af932675cbb7eaddf8d63e379404009-1920x1440.jpg'
+  const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
+  const heroImageAlt = images[0]?.alt ?? `Vista de ${lugar.title}`
+
+  const hasFichaTecnica = !!(lugar.schedule || lugar.cost || lugar.address || lugar.recommendations)
+
+  const mapsUrl = lugar.address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar.address)}`
+    : null
 
   const markers = lugar.coordinates
     ? [
@@ -79,7 +76,7 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/737c94162af932675cbb7eaddf8d63e379404009-1920x1440.jpg" imageAlt="Imagen hero de una mapa y una camara encima" size="compact">
+      <PageHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} size="compact">
         <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
 
         {/* Category badge */}
@@ -134,55 +131,76 @@ export default async function LugarDetailPage({ params }: Props) {
                   </h2>
                 </div>
 
-                <div className="p-4 sm:p-5 space-y-5">
-                  {lugar.schedule && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Clock className="w-4.5 h-4.5 text-primary" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Horario</dt>
-                        <dd className="text-sm text-stone leading-snug">{lugar.schedule}</dd>
-                      </div>
-                    </div>
-                  )}
+                <div className="p-4 sm:p-5">
+                  {hasFichaTecnica ? (
+                    <dl className="space-y-5">
+                      {lugar.schedule && (
+                        <div className="flex gap-3.5">
+                          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Clock className="w-[18px] h-[18px] text-primary" />
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Horario</dt>
+                            <dd className="text-sm text-stone leading-snug">{lugar.schedule}</dd>
+                          </div>
+                        </div>
+                      )}
 
-                  {lugar.cost && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
-                        <DollarSign className="w-4.5 h-4.5 text-secondary" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Costo</dt>
-                        <dd className="text-sm text-stone leading-snug">{lugar.cost}</dd>
-                      </div>
-                    </div>
-                  )}
+                      {lugar.cost && (
+                        <div className="flex gap-3.5">
+                          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
+                            <DollarSign className="w-[18px] h-[18px] text-secondary" />
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Costo</dt>
+                            <dd className="text-sm text-stone leading-snug">{lugar.cost}</dd>
+                          </div>
+                        </div>
+                      )}
 
-                  {lugar.address && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
-                        <MapPin className="w-4.5 h-4.5 text-accent" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Dirección</dt>
-                        <dd className="text-sm text-stone leading-snug">{lugar.address}</dd>
-                      </div>
-                    </div>
-                  )}
+                      {lugar.address && (
+                        <div className="flex gap-3.5">
+                          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
+                            <MapPin className="w-[18px] h-[18px] text-accent" />
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Dirección</dt>
+                            <dd className="text-sm text-stone leading-snug">
+                              {mapsUrl ? (
+                                <a
+                                  href={mapsUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:text-primary underline underline-offset-2 transition-colors"
+                                >
+                                  {lugar.address}
+                                </a>
+                              ) : (
+                                lugar.address
+                              )}
+                            </dd>
+                          </div>
+                        </div>
+                      )}
 
-                  {lugar.recommendations && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
-                        <Star className="w-4.5 h-4.5 text-amber-600" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Recomendaciones</dt>
-                        <dd className="text-sm text-stone leading-snug prose prose-sm prose-stone max-w-none">
-                          <PortableText value={lugar.recommendations as PortableTextBlock[]} />
-                        </dd>
-                      </div>
-                    </div>
+                      {lugar.recommendations && (
+                        <div className="flex gap-3.5">
+                          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
+                            <Star className="w-[18px] h-[18px] text-amber-600" />
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Recomendaciones</dt>
+                            <dd className="text-sm text-stone leading-snug prose prose-sm prose-stone max-w-none">
+                              <PortableText value={lugar.recommendations as PortableTextBlock[]} />
+                            </dd>
+                          </div>
+                        </div>
+                      )}
+                    </dl>
+                  ) : (
+                    <p className="text-sm text-stone/60 italic text-center py-4">
+                      Información no disponible aún.
+                    </p>
                   )}
                 </div>
               </div>
