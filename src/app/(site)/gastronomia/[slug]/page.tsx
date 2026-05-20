@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { getGastronomiaBySlug } from '@/lib/data'
+import { client } from '@/sanity/lib/client'
 import { Container } from '@/components/ui/Container'
 import {
   ArrowLeft,
@@ -104,6 +106,15 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
+export async function generateStaticParams() {
+  const slugs = await client.fetch<{ slug: string }[]>(
+    `*[_type == "gastronomia" && defined(slug.current)]{ "slug": slug.current }`,
+    {},
+    { next: { tags: ['gastronomia'] } },
+  )
+  return slugs.map((l) => ({ slug: l.slug }))
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const item = await getGastronomiaBySlug(slug)
@@ -132,24 +143,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
   const { slug } = await params
   const item = await getGastronomiaBySlug(slug)
 
-  if (!item) {
-    return (
-      <Container className="py-20 text-center">
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
-          <Utensils className="w-8 h-8 text-accent/40" />
-        </div>
-        <h1 className="font-heading font-semibold text-xl text-primary mb-2">Elemento no encontrado</h1>
-        <p className="text-stone mb-6">No pudimos encontrar este lugar gastronómico.</p>
-        <Link
-          href="/gastronomia"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-medium transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver a Gastronomía
-        </Link>
-      </Container>
-    )
-  }
+  if (!item) notFound()
 
   const images = (item.images ?? [])
     .map((img) => ({ url: img.url ?? img.asset?.url ?? '', alt: img.alt ?? item.title ?? '' }))
