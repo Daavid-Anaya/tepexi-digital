@@ -559,7 +559,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.preparationTime && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <Timer className="w-4 h-4 text-accent" />
@@ -579,7 +578,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.servings && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <Users className="w-4 h-4 text-accent" />
@@ -599,7 +597,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.season && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <CalendarDays className="w-4 h-4 text-accent" />
@@ -619,7 +616,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.priceRange && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <span className="text-sm font-bold text-accent">$</span>
@@ -637,7 +633,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.origin && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <Globe className="w-4 h-4 text-accent" />
@@ -657,7 +652,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.cost && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
                           <span className="text-sm font-bold text-accent">$</span>
