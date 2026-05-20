@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url,
-      ...(lugar.imageUrl && { images: [{ url: lugar.imageUrl, width: 1200, height: 630 }] }),
+      ...(lugar.images?.[0]?.url && { images: [{ url: lugar.images[0].url, width: 1200, height: 630 }] }),
     },
   }
 }
