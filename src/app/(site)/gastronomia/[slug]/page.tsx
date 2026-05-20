@@ -18,6 +18,7 @@ import {
   CircleDot,
   Clock,
 } from 'lucide-react'
+import Image from 'next/image'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 
 // ---------------------------------------------------------------------------
@@ -64,8 +65,7 @@ function DifficultyFlames({ difficulty }: { difficulty: string }) {
       {[1, 2, 3].map((n) => (
         <Flame
           key={n}
-          className="w-4 h-4"
-          style={{ color: n <= filled ? '#BF360C' : '#d6ccc2', fill: n <= filled ? '#BF360C' : '#d6ccc2' }}
+          className={`w-4 h-4 ${n <= filled ? 'text-accent fill-accent' : 'text-stone/40 fill-stone/40'}`}
         />
       ))}
       <span className="ml-1.5 text-sm text-stone font-medium">{DIFFICULTY_LABEL[difficulty] ?? difficulty}</span>
@@ -80,8 +80,7 @@ function PriceSymbols({ priceRange }: { priceRange: string }) {
       {[1, 2, 3].map((n) => (
         <span
           key={n}
-          className="text-lg font-bold"
-          style={{ color: n <= active ? '#BF360C' : '#d6ccc2' }}
+          className={`text-lg font-bold ${n <= active ? 'text-accent' : 'text-stone/40'}`}
         >
           $
         </span>
@@ -91,11 +90,11 @@ function PriceSymbols({ priceRange }: { priceRange: string }) {
 }
 
 function IngredientIcon({ icon }: { icon: string | null }) {
-  if (icon === 'utensils') return <Utensils className="w-5 h-5" style={{ color: '#BF360C' }} />
-  if (icon === 'flame') return <Flame className="w-5 h-5" style={{ color: '#BF360C' }} />
-  if (icon === 'leaf') return <Leaf className="w-5 h-5" style={{ color: '#BF360C' }} />
-  if (icon === 'grain') return <CircleDot className="w-5 h-5" style={{ color: '#BF360C' }} />
-  return <Utensils className="w-5 h-5" style={{ color: '#BF360C' }} />
+  if (icon === 'utensils') return <Utensils className="w-5 h-5 text-accent" />
+  if (icon === 'flame') return <Flame className="w-5 h-5 text-accent" />
+  if (icon === 'leaf') return <Leaf className="w-5 h-5 text-accent" />
+  if (icon === 'grain') return <CircleDot className="w-5 h-5 text-accent" />
+  return <Utensils className="w-5 h-5 text-accent" />
 }
 
 // ---------------------------------------------------------------------------
@@ -234,10 +233,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             {/* Left column: description content */}
             <div className={item.descriptionImage ? '' : 'max-w-3xl mx-auto'}>
               {/* Section label */}
-              <p
-                className="text-xs font-semibold tracking-[0.25em] uppercase mb-4"
-                style={{ color: '#BF360C' }}
-              >
+              <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-4 text-accent">
                 Gastronomía de la Mixteca
               </p>
 
@@ -280,17 +276,16 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             {item.descriptionImage && (
               <div className="relative">
                 <div className="w-full rounded-2xl overflow-hidden shadow-lg">
-                  <img
+                  <Image
                     src={item.descriptionImage.url}
                     alt={item.descriptionImage.alt ?? item.title ?? ''}
+                    width={800}
+                    height={600}
                     className="w-full h-auto rounded-2xl object-cover"
                   />
                 </div>
                 {/* Decorative terracotta accent */}
-                <div
-                  className="absolute -bottom-3 -right-3 w-24 h-24 rounded-xl -z-10"
-                  style={{ background: '#BF360C15' }}
-                />
+                <div className="absolute -bottom-3 -right-3 w-24 h-24 rounded-xl -z-10 bg-accent/10" />
               </div>
             )}
           </div>
@@ -301,14 +296,11 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* 3. INGREDIENTES CLAVE — editorial ingredient grid                */}
       {/* ================================================================ */}
       {hasKeyIngredients && (
-        <section className="py-10 md:py-16" style={{ background: '#FBF5F0' }}>
+        <section className="py-10 md:py-16 bg-primary-50">
           <Container>
             {/* Section header */}
             <div className="flex items-center gap-3 mb-6 md:mb-10">
-              <span
-                className="w-1 h-8 rounded-full inline-block"
-                style={{ background: '#BF360C' }}
-              />
+              <span className="w-1 h-8 rounded-full inline-block bg-accent" />
               <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
                 Ingredientes Clave
               </h2>
@@ -322,10 +314,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
-                    style={{ background: '#BF360C10' }}
-                  >
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-accent/10 group-hover:bg-accent/25 transition-colors duration-300">
                     <IngredientIcon icon={item.keyIngredients![0].icon} />
                   </div>
                   {item.keyIngredients![0].name && (
@@ -334,7 +323,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h3>
                   )}
                   {item.keyIngredients![0].description && (
-                    <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                    <p className="text-sm leading-relaxed text-stone">
                       {item.keyIngredients![0].description}
                     </p>
                   )}
@@ -347,10 +336,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
-                    style={{ background: '#BF360C10' }}
-                  >
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-accent/10 group-hover:bg-accent/25 transition-colors duration-300">
                     <IngredientIcon icon={item.keyIngredients![1].icon} />
                   </div>
                   {item.keyIngredients![1].name && (
@@ -359,10 +345,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h3>
                   )}
                   {item.keyIngredients![1].description && (
-                    <p
-                      className="text-xs font-medium tracking-widest uppercase"
-                      style={{ color: '#9e7b6b' }}
-                    >
+                    <p className="text-xs font-medium tracking-widest uppercase text-stone">
                       {item.keyIngredients![1].description}
                     </p>
                   )}
@@ -375,10 +358,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5', minHeight: '160px' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
-                    style={{ background: '#BF360C10' }}
-                  >
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-accent/10 group-hover:bg-accent/25 transition-colors duration-300">
                     <IngredientIcon icon={item.keyIngredients![2].icon} />
                   </div>
                   {item.keyIngredients![2].name && (
@@ -387,10 +367,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h3>
                   )}
                   {item.keyIngredients![2].description && (
-                    <p
-                      className="text-xs font-medium tracking-widest uppercase"
-                      style={{ color: '#9e7b6b' }}
-                    >
+                    <p className="text-xs font-medium tracking-widest uppercase text-stone">
                       {item.keyIngredients![2].description}
                     </p>
                   )}
@@ -404,21 +381,20 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   style={{ minHeight: '200px' }}
                 >
                   {item.keyIngredients![3].imageUrl ? (
-                    <img
+                    <Image
                       src={item.keyIngredients![3].imageUrl}
                       alt={item.keyIngredients![3].name ?? 'Ingrediente'}
+                      width={800}
+                      height={400}
                       className="w-full h-full object-cover"
                       style={{ minHeight: '200px' }}
                     />
                   ) : (
                     <div
-                      className="w-full h-full flex items-center justify-center"
-                      style={{
-                        background: 'linear-gradient(135deg, #FBF5F0 0%, #F5EAE0 100%)',
-                        minHeight: '200px',
-                      }}
+                      className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100"
+                      style={{ minHeight: '200px' }}
                     >
-                      <Utensils className="w-10 h-10" style={{ color: '#BF360C30' }} />
+                      <Utensils className="w-10 h-10 text-accent/20" />
                     </div>
                   )}
                 </div>
@@ -430,10 +406,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                   style={{ background: '#FFFFFF', borderColor: '#E8DDD5' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300"
-                    style={{ background: '#BF360C10' }}
-                  >
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-accent/10 group-hover:bg-accent/25 transition-colors duration-300">
                     <IngredientIcon icon={item.keyIngredients![4].icon} />
                   </div>
                   {item.keyIngredients![4].name && (
@@ -442,7 +415,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h3>
                   )}
                   {item.keyIngredients![4].description && (
-                    <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                    <p className="text-sm leading-relaxed text-stone">
                       {item.keyIngredients![4].description}
                     </p>
                   )}
@@ -461,10 +434,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
           <Container>
             {/* Section header */}
             <div className="flex items-center gap-3 mb-8 md:mb-12">
-              <span
-                className="w-1 h-8 rounded-full inline-block"
-                style={{ background: '#BF360C' }}
-              />
+              <span className="w-1 h-8 rounded-full inline-block bg-accent" />
               <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
                 Proceso de Preparación
               </h2>
@@ -473,10 +443,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             {/* Timeline — alternating left/right on desktop, stacked on mobile */}
             <div className="relative max-w-6xl mx-auto">
               {/* Central vertical line (desktop only) */}
-              <div
-                className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
-                style={{ background: '#BF360C20' }}
-              />
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-accent/[0.125]" />
 
               {item.preparationSteps!.map((step, index) => {
                 const isLeft = index % 2 === 0
@@ -485,8 +452,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {/* Step circle — centered on the line (desktop), left-aligned (mobile) */}
                     <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10">
                       <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-white text-sm shadow-md"
-                        style={{ background: '#BF360C' }}
+                        className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-white text-sm shadow-md bg-accent"
                       >
                         {index + 1}
                       </div>
@@ -509,15 +475,14 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                           </h3>
                           {step.duration && (
                             <span
-                              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border flex-shrink-0"
-                              style={{ color: '#BF360C', borderColor: '#BF360C30', background: '#BF360C08' }}
+                              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border flex-shrink-0 text-accent border-accent/20 bg-accent/5"
                             >
                               <Clock className="w-3 h-3" />
                               {step.duration}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm leading-relaxed" style={{ color: '#6b5b4e' }}>
+                        <p className="text-sm leading-relaxed text-stone">
                           {step.description}
                         </p>
                       </div>
@@ -544,10 +509,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               {images.length > 0 && (
                 <div>
                   <div className="flex items-center gap-3 mb-6">
-                    <span
-                      className="w-0.5 h-6 rounded-full inline-block"
-                      style={{ background: '#BF360C' }}
-                    />
+                    <span className="w-0.5 h-6 rounded-full inline-block bg-accent" />
                      <h2 className="font-heading font-bold text-text-primary text-2xl">
                       Galería
                     </h2>
@@ -565,15 +527,9 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
               {/* Recipe Quick Facts Card */}
               {hasMagazineContent && (
-                <div
-                  className="rounded-2xl overflow-hidden shadow-sm border"
-                  style={{ borderColor: '#E8DDD5' }}
-                >
+                <div className="rounded-2xl overflow-hidden shadow-sm border border-[#E8DDD5]">
                   {/* Card header */}
-                  <div
-                    className="px-4 sm:px-5 py-4"
-                    style={{ background: '#BF360C' }}
-                  >
+                  <div className="px-4 sm:px-5 py-4 bg-accent">
                     <h2 className="font-heading font-semibold text-white text-sm tracking-widest uppercase">
                       Ficha del platillo
                     </h2>
@@ -584,15 +540,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.difficulty && (
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <Flame className="w-4 h-4" style={{ color: '#BF360C' }} />
+                          <Flame className="w-4 h-4 text-accent" />
                         </div>
                         <div>
                           <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-1"
-                            style={{ color: '#9e7b6b' }}
+                            className="text-[11px] uppercase tracking-widest font-semibold mb-1 text-stone"
                           >
                             Dificultad
                           </dt>
@@ -606,14 +560,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <Timer className="w-4 h-4" style={{ color: '#BF360C' }} />
+                          <Timer className="w-4 h-4 text-accent" />
                         </div>
                         <div>
                           <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
+                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone"
                           >
                             Preparación
                           </dt>
@@ -627,14 +580,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <Users className="w-4 h-4" style={{ color: '#BF360C' }} />
+                          <Users className="w-4 h-4 text-accent" />
                         </div>
                         <div>
                           <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
+                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone"
                           >
                             Porciones
                           </dt>
@@ -648,14 +600,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <CalendarDays className="w-4 h-4" style={{ color: '#BF360C' }} />
+                          <CalendarDays className="w-4 h-4 text-accent" />
                         </div>
                         <div>
                           <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
+                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone"
                           >
                             Temporada
                           </dt>
@@ -669,15 +620,12 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <span className="text-sm font-bold" style={{ color: '#BF360C' }}>$</span>
+                          <span className="text-sm font-bold text-accent">$</span>
                         </div>
                         <div>
-                          <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
-                          >
+                          <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
                             Rango de precios
                           </dt>
                           <PriceSymbols priceRange={item.priceRange} />
@@ -690,14 +638,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <Globe className="w-4 h-4" style={{ color: '#BF360C' }} />
+                          <Globe className="w-4 h-4 text-accent" />
                         </div>
                         <div>
                           <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
+                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone"
                           >
                             Origen
                           </dt>
@@ -711,15 +658,12 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                       <div className="flex items-start gap-3">
                         <div
                           className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
-                          style={{ background: '#BF360C15' }}
+                          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10"
                         >
-                          <span className="text-sm font-bold" style={{ color: '#BF360C' }}>$</span>
+                          <span className="text-sm font-bold text-accent">$</span>
                         </div>
                         <div>
-                          <dt
-                            className="text-[11px] uppercase tracking-widest font-semibold mb-0.5"
-                            style={{ color: '#9e7b6b' }}
-                          >
+                          <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
                             Precio aproximado
                           </dt>
                           <dd className="text-sm text-stone leading-snug">{item.cost}</dd>
@@ -732,13 +676,9 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
               {/* Standalone quote card */}
               {item.quote && (
-                <figure
-                  className="rounded-2xl p-4 sm:p-6 border"
-                  style={{ background: '#FBF5F0', borderColor: '#E8DDD5' }}
-                >
+                <figure className="rounded-2xl p-4 sm:p-6 border bg-primary-50 border-[#E8DDD5]">
                   <span
-                    className="block font-heading text-5xl leading-none mb-3"
-                    style={{ color: '#BF360C40' }}
+                    className="block font-heading text-5xl leading-none mb-3 text-accent/25"
                     aria-hidden="true"
                   >
                     &ldquo;
@@ -748,10 +688,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                   >
                     {item.quote.text}
                   </blockquote>
-                  <figcaption
-                    className="text-xs tracking-widest uppercase font-medium"
-                    style={{ color: '#BF360C' }}
-                  >
+                  <figcaption className="text-xs tracking-widest uppercase font-medium text-accent">
                     — {item.quote.author}
                   </figcaption>
                 </figure>
