@@ -36,9 +36,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const evento = await getEventoBySlug(slug)
   if (!evento) return { title: 'No encontrado' }
+  const title = evento.seo?.metaTitle ?? evento.title ?? 'Evento'
+  const description = evento.seo?.metaDescription ?? undefined
+  const url = `https://tepexidigital.com.mx/agenda/${slug}`
   return {
-    title: evento.seo?.metaTitle ?? evento.title ?? 'Evento',
-    description: evento.seo?.metaDescription ?? undefined,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      ...(evento.imageUrl && { images: [{ url: evento.imageUrl, width: 1200, height: 630 }] }),
+    },
   }
 }
 

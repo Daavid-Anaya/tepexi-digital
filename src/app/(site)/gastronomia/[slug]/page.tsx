@@ -108,9 +108,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const item = await getGastronomiaBySlug(slug)
   if (!item) return { title: 'No encontrado' }
+  const title = item.seo?.metaTitle ?? item.title ?? 'Gastronomía'
+  const description = item.seo?.metaDescription ?? undefined
+  const url = `https://tepexidigital.com.mx/gastronomia/${slug}`
   return {
-    title: item.seo?.metaTitle ?? item.title ?? 'Gastronomía',
-    description: item.seo?.metaDescription ?? undefined,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      ...(item.imageUrl && { images: [{ url: item.imageUrl, width: 1200, height: 630 }] }),
+    },
   }
 }
 

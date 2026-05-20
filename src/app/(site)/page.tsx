@@ -10,9 +10,9 @@ import { getAllLugares, getAllGastronomia, getUpcomingEventos, getSettings } fro
 import type { PlaceCardProps, EventCardProps } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Inicio',
+  title: 'Tepexi de Rodríguez — Turismo, Cultura y Gastronomía',
   description:
-    'Descubre la riqueza turística, cultural y gastronómica de Tepexi de Rodríguez, Puebla.',
+    'Descubre la riqueza turística, cultural y gastronómica de Tepexi de Rodríguez, Puebla. Huellas de dinosaurios, arquitectura colonial, manantiales naturales y la gastronomía de la Mixteca Poblana.',
 }
 
 export default async function HomePage() {

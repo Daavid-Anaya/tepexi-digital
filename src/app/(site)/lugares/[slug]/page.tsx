@@ -18,9 +18,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const lugar = await getLugarBySlug(slug)
   if (!lugar) return { title: 'Lugar no encontrado' }
+  const title = lugar.seo?.metaTitle ?? lugar.title ?? 'Lugar turístico'
+  const description = lugar.seo?.metaDescription ?? undefined
+  const url = `https://tepexidigital.com.mx/lugares/${slug}`
   return {
-    title: lugar.seo?.metaTitle ?? lugar.title ?? 'Lugar turístico',
-    description: lugar.seo?.metaDescription ?? undefined,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      ...(lugar.imageUrl && { images: [{ url: lugar.imageUrl, width: 1200, height: 630 }] }),
+    },
   }
 }
 

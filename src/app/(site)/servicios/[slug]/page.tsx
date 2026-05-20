@@ -17,9 +17,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const servicio = await getServicioBySlug(slug)
   if (!servicio) return { title: 'Servicio no encontrado' }
+  const title = servicio.seo?.metaTitle ?? servicio.title ?? 'Servicio'
+  const description = servicio.seo?.metaDescription ?? undefined
+  const url = `https://tepexidigital.com.mx/servicios/${slug}`
   return {
-    title: servicio.seo?.metaTitle ?? servicio.title ?? 'Servicio',
-    description: servicio.seo?.metaDescription ?? undefined,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      ...(servicio.imageUrl && { images: [{ url: servicio.imageUrl, width: 1200, height: 630 }] }),
+    },
   }
 }
 
