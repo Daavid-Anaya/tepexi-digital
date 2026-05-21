@@ -37,8 +37,8 @@ function createCategoryIcon(color: string): L.DivIcon {
 
 const TYPE_PATHS: Record<string, string> = {
   lugar: '/lugares',
-  gastronomia: '/gastronomia',
-  cultura: '/cultura',
+  gastronomia: '/lugares',
+  cultura: '/lugares',
   servicios: '/servicios',
 }
 
