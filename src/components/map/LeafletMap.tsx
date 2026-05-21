@@ -10,20 +10,28 @@ const DEFAULT_CENTER = { lat: 18.5793, lng: -97.9218 }
 const DEFAULT_ZOOM = 14
 
 function createCategoryIcon(color: string): L.DivIcon {
+  const fill = color || '#8B4513'
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 44" width="32" height="44">
+      <defs>
+        <filter id="pin-shadow" x="-30%" y="-10%" width="160%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.35)"/>
+        </filter>
+      </defs>
+      <path
+        filter="url(#pin-shadow)"
+        d="M16 0C7.163 0 0 7.163 0 16c0 6.04 3.35 11.3 8.3 14.06L16 44l7.7-13.94C28.65 27.3 32 22.04 32 16 32 7.163 24.837 0 16 0z"
+        fill="${fill}"
+      />
+      <circle cx="16" cy="15" r="6.5" fill="white" opacity="0.95"/>
+    </svg>
+  `
   return L.divIcon({
     className: '',
-    html: `<div style="
-      width: 24px;
-      height: 24px;
-      border-radius: 50% 50% 50% 0;
-      background-color: ${color || '#8B4513'};
-      transform: rotate(-45deg);
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    "></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 24],
-    popupAnchor: [0, -24],
+    html: svg,
+    iconSize: [32, 44],
+    iconAnchor: [16, 44],
+    popupAnchor: [0, -46],
   })
 }
 
@@ -58,16 +66,36 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
             position={[marker.coordinates.lat, marker.coordinates.lng]}
             icon={icon}
           >
-            <Popup>
-              <div className="text-sm">
-                <p className="font-semibold mb-1">{marker.title}</p>
-                <p className="text-stone-500 capitalize mb-2">{marker.category}</p>
-                <Link
-                  href={`${basePath}/${marker.slug}`}
-                  className="text-primary underline text-xs"
+            <Popup minWidth={180} className="leaflet-popup-custom">
+              <div className="text-sm leading-snug" style={{ fontFamily: 'inherit' }}>
+                <p
+                  className="font-semibold mb-0.5 text-stone-800"
+                  style={{ fontSize: '0.875rem' }}
                 >
-                  Ver detalle →
-                </Link>
+                  {marker.title}
+                </p>
+                <p
+                  className="capitalize mb-3"
+                  style={{ fontSize: '0.75rem', color: '#78716c' }}
+                >
+                  {marker.category}
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <Link
+                    href={`${basePath}/${marker.slug}`}
+                    style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
+                  >
+                    Ver detalle →
+                  </Link>
+                  <a
+                    href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '0.75rem', color: '#2563eb', textDecoration: 'underline' }}
+                  >
+                    Abrir en Google Maps ↗
+                  </a>
+                </div>
               </div>
             </Popup>
           </Marker>
