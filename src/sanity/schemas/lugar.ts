@@ -31,7 +31,34 @@ export const lugar = defineType({
       name: 'description',
       title: 'Descripción',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Título (H2)', value: 'h2' },
+            { title: 'Subtítulo (H3)', value: 'h3' },
+            { title: 'Cita', value: 'blockquote' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Negrita', value: 'strong' },
+              { title: 'Cursiva', value: 'em' },
+              { title: 'Resaltado', value: 'highlight', icon: () => '🖊' },
+            ],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Enlace',
+                fields: [
+                  { name: 'href', type: 'url', title: 'URL' },
+                ],
+              },
+            ],
+          },
+        },
+      ],
     }),
     defineField({
       name: 'images',

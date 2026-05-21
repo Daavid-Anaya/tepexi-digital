@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { PortableText } from '@portabletext/react'
+import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { getLugarBySlug } from '@/lib/data'
 import { client } from '@/sanity/lib/client'
@@ -41,6 +41,68 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(lugar.images?.[0]?.url && { images: [{ url: lugar.images[0].url, width: 1200, height: 630 }] }),
     },
   }
+}
+
+const descriptionComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => (
+      <p style={{ marginBottom: '1rem', lineHeight: '1.75' }} className="text-stone">
+        {children}
+      </p>
+    ),
+    h2: ({ children }) => (
+      <h2
+        style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '2rem', marginBottom: '0.75rem', lineHeight: '1.3' }}
+        className="font-heading text-text-primary"
+      >
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3
+        style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '1.5rem', marginBottom: '0.5rem', lineHeight: '1.4' }}
+        className="font-heading text-text-primary"
+      >
+        {children}
+      </h3>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote
+        style={{
+          borderLeft: '4px solid rgba(139,69,19,0.4)',
+          backgroundColor: 'rgba(139,69,19,0.05)',
+          paddingLeft: '1rem',
+          paddingRight: '1rem',
+          paddingTop: '0.5rem',
+          paddingBottom: '0.5rem',
+          marginTop: '1rem',
+          marginBottom: '1rem',
+          borderRadius: '0 0.5rem 0.5rem 0',
+          fontStyle: 'italic',
+        }}
+        className="text-stone"
+      >
+        {children}
+      </blockquote>
+    ),
+  },
+  marks: {
+    highlight: ({ children }) => (
+      <mark style={{ backgroundColor: 'rgba(139,69,19,0.12)', borderRadius: '2px', padding: '0 2px' }} className="text-primary-dark not-italic font-medium">
+        {children}
+      </mark>
+    ),
+    link: ({ value, children }) => (
+      <a
+        href={value?.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary underline underline-offset-4 hover:text-primary-dark transition-colors"
+      >
+        {children}
+      </a>
+    ),
+  },
 }
 
 export default async function LugarDetailPage({ params }: Props) {
@@ -120,8 +182,11 @@ export default async function LugarDetailPage({ params }: Props) {
 
               {/* Description */}
               {lugar.description && (
-                <div className="prose prose-stone max-w-none prose-headings:font-heading prose-headings:text-primary prose-a:text-primary prose-a:underline-offset-4 prose-strong:text-primary-dark prose-p:leading-relaxed prose-p:text-stone">
-                  <PortableText value={lugar.description as PortableTextBlock[]} />
+                <div className="text-base text-stone">
+                  <PortableText
+                    value={lugar.description as PortableTextBlock[]}
+                    components={descriptionComponents}
+                  />
                 </div>
               )}
             </div>
