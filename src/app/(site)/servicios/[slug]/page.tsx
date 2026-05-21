@@ -61,6 +61,10 @@ export default async function ServicioDetailPage({ params }: Props) {
     alt: img.alt ?? servicio.title ?? '',
   })).filter((img) => img.url)
 
+  const mapsUrl = servicio.address
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servicio.address)}`
+    : null
+
   const markers = servicio.coordinates
     ? [
         {
@@ -165,7 +169,20 @@ export default async function ServicioDetailPage({ params }: Props) {
                       </div>
                       <div>
                         <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Direccion</dt>
-                        <dd className="text-sm text-stone leading-snug">{servicio.address}</dd>
+                        <dd className="text-sm text-stone leading-snug">
+                          {mapsUrl ? (
+                            <a
+                              href={mapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-primary underline underline-offset-2 transition-colors"
+                            >
+                              {servicio.address}
+                            </a>
+                          ) : (
+                            servicio.address
+                          )}
+                        </dd>
                       </div>
                     </div>
                   )}
