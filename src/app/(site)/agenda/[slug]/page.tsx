@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { PortableText } from '@portabletext/react'
+import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { getEventoBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
@@ -50,6 +50,68 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(evento.imageUrl && { images: [{ url: evento.imageUrl, width: 1200, height: 630 }] }),
     },
   }
+}
+
+const descriptionComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => (
+      <p style={{ marginBottom: '1rem', lineHeight: '1.75' }} className="text-stone">
+        {children}
+      </p>
+    ),
+    h2: ({ children }) => (
+      <h2
+        style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '2rem', marginBottom: '0.75rem', lineHeight: '1.3' }}
+        className="font-heading text-text-primary"
+      >
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3
+        style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '1.5rem', marginBottom: '0.5rem', lineHeight: '1.4' }}
+        className="font-heading text-text-primary"
+      >
+        {children}
+      </h3>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote
+        style={{
+          borderLeft: '4px solid rgba(46,125,50,0.4)',
+          backgroundColor: 'rgba(46,125,50,0.05)',
+          paddingLeft: '1rem',
+          paddingRight: '1rem',
+          paddingTop: '0.5rem',
+          paddingBottom: '0.5rem',
+          marginTop: '1rem',
+          marginBottom: '1rem',
+          borderRadius: '0 0.5rem 0.5rem 0',
+          fontStyle: 'italic',
+        }}
+        className="text-stone"
+      >
+        {children}
+      </blockquote>
+    ),
+  },
+  marks: {
+    highlight: ({ children }) => (
+      <mark style={{ backgroundColor: 'rgba(46,125,50,0.12)', borderRadius: '2px', padding: '0 2px' }} className="text-secondary not-italic font-medium">
+        {children}
+      </mark>
+    ),
+    link: ({ value, children }) => (
+      <a
+        href={value?.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-secondary underline underline-offset-4 hover:text-secondary/80 transition-colors"
+      >
+        {children}
+      </a>
+    ),
+  },
 }
 
 export default async function EventoDetailPage({ params }: Props) {
@@ -166,8 +228,11 @@ export default async function EventoDetailPage({ params }: Props) {
 
               {/* Description */}
               {evento.description && (
-                <div className="prose prose-stone max-w-none prose-headings:font-heading prose-headings:text-primary prose-a:text-secondary prose-a:underline-offset-4 prose-strong:text-primary-dark prose-p:leading-relaxed prose-p:text-stone">
-                  <PortableText value={evento.description as PortableTextBlock[]} />
+                <div className="text-base text-stone">
+                  <PortableText
+                    value={evento.description as PortableTextBlock[]}
+                    components={descriptionComponents}
+                  />
                 </div>
               )}
             </div>
