@@ -3,10 +3,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
+import { notFound } from 'next/navigation'
 import { getEventoBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
-import { ArrowLeft, MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
+import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 
@@ -118,24 +119,7 @@ export default async function EventoDetailPage({ params }: Props) {
   const { slug } = await params
   const evento = await getEventoBySlug(slug)
 
-  if (!evento) {
-    return (
-      <Container className="py-20 text-center">
-        <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-4">
-          <CalendarDays className="w-8 h-8 text-secondary/40" />
-        </div>
-        <h1 className="font-heading font-semibold text-xl text-primary mb-2">Evento no encontrado</h1>
-        <p className="text-stone mb-6">No pudimos encontrar este evento en la agenda.</p>
-        <Link
-          href="/agenda"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-medium transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver a Agenda
-        </Link>
-      </Container>
-    )
-  }
+  if (!evento) notFound()
 
   const formatted = formatDateShort(evento.date)
   const locationLabel = evento.location?.title ?? evento.locationText

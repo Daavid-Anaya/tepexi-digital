@@ -237,11 +237,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 Gastronomía de la Mixteca
               </p>
 
-              {/* Dish name as editorial lead-in */}
-              <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary leading-tight mb-8">
-                {/*Historia y contexto cultural*/}
-              </h2>
-
               {/* Introduction — shown before description */}
               {item.introduction && (
                 <div

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { getServicioBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
-import { ArrowLeft, MapPin, Clock, DollarSign, Star, Map, ConciergeBell } from 'lucide-react'
+import { MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
@@ -37,24 +37,7 @@ export default async function ServicioDetailPage({ params }: Props) {
   const { slug } = await params
   const servicio = await getServicioBySlug(slug)
 
-  if (!servicio) {
-    return (
-      <Container className="py-20 text-center">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
-          <ConciergeBell className="w-8 h-8" style={{ color: 'rgba(55,71,79,0.4)' }} />
-        </div>
-        <h1 className="font-heading font-semibold text-xl text-primary mb-2">Servicio no encontrado</h1>
-        <p className="text-stone mb-6">No pudimos encontrar este servicio.</p>
-        <Link
-          href="/mapa"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-dark font-medium transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver al Mapa
-        </Link>
-      </Container>
-    )
-  }
+  if (!servicio) notFound()
 
   const images = (servicio.images ?? []).map((img) => ({
     url: img.url ?? img.asset?.url ?? '',
