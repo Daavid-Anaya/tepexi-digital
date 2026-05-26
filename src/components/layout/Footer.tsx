@@ -2,17 +2,7 @@ import Link from 'next/link'
 import { MapPin, Share2, AtSign, Mail, Phone, Globe } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { getSettings } from '@/lib/data'
-
-const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/lugares', label: 'Lugares' },
-  { href: '/gastronomia', label: 'Gastronomía' },
-  { href: '/cultura', label: 'Cultura' },
-  { href: '/como-llegar', label: 'Cómo llegar' },
-  { href: '/mapa', label: 'Mapa' },
-  { href: '/agenda', label: 'Agenda' },
-  { href: '/contacto', label: 'Contacto' },
-]
+import { navLinks } from './Navbar'
 
 function getSocialIcon(platform: string) {
   const lower = platform.toLowerCase()

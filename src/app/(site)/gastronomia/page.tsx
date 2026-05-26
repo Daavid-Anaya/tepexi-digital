@@ -45,7 +45,7 @@ const endemicIngredients = [
     image: 'https://cdn.sanity.io/images/45s7lmkb/production/818070b7fff1df63925cd6be043dd34fffa13a52-2048x1536.jpg',
     title: 'Cactáceas y Frutos',
     description:
-      'El tesoro del decierto, La Pitaya o Pitahaya, un fruto vibrante y dulce que domina la temporada de calor.',
+      'El tesoro del desierto, La Pitaya o Pitahaya, un fruto vibrante y dulce que domina la temporada de calor.',
   },
   {
     image: 'https://cdn.sanity.io/images/45s7lmkb/production/77da54ec4a15baf024ae5c4a3d000f6f8df9f607-2039x1570.jpg',

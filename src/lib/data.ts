@@ -174,12 +174,13 @@ function mockToLugarList(l: MockLugar): LugarListItem {
   }
 }
 
+let _portableTextKeyCounter = 0
 function stringToPortableText(text: string | null): unknown[] | null {
   if (!text) return null
   return [
     {
       _type: 'block',
-      _key: `mock-rec-${Date.now()}`,
+      _key: `mock-rec-${++_portableTextKeyCounter}`,
       style: 'normal',
       children: [{ _type: 'span', text, marks: [] }],
       markDefs: [],

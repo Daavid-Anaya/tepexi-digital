@@ -483,7 +483,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       )}
 
       {/* ================================================================ */}
-      {/* 6. MAIN CONTENT — two-column editorial layout                    */}
+      {/* 5. MAIN CONTENT — two-column editorial layout                    */}
       {/* ================================================================ */}
       <section className="py-10 md:py-14 bg-white">
         <Container>

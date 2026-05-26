@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { MobileNavToggle } from './MobileNavToggle'
+import { NavLinks } from './NavLinks'
 
 export const navLinks = [
   { href: '/', label: 'Inicio' },
@@ -46,22 +47,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <ul className="hidden md:flex items-center gap-0.5" role="list">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="relative px-3 py-2 text-sm font-medium text-stone hover:text-primary rounded-md transition-colors duration-200
-                      after:absolute after:bottom-0.5 after:left-3 after:right-3 after:h-[2px]
-                      after:bg-primary after:scale-x-0 after:origin-left
-                      after:transition-transform after:duration-200
-                      hover:after:scale-x-100"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <NavLinks links={navLinks} />
 
             {/* Mobile toggle */}
             <MobileNavToggle navLinks={navLinks} />

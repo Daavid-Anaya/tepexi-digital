@@ -120,7 +120,7 @@ export default async function ServicioDetailPage({ params }: Props) {
                 {/* Sidebar header */}
                 <div className="px-5 py-4" style={{ backgroundColor: '#37474F' }}>
                   <h2 className="font-heading font-semibold text-white text-sm tracking-wide uppercase">
-                    Informacion del Servicio
+                    Información del Servicio
                   </h2>
                 </div>
 
@@ -155,7 +155,7 @@ export default async function ServicioDetailPage({ params }: Props) {
                         <MapPin className="w-4 h-4" style={{ color: '#37474F' }} />
                       </div>
                       <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Direccion</dt>
+                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Dirección</dt>
                         <dd className="text-sm text-stone leading-snug">
                           {mapsUrl ? (
                             <a
