@@ -15,12 +15,16 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: string }[]>(
-    `*[_type == "lugar" && defined(slug.current)]{ "slug": slug.current }`,
-    {},
-    { next: { tags: ['lugar'] } },
-  )
-  return slugs.map((l) => ({ slug: l.slug }))
+  try {
+    const slugs = await client.fetch<{ slug: string }[]>(
+      `*[_type == "lugar" && defined(slug.current)]{ "slug": slug.current }`,
+      {},
+      { next: { tags: ['lugar'] } },
+    )
+    return slugs.map((l) => ({ slug: l.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -278,7 +282,7 @@ export default async function LugarDetailPage({ params }: Props) {
               {/* Quick tip */}
               <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                 <p className="text-sm text-primary/80 leading-relaxed">
-                  💡 Nuestro equipo se encuentra trabajando para obtener información más completa e imgenes de los lugares más representativos de la región, Gracias por su paciencia! ^^
+                  💡 Estamos trabajando para completar la información de este lugar, Gracias por su paciencia! ¿Tenés datos o fotos que compartir? <a href="/contacto" className="underline underline-offset-2 hover:text-primary transition-colors">Contactanos</a>.
                 </p>
               </div>
             </aside>

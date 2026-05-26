@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { getGastronomiaBySlug } from '@/lib/data'
 import { client } from '@/sanity/lib/client'
 import { Container } from '@/components/ui/Container'
+import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 import {
-  ArrowLeft,
   Utensils,
   Flame,
   Leaf,
@@ -106,12 +105,16 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: string }[]>(
-    `*[_type == "gastronomia" && defined(slug.current)]{ "slug": slug.current }`,
-    {},
-    { next: { tags: ['gastronomia'] } },
-  )
-  return slugs.map((l) => ({ slug: l.slug }))
+  try {
+    const slugs = await client.fetch<{ slug: string }[]>(
+      `*[_type == "gastronomia" && defined(slug.current)]{ "slug": slug.current }`,
+      {},
+      { next: { tags: ['gastronomia'] } },
+    )
+    return slugs.map((l) => ({ slug: l.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -148,6 +151,10 @@ export default async function GastronomiaDetailPage({ params }: Props) {
     .map((img) => ({ url: img.url ?? img.asset?.url ?? '', alt: img.alt ?? item.title ?? '' }))
     .filter((img) => img.url)
 
+  const HERO_FALLBACK = 'https://cdn.sanity.io/images/45s7lmkb/production/04919ba0ea9ad85fd4f46aea35d7c3a513f4becb-4104x2736.jpg'
+  const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
+  const heroImageAlt = images[0]?.alt ?? item.title ?? 'Imagen de gastronomía'
+
   const dishTypeLabel = item.dishType ? (DISH_TYPE_LABELS[item.dishType] ?? item.dishType) : null
 
   // Article metadata strip values
@@ -165,64 +172,49 @@ export default async function GastronomiaDetailPage({ params }: Props) {
   return (
     <>
       {/* ================================================================ */}
-      {/* 1. HERO — solid background, same pattern as /lugares/[slug]       */}
+      {/* 1. HERO                                                           */}
       {/* ================================================================ */}
-      <section className="relative overflow-hidden bg-primary py-10 md:py-14">
-        {/* Decorative circles */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-primary-light" />
-          <div className="absolute bottom-0 left-1/3 w-40 h-40 rounded-full bg-primary-dark" />
+      <PageHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} size="compact">
+        <PageHeroBackLink href="/gastronomia" label="Volver a Gastronomía" />
+
+        {/* Category + dish type badges */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {item.category && (
+            <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
+              <Utensils className="w-3 h-3" />
+              {item.category}
+            </span>
+          )}
+          {dishTypeLabel && (
+            <span className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
+              {dishTypeLabel}
+            </span>
+          )}
         </div>
 
-        <Container className="relative">
-          {/* Back navigation */}
-          <Link
-            href="/gastronomia"
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-            Volver a Gastronomía
-          </Link>
+        {/* Title */}
+        <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
+          {item.title}
+        </h1>
 
-          {/* Category + dish type badges */}
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            {item.category && (
-              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-                <Utensils className="w-3 h-3" />
-                {item.category}
-              </span>
+        {/* Origin + season meta */}
+        {(item.origin || item.season) && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
+            {item.origin && (
+              <p className="flex items-center gap-2 text-white/70 text-sm">
+                <Globe className="w-4 h-4 flex-shrink-0" />
+                <span>{item.origin}</span>
+              </p>
             )}
-            {dishTypeLabel && (
-              <span className="inline-flex items-center bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-                {dishTypeLabel}
-              </span>
+            {item.season && (
+              <p className="flex items-center gap-2 text-white/70 text-sm">
+                <CalendarDays className="w-4 h-4 flex-shrink-0" />
+                <span>Temporada: {item.season}</span>
+              </p>
             )}
           </div>
-
-          {/* Title */}
-          <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
-            {item.title}
-          </h1>
-
-          {/* Origin + season meta */}
-          {(item.origin || item.season) && (
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
-              {item.origin && (
-                <p className="flex items-center gap-2 text-white/70 text-sm">
-                  <Globe className="w-4 h-4 flex-shrink-0" />
-                  <span>{item.origin}</span>
-                </p>
-              )}
-              {item.season && (
-                <p className="flex items-center gap-2 text-white/70 text-sm">
-                  <CalendarDays className="w-4 h-4 flex-shrink-0" />
-                  <span>Temporada: {item.season}</span>
-                </p>
-              )}
-            </div>
-          )}
-        </Container>
-      </section>
+        )}
+      </PageHero>
 
       {/* ================================================================ */}
       {/* 2. ARTICLE LEAD — intro & description (two-column with image)    */}

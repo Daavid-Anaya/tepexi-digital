@@ -217,10 +217,9 @@ const CATEGORY_TYPE_MAP: Record<string, 'lugar' | 'gastronomia' | 'cultura' | 's
   'Ecoturismo y Naturaleza': 'lugar',
   'Historia y Arqueología': 'lugar',
   'Paleontología': 'lugar',
-  'Hospedaje': 'lugar',
+  'Hospedaje': 'servicios',
   'Gastronomía y Comercio Local': 'gastronomia',
   'Cultura y Espacios Públicos': 'cultura',
-  'Hotel': 'servicios',
   'Banco': 'servicios',
 }
 
@@ -308,6 +307,8 @@ export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
     const { sanityFetch } = await import('@/sanity/lib/live')
     const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: allGastronomiaQuery })
+    // Intentionally no mock fallback: gastronomia has no mock data.
+    // An empty result means no dishes are published yet — that's valid.
     return (data ?? []) as GastronomiaListItem[]
   } catch (err) {
     logMockFallback('getAllGastronomia', 'fetch-error', err)

@@ -5,6 +5,7 @@ import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import { getEventoBySlug } from '@/lib/data'
+import { client } from '@/sanity/lib/client'
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
@@ -31,6 +32,19 @@ function formatDateShort(dateString: string) {
 
 interface Props {
   params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+  try {
+    const slugs = await client.fetch<{ slug: string }[]>(
+      `*[_type == "evento" && defined(slug.current)]{ "slug": slug.current }`,
+      {},
+      { next: { tags: ['evento'] } },
+    )
+    return slugs.map((e) => ({ slug: e.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

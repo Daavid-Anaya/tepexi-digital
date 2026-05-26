@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 }
 
 // ─── Data ────────────────────────────────────────────────────────────────────
+// NOTE: This page is intentionally static (no Sanity schema for "cultura" yet).
+// When a "cultura" content type is created in Sanity, connect it here.
 
 const timelineItems = [
   {
