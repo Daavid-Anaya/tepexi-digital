@@ -8,5 +8,5 @@ export const { sanityFetch, SanityLive } = defineLive({
     apiVersion: '2025-03-01',
   }),
   serverToken: token,
-  browserToken: token,
+  browserToken: token, // Required for live preview in draft mode
 })

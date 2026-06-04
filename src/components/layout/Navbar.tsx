@@ -31,7 +31,6 @@ export function Navbar() {
             <Link
               href="/"
               className="flex items-center gap-2 group"
-              aria-label="Tepexi Digital — Inicio"
             >
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-cream shadow-sm group-hover:bg-primary-dark transition-colors duration-200">
                 <MapPin size={16} strokeWidth={2.5} />

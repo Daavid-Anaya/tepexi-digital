@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { getSettings } from '@/lib/data'
 import { SanityLive } from '@/sanity/lib/live'
@@ -46,11 +47,13 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { isEnabled: isDraft } = await draftMode()
+
   return (
     <html
       lang="es"
@@ -59,7 +62,7 @@ export default function RootLayout({
     >
       <body className="bg-sand antialiased">
         {children}
-        <SanityLive />
+        {isDraft && <SanityLive />}
       </body>
     </html>
   )
