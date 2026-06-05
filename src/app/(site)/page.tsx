@@ -160,7 +160,7 @@ export default async function HomePage() {
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <p className="font-heading font-bold text-3xl text-primary-300 leading-none">{value}</p>
-                <p className="text-cream/80 text-xs mt-1 uppercase tracking-wide">{label}</p>
+                <p className="text-cream text-xs mt-1 uppercase tracking-wide">{label}</p>
               </div>
             ))}
           </div>
@@ -181,7 +181,7 @@ export default async function HomePage() {
           {/* Section header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Destinos
               </p>
@@ -233,7 +233,7 @@ export default async function HomePage() {
         <Container className="relative">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Próximamente
               </p>
@@ -273,7 +273,7 @@ export default async function HomePage() {
         <Container>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-6 md:mb-8">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Sabores
               </p>
@@ -373,7 +373,7 @@ export default async function HomePage() {
         />
 
         <Container className="relative text-center">
-          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary/80 mb-4">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-text-secondary mb-4">
             <span className="w-5 h-px bg-primary/30" />
             ¿Listo para explorar?
             <span className="w-5 h-px bg-primary/30" />
