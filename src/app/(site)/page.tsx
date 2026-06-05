@@ -70,6 +70,7 @@ export default async function HomePage() {
             alt={settings.heroTitle ?? 'Paisaje de Tepexi de Rodríguez'}
             fill
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover"
           />

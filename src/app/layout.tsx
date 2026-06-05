@@ -60,6 +60,11 @@ export default async function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${plusJakartaSans.variable}`}
     >
+      <head>
+        {/* Preconnect to Sanity CDN so hero image DNS+TLS is ready before it's requested */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+      </head>
       <body className="bg-sand antialiased">
         {children}
         {isDraft && <SanityLive />}
