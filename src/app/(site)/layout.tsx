@@ -2,7 +2,6 @@ import Script from 'next/script'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { getSettings } from '@/lib/data'
 
 const GA_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
@@ -57,7 +56,6 @@ export default async function SiteLayout({
       )}
 
       <Analytics />
-      <SpeedInsights />
     </>
   )
 }
