@@ -48,7 +48,7 @@ export async function Footer() {
                 </span>
                 <span className="font-heading leading-none">
                   <span className="font-bold text-xl text-cream">Tepexi</span>
-                  <span className="font-light text-xl text-cream/60 ml-0.5">Digital</span>
+                  <span className="font-light text-xl text-cream/80 ml-0.5">Digital</span>
                 </span>
               </Link>
 
@@ -67,7 +67,7 @@ export async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.platform}
-                      className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
+                      className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                     >
                       <Icon size={16} />
                     </a>
@@ -76,7 +76,7 @@ export async function Footer() {
                 <Link
                   href="/contacto"
                   aria-label="Correo"
-                  className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
+                  className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                 >
                   <Mail size={16} />
                 </Link>
@@ -84,7 +84,7 @@ export async function Footer() {
                   <a
                     href={`tel:${settings.contactPhone}`}
                     aria-label="Teléfono"
-                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/60 hover:bg-cream/15 hover:text-cream transition-all duration-200"
+                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                   >
                     <Phone size={16} />
                   </a>
@@ -102,7 +102,7 @@ export async function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-cream/60 hover:text-cream transition-colors duration-200 flex items-center gap-1.5 group"
+                      className="text-sm text-cream/80 hover:text-cream transition-colors duration-200 flex items-center gap-1.5 group"
                     >
                       <span className="w-0 overflow-hidden group-hover:w-2.5 transition-all duration-200 text-primary-400">→</span>
                       {link.label}
@@ -120,7 +120,7 @@ export async function Footer() {
               <address className="not-italic space-y-3.5">
                 <div className="flex items-start gap-2.5">
                   <MapPin size={15} className="text-primary-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-cream/60 leading-relaxed">
+                  <div className="text-sm text-cream/80 leading-relaxed">
                     {settings.address ? (
                       settings.address.split(',').map((line, i) => (
                         <p key={i}>{line.trim()}</p>
@@ -138,7 +138,7 @@ export async function Footer() {
                     <Mail size={15} className="text-primary-400 flex-shrink-0" />
                     <a
                       href={`mailto:${settings.contactEmail}`}
-                      className="text-sm text-cream/60 hover:text-cream transition-colors duration-200"
+                      className="text-sm text-cream/80 hover:text-cream transition-colors duration-200"
                     >
                       {settings.contactEmail}
                     </a>
@@ -149,7 +149,7 @@ export async function Footer() {
                     <Phone size={15} className="text-primary-400 flex-shrink-0" />
                     <a
                       href={`tel:${settings.contactPhone}`}
-                      className="text-sm text-cream/60 hover:text-cream transition-colors duration-200"
+                      className="text-sm text-cream/80 hover:text-cream transition-colors duration-200"
                     >
                       {settings.contactPhone}
                     </a>

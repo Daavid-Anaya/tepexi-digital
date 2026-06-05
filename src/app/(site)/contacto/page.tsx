@@ -107,7 +107,7 @@ export default async function ContactoPage() {
 
               {/* CTA panel */}
               <div className="bg-primary/5 rounded-2xl border border-primary/15 p-5">
-                <p className="text-sm text-stone/80 leading-relaxed">
+                <p className="text-sm text-stone leading-relaxed">
                   También puedes explorar nuestra plataforma para conocer los{' '}
                   <Link href="/lugares" className="text-primary font-medium hover:underline underline-offset-4">
                     lugares turísticos

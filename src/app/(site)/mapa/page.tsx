@@ -125,7 +125,7 @@ export default async function MapaPage() {
                               className="flex-shrink-0 w-2.5 h-2.5 rounded-full"
                               style={{ backgroundColor: cat.color }}
                             />
-                            <span className="text-xs text-stone/80 leading-snug">
+                            <span className="text-xs text-stone leading-snug">
                               {cat.label}
                             </span>
                           </li>
@@ -140,7 +140,7 @@ export default async function MapaPage() {
               <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                 <div className="flex items-start gap-2">
                   <Info className="w-4 h-4 text-primary/70 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs text-stone/80 leading-relaxed">
+                  <p className="text-xs text-stone leading-relaxed">
                     Haz clic en cualquier marcador del mapa para ver el nombre y acceder a
                     la información completa del lugar.
                   </p>

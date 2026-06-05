@@ -160,14 +160,14 @@ export default async function HomePage() {
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <p className="font-heading font-bold text-3xl text-primary-300 leading-none">{value}</p>
-                <p className="text-cream/60 text-xs mt-1 uppercase tracking-wide">{label}</p>
+                <p className="text-cream/80 text-xs mt-1 uppercase tracking-wide">{label}</p>
               </div>
             ))}
           </div>
         </Container>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1 text-cream/50 z-10">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1 text-cream/70 z-10">
           <span className="text-[10px] uppercase tracking-widest">Desliza</span>
           <ChevronDown size={18} className="animate-bounce-slow" />
         </div>
@@ -181,7 +181,7 @@ export default async function HomePage() {
           {/* Section header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/60 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Destinos
               </p>
@@ -233,7 +233,7 @@ export default async function HomePage() {
         <Container className="relative">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/60 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Próximamente
               </p>
@@ -273,7 +273,7 @@ export default async function HomePage() {
         <Container>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-6 md:mb-8">
             <div>
-              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/60 mb-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80 mb-3">
                 <span className="w-5 h-px bg-primary/40" />
                 Sabores
               </p>
@@ -297,7 +297,7 @@ export default async function HomePage() {
           </div>
 
           {/* Warm introduction paragraph */}
-          <p className="text-stone/80 text-base leading-relaxed max-w-2xl mb-10 border-l-2 border-primary/30 pl-4">
+          <p className="text-stone text-base leading-relaxed max-w-2xl mb-10 border-l-2 border-primary/30 pl-4">
             La cocina de la Mixteca Poblana es un tesoro vivo: huaxmole, chileatole, tlacoyos y
             el mezcal artesanal, recetas transmitidas de generación en generación. Cada
             platillo es una historia de la tierra.
@@ -347,7 +347,7 @@ export default async function HomePage() {
                   <h3 className="font-heading font-semibold text-cream leading-tight mb-1 group-hover:text-primary-300 transition-colors duration-200">
                     {title}
                   </h3>
-                  <p className="text-cream/50 text-sm leading-relaxed">{description}</p>
+                  <p className="text-cream/70 text-sm leading-relaxed">{description}</p>
                 </div>
               </Link>
             ))}
@@ -373,7 +373,7 @@ export default async function HomePage() {
         />
 
         <Container className="relative text-center">
-          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary/50 mb-4">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary/80 mb-4">
             <span className="w-5 h-px bg-primary/30" />
             ¿Listo para explorar?
             <span className="w-5 h-px bg-primary/30" />
