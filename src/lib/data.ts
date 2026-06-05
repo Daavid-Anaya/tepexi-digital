@@ -9,6 +9,7 @@ import 'server-only'
  * - When NEXT_PUBLIC_SANITY_PROJECT_ID is NOT set → use mock data directly.
  */
 
+import { cache } from 'react'
 import type { MapMarker } from '@/types'
 import {
   mockLugares,
@@ -435,7 +436,9 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
 
 export type { MockSettings as SiteSettings, SocialLink, SeoDefaults }
 
-export async function getSettings(): Promise<MockSettings> {
+// React.cache deduplicates calls within the same request — if layout and page
+// both call getSettings(), Sanity is only queried once per render pass.
+export const getSettings = cache(async (): Promise<MockSettings> => {
   if (!USE_SANITY) {
     logMockFallback('getSettings', 'no-sanity-config')
     return mockSettings
@@ -454,4 +457,4 @@ export async function getSettings(): Promise<MockSettings> {
     logMockFallback('getSettings', 'fetch-error', err)
     return mockSettings
   }
-}
+})
