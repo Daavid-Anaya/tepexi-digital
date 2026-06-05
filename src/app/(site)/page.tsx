@@ -160,7 +160,7 @@ export default async function HomePage() {
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <p className="font-heading font-bold text-3xl text-primary-300 leading-none">{value}</p>
-                <p className="text-cream text-xs mt-1 uppercase tracking-wide">{label}</p>
+                <p className="text-xs mt-1 uppercase tracking-wide" style={{ color: '#FFFBF0' }}>{label}</p>
               </div>
             ))}
           </div>
