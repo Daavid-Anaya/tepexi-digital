@@ -14,11 +14,12 @@ export default async function SiteLayout({
 }) {
   const settings = await getSettings()
 
-  // Build the Next.js image optimizer URL for the hero so the browser
-  // can start fetching it before React hydrates — this is the LCP element.
-  // Mobile viewport: 412px wide. We request 828w (2x) via the optimizer.
+  // Use Sanity CDN's native image transformation API directly for the preload.
+  // This eliminates the Vercel optimizer middleman (Vercel → Sanity → browser)
+  // and serves the image in one hop (Sanity CDN → browser) at the exact size
+  // needed for mobile (828px wide = 414px * 2x DPR) in WebP format.
   const heroPreloadUrl = settings.heroImageUrl
-    ? `/_next/image?url=${encodeURIComponent(settings.heroImageUrl)}&w=828&q=75`
+    ? `${settings.heroImageUrl}?w=828&h=560&fit=crop&auto=format&q=75`
     : null
 
   return (

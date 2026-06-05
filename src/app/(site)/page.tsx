@@ -66,12 +66,17 @@ export default async function HomePage() {
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src={settings.heroImageUrl ?? 'https://picsum.photos/seed/tepexi-nature/1920/1080'}
+            src={
+              settings.heroImageUrl
+                ? `${settings.heroImageUrl}?w=1920&fit=crop&auto=format&q=75`
+                : 'https://picsum.photos/seed/tepexi-nature/1920/1080'
+            }
             alt={settings.heroTitle ?? 'Paisaje de Tepexi de Rodríguez'}
             fill
             priority
             fetchPriority="high"
             sizes="100vw"
+            unoptimized={!!settings.heroImageUrl}
             className="object-cover"
           />
           {/* Layered gradient overlay */}
