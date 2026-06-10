@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
+import iconPng from '@/app/icon.png'
 import { MobileNavToggle } from './MobileNavToggle'
 import { NavLinks } from './NavLinks'
 
@@ -32,9 +33,13 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2 group"
             >
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-cream shadow-sm group-hover:bg-primary-dark transition-colors duration-200">
-                <MapPin size={16} strokeWidth={2.5} />
-              </span>
+              <Image
+                src={iconPng}
+                alt="Tepexi Digital"
+                width={32}
+                height={32}
+                className="rounded-lg shadow-sm"
+              />
               <span className="font-heading leading-none">
                 <span className="font-bold text-[1.15rem] text-primary group-hover:text-primary-dark transition-colors duration-200">
                   Tepexi
