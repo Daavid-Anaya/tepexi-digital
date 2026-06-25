@@ -9,8 +9,10 @@ import type { LeafletMapProps } from '@/types'
 const DEFAULT_CENTER = { lat: 18.5793, lng: -97.9218 }
 const DEFAULT_ZOOM = 14
 
+const HEX_COLOR_RE = /^#[0-9A-Fa-f]{3,8}$/
+
 function createCategoryIcon(color: string): L.DivIcon {
-  const fill = color || '#8B4513'
+  const fill = HEX_COLOR_RE.test(color) ? color : '#8B4513'
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 44" width="32" height="44">
       <defs>

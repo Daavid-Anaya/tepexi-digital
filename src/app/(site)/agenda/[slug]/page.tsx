@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { isSafeUrl } from '@/lib/safe-url'
 
 function formatDateFull(dateString: string) {
   return new Date(dateString).toLocaleDateString('es-MX', {
@@ -116,16 +117,20 @@ const descriptionComponents: PortableTextComponents = {
         {children}
       </mark>
     ),
-    link: ({ value, children }) => (
-      <a
-        href={value?.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-secondary underline underline-offset-4 hover:text-secondary/80 transition-colors"
-      >
-        {children}
-      </a>
-    ),
+    link: ({ value, children }) => {
+      const href = value?.href
+      if (!isSafeUrl(href)) return <>{children}</>
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-secondary underline underline-offset-4 hover:text-secondary/80 transition-colors"
+        >
+          {children}
+        </a>
+      )
+    },
   },
 }
 

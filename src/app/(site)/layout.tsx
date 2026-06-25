@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { headers } from 'next/headers'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { Analytics } from "@vercel/analytics/next"
@@ -12,6 +13,8 @@ export default async function SiteLayout({
   children: React.ReactNode
 }) {
   const settings = await getSettings()
+  const headersList = await headers()
+  const nonce = headersList.get('x-nonce') ?? undefined
 
   // Use Sanity CDN's native image transformation API directly for the preload.
   // This eliminates the Vercel optimizer middleman (Vercel → Sanity → browser)
@@ -43,8 +46,9 @@ export default async function SiteLayout({
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
             strategy="lazyOnload"
+            nonce={nonce}
           />
-          <Script id="ga-init" strategy="lazyOnload">
+          <Script id="ga-init" strategy="lazyOnload" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}

@@ -1,6 +1,10 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
+import { rateLimit } from '@/lib/rate-limit'
+
+// 30 revalidations per minute per IP
+const REVALIDATE_RATE_LIMIT = { limit: 30, windowSeconds: 60 }
 
 // Sanity document types mapped to their paths
 const TYPE_TO_PATHS: Record<string, string[]> = {
@@ -14,6 +18,15 @@ const TYPE_TO_PATHS: Record<string, string[]> = {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
+    const { allowed } = rateLimit(`revalidate:${ip}`, REVALIDATE_RATE_LIMIT)
+    if (!allowed) {
+      return NextResponse.json(
+        { message: 'Too many requests' },
+        { status: 429 },
+      )
+    }
+
     // Verify the webhook signature
     const { isValidSignature, body } = await parseBody<{
       _type: string
@@ -71,7 +84,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('Revalidation error:', err)
     return NextResponse.json(
-      { message: 'Error revalidating', error: String(err) },
+      { message: 'Error revalidating' },
       { status: 500 }
     )
   }

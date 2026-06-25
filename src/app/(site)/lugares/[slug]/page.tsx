@@ -9,6 +9,7 @@ import { MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { isSafeUrl } from '@/lib/safe-url'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -96,16 +97,20 @@ const descriptionComponents: PortableTextComponents = {
         {children}
       </mark>
     ),
-    link: ({ value, children }) => (
-      <a
-        href={value?.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary underline underline-offset-4 hover:text-primary-dark transition-colors"
-      >
-        {children}
-      </a>
-    ),
+    link: ({ value, children }) => {
+      const href = value?.href
+      if (!isSafeUrl(href)) return <>{children}</>
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline underline-offset-4 hover:text-primary-dark transition-colors"
+        >
+          {children}
+        </a>
+      )
+    },
   },
 }
 

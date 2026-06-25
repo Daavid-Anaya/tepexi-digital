@@ -2,6 +2,7 @@
   "name": "tepexi-digital",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +20,7 @@
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.7.0",
-    "next": "16.2.1",
+    "next": "16.2.9",
     "next-sanity": "^12.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -36,7 +37,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.1",
+    "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
