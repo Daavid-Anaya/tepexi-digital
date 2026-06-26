@@ -4,17 +4,7 @@ import { Container } from '@/components/ui/Container'
 import iconPng from '@/app/icon.png'
 import { MobileNavToggle } from './MobileNavToggle'
 import { NavLinks } from './NavLinks'
-
-export const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/lugares', label: 'Lugares' },
-  { href: '/gastronomia', label: 'Gastronomía' },
-  { href: '/cultura', label: 'Cultura' },
-  { href: '/como-llegar', label: 'Cómo llegar' },
-  { href: '/mapa', label: 'Mapa' },
-  { href: '/agenda', label: 'Agenda' },
-  { href: '/contacto', label: 'Contacto' },
-]
+import { navLinks } from '@/lib/navigation'
 
 export function Navbar() {
   return (

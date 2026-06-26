@@ -5,8 +5,9 @@ import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import Link from 'next/link'
 import type { LeafletMapProps } from '@/types'
+import { TEPEXI_CENTER } from '@/lib/constants'
 
-const DEFAULT_CENTER = { lat: 18.5793, lng: -97.9218 }
+const DEFAULT_CENTER = TEPEXI_CENTER
 const DEFAULT_ZOOM = 14
 
 const HEX_COLOR_RE = /^#[0-9A-Fa-f]{3,8}$/

@@ -4,6 +4,7 @@ import { getAllMapMarkers } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
+import { TEPEXI_CENTER, HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Mapa Interactivo',
@@ -55,7 +56,7 @@ const LEGEND_TYPES: LegendType[] = [
     showCounter: false,
     categories: [
       { label: 'Hospedaje', color: '#5D4037' }, 
-      { label: 'Banco', color: '#37474F' },
+      { label: 'Banco', color: CATEGORY_COLORS.servicios },
     ],
   },
 ]
@@ -66,7 +67,7 @@ export default async function MapaPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/5770b9cad7f1ad28b453a3ccc9390e4e8962fa25-4928x3264.jpg" imageAlt="Imagen hero de un mapa">
+      <PageHero imageUrl={HERO_FALLBACKS.mapa} imageAlt="Imagen hero de un mapa">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} />
         <PageHeroHeader
           icon={Map}
@@ -162,7 +163,7 @@ export default async function MapaPage() {
 
                 <DynamicLeafletMap
                   markers={markers}
-                  center={{ lat: 18.5793, lng: -97.9218 }}
+                   center={TEPEXI_CENTER}
                   zoom={13}
                 />
               </div>

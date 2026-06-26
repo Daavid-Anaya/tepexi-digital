@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { sanityFetch } from '@/sanity/lib/live'
 import { defineQuery } from 'next-sanity'
+import { SITE_URL } from '@/lib/constants'
 
 const allSlugsQuery = defineQuery(`{
   "lugares": *[_type == "lugar"]{ "slug": slug.current, _updatedAt },
@@ -9,8 +10,7 @@ const allSlugsQuery = defineQuery(`{
 }`)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://tepexidigital.com.mx'
-  const { data } = await sanityFetch({ query: allSlugsQuery })
+  const baseUrl = SITE_URL
 
   const staticRoutes = [
     '',
@@ -27,22 +27,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'weekly' as const,
   }))
 
-  type SlugEntry = { slug: string | null; _updatedAt: string }
+  try {
+    const { data } = await sanityFetch({ query: allSlugsQuery })
 
-  const dynamicRoutes = [
-    ...(data?.lugares ?? []).map((l: SlugEntry) => ({
-      url: `${baseUrl}/lugares/${l.slug}`,
-      lastModified: new Date(l._updatedAt),
-    })),
-    ...(data?.gastronomia ?? []).map((g: SlugEntry) => ({
-      url: `${baseUrl}/gastronomia/${g.slug}`,
-      lastModified: new Date(g._updatedAt),
-    })),
-    ...(data?.servicios ?? []).map((s: SlugEntry) => ({
-      url: `${baseUrl}/servicios/${s.slug}`,
-      lastModified: new Date(s._updatedAt),
-    })),
-  ]
+    type SlugEntry = { slug: string | null; _updatedAt: string }
 
-  return [...staticRoutes, ...dynamicRoutes]
+    const dynamicRoutes = [
+      ...(data?.lugares ?? []).map((l: SlugEntry) => ({
+        url: `${baseUrl}/lugares/${l.slug}`,
+        lastModified: new Date(l._updatedAt),
+      })),
+      ...(data?.gastronomia ?? []).map((g: SlugEntry) => ({
+        url: `${baseUrl}/gastronomia/${g.slug}`,
+        lastModified: new Date(g._updatedAt),
+      })),
+      ...(data?.servicios ?? []).map((s: SlugEntry) => ({
+        url: `${baseUrl}/servicios/${s.slug}`,
+        lastModified: new Date(s._updatedAt),
+      })),
+    ]
+
+    return [...staticRoutes, ...dynamicRoutes]
+  } catch {
+    return staticRoutes
+  }
 }

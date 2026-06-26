@@ -6,6 +6,7 @@ import { CategoryNav, type CategoryNavItem } from '@/components/places/CategoryN
 import { CategorySection } from '@/components/places/CategorySection'
 import type { PlaceCardProps } from '@/types'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
+import { HERO_FALLBACKS } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Lugares Turísticos',
@@ -105,7 +106,7 @@ export default async function LugaresPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/737c94162af932675cbb7eaddf8d63e379404009-1920x1440.jpg" imageAlt="Imagen hero de una mapa y una camara encima" className="mb-10 md:mb-16">
+      <PageHero imageUrl={HERO_FALLBACKS.lugares} imageAlt="Imagen hero de una mapa y una camara encima" className="mb-10 md:mb-16">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Lugares Turísticos' }]} />
         <PageHeroHeader
           icon={MapPin}

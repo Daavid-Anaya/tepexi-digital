@@ -3,11 +3,6 @@ export interface Coordinates {
   lng: number
 }
 
-export interface SeoFields {
-  metaTitle: string | null
-  metaDescription: string | null
-}
-
 export interface PlaceCardProps {
   title: string
   slug: string
@@ -43,9 +38,4 @@ export interface EventCardProps {
   imageUrl?: string
   imageAlt?: string
   isFeatured?: boolean
-}
-
-export interface ContactFormState {
-  success: boolean
-  error: string | null
 }
