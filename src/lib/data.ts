@@ -1,4 +1,5 @@
 import 'server-only'
+import { CATEGORY_COLORS } from './constants'
 
 /**
  * Data abstraction layer.
@@ -10,6 +11,7 @@ import 'server-only'
  */
 
 import { cache } from 'react'
+import type { PortableTextBlock } from '@portabletext/react'
 import type { MapMarker } from '@/types'
 import {
   mockLugares,
@@ -19,6 +21,12 @@ import {
   type SocialLink,
   type SeoDefaults,
 } from './mock-data'
+import { sanityFetch } from '@/sanity/lib/live'
+import { allLugaresQuery, lugarBySlugQuery, allLugaresMapQuery } from '@/sanity/queries/lugares'
+import { servicioBySlugQuery, allServiciosMapQuery } from '@/sanity/queries/servicios'
+import { allGastronomiaQuery, gastronomiaBySlugQuery } from '@/sanity/queries/gastronomia'
+import { upcomingEventosQuery, eventoBySlugQuery } from '@/sanity/queries/eventos'
+import { settingsQuery } from '@/sanity/queries/settings'
 
 const USE_SANITY = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const IS_PROD = process.env.NODE_ENV === 'production'
@@ -71,13 +79,13 @@ export interface LugarDetail {
   slug: { current: string }
   category: string
   categoryColor: string
-  description: unknown[] | null
+  description: PortableTextBlock[] | null
   images: Array<{ url: string; alt: string; asset: { url: string } }>
   coordinates: { lat: number; lng: number } | null
   address: string | null
   schedule: string | null
   cost: string | null
-  recommendations: unknown[] | null
+  recommendations: PortableTextBlock[] | null
   seo: { metaTitle: string | null; metaDescription: string | null } | null
 }
 
@@ -94,7 +102,7 @@ export interface GastronomiaListItem {
   imageUrl: string
   imageAlt: string
   priceRange: string | null
-  dishType: string | null
+  dishType: string[] | null
 }
 
 // --- Gastronomia detail ---
@@ -104,12 +112,12 @@ export interface GastronomiaDetail {
   slug: { current: string }
   category: string
   categoryColor: string
-  introduction: unknown[] | null
-  description: unknown[] | null
+  introduction: PortableTextBlock[] | null
+  description: PortableTextBlock[] | null
   images: Array<{ url: string; alt: string; asset: { url: string } }>
   descriptionImage: { url: string; alt: string } | null
   cost: string | null
-  dishType: string | null
+  dishType: string[] | null
   priceRange: string | null
   origin: string | null
   season: string | null
@@ -141,7 +149,7 @@ export interface EventoDetail {
   _id: string
   title: string
   slug: { current: string }
-  description: unknown[] | null
+  description: PortableTextBlock[] | null
   imageUrl: string | null
   imageAlt: string | null
   date: string
@@ -178,15 +186,15 @@ function mockToLugarList(l: MockLugar): LugarListItem {
 }
 
 let _portableTextKeyCounter = 0
-function stringToPortableText(text: string | null): unknown[] | null {
+function stringToPortableText(text: string | null): PortableTextBlock[] | null {
   if (!text) return null
   return [
     {
-      _type: 'block',
+      _type: 'block' as const,
       _key: `mock-rec-${++_portableTextKeyCounter}`,
-      style: 'normal',
-      children: [{ _type: 'span', text, marks: [] }],
-      markDefs: [],
+      style: 'normal' as const,
+      children: [{ _type: 'span' as const, text, marks: [] as string[] }],
+      markDefs: [] as { [key: string]: unknown; _type: string; _key: string }[],
     },
   ]
 }
@@ -217,16 +225,6 @@ function getMockLugaresList(): LugarListItem[] {
   return mockLugares.map(mockToLugarList)
 }
 
-const CATEGORY_TYPE_MAP: Record<string, 'lugar' | 'gastronomia' | 'cultura' | 'servicios'> = {
-  'Ecoturismo y Naturaleza': 'lugar',
-  'Historia y Arqueología': 'lugar',
-  'Paleontología': 'lugar',
-  'Hospedaje': 'servicios',
-  'Gastronomía y Comercio Local': 'gastronomia',
-  'Cultura y Espacios Públicos': 'cultura',
-  'Banco': 'servicios',
-}
-
 function getMockMapMarkers(): MapMarker[] {
   return mockLugares
     .filter((l) => l.coordinates)
@@ -237,7 +235,7 @@ function getMockMapMarkers(): MapMarker[] {
       coordinates: l.coordinates!,
       category: l.category,
       categoryColor: l.categoryColor,
-      type: CATEGORY_TYPE_MAP[l.category] ?? 'lugar',
+      type: l.categoryType,
     }))
 }
 
@@ -252,8 +250,7 @@ export async function getAllLugares(): Promise<LugarListItem[]> {
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { allLugaresQuery } = await import('@/sanity/queries/lugares')
+    // TODO: add runtime validation (Zod) when sanityFetch supports explicit generics
     const { data } = await sanityFetch({ query: allLugaresQuery })
     const results = (data ?? []) as LugarListItem[]
     if (results.length > 0) return results
@@ -273,8 +270,6 @@ export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> 
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { lugarBySlugQuery } = await import('@/sanity/queries/lugares')
     const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
     if (data) return data as LugarDetail
     logMockFallback('getLugarBySlug', 'empty-results')
@@ -291,8 +286,6 @@ export async function getServicioBySlug(slug: string): Promise<ServicioDetail | 
   if (!USE_SANITY) return null
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { servicioBySlugQuery } = await import('@/sanity/queries/servicios')
     const { data } = await sanityFetch({ query: servicioBySlugQuery, params: { slug } })
     if (data) return data as ServicioDetail
     return null
@@ -308,8 +301,6 @@ export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { allGastronomiaQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: allGastronomiaQuery })
     // Intentionally no mock fallback: gastronomia has no mock data.
     // An empty result means no dishes are published yet — that's valid.
@@ -327,8 +318,6 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { gastronomiaBySlugQuery } = await import('@/sanity/queries/gastronomia')
     const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
     if (data) return data as GastronomiaDetail
     return null
@@ -346,8 +335,6 @@ export async function getUpcomingEventos(): Promise<EventoListItem[]> {
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { upcomingEventosQuery } = await import('@/sanity/queries/eventos')
     // Use start-of-today so events remain visible all day until midnight.
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -367,8 +354,6 @@ export async function getEventoBySlug(slug: string): Promise<EventoDetail | null
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { eventoBySlugQuery } = await import('@/sanity/queries/eventos')
     const { data } = await sanityFetch({ query: eventoBySlugQuery, params: { slug } })
     if (data) return data as EventoDetail
     return null
@@ -397,7 +382,7 @@ function sanityRowsToMarkers(rows: SanityMapRow[]): MapMarker[] {
       slug: r.slug?.current ?? '',
       coordinates: { lat: r.coordinates!.lat, lng: r.coordinates!.lng },
       category: r.category ?? '',
-      categoryColor: r.categoryColor ?? '#8B4513',
+      categoryColor: r.categoryColor ?? CATEGORY_COLORS.default,
       type: (r.categoryType as MapMarker['type']) ?? 'lugar',
     }))
 }
@@ -409,10 +394,6 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { allLugaresMapQuery } = await import('@/sanity/queries/lugares')
-    const { allServiciosMapQuery } = await import('@/sanity/queries/servicios')
-
     const [lugaresRes, serviciosRes] = await Promise.all([
       sanityFetch({ query: allLugaresMapQuery }),
       sanityFetch({ query: allServiciosMapQuery }),
@@ -434,25 +415,24 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
   }
 }
 
-export type { MockSettings as SiteSettings, SocialLink, SeoDefaults }
+type SiteSettings = MockSettings
+export type { SiteSettings, SocialLink, SeoDefaults }
 
 // React.cache deduplicates calls within the same request — if layout and page
 // both call getSettings(), Sanity is only queried once per render pass.
-export const getSettings = cache(async (): Promise<MockSettings> => {
+export const getSettings = cache(async (): Promise<SiteSettings> => {
   if (!USE_SANITY) {
     logMockFallback('getSettings', 'no-sanity-config')
     return mockSettings
   }
 
   try {
-    const { sanityFetch } = await import('@/sanity/lib/live')
-    const { settingsQuery } = await import('@/sanity/queries/settings')
     const { data } = await sanityFetch({ query: settingsQuery })
     if (!data || !data.siteName) {
       logMockFallback('getSettings', 'empty-results')
       return mockSettings
     }
-    return data as MockSettings
+    return data as SiteSettings
   } catch (err) {
     logMockFallback('getSettings', 'fetch-error', err)
     return mockSettings

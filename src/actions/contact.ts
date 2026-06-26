@@ -4,6 +4,7 @@ import 'server-only'
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
 import { rateLimit } from '@/lib/rate-limit'
+import { SITE_URL } from '@/lib/constants'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -42,7 +43,7 @@ export async function sendContactMessage(
 
   try {
     await resend.emails.send({
-      from: 'Tepexi Digital <noreply@tepexidigital.com.mx>',
+      from: `Tepexi Digital <noreply@${new URL(SITE_URL).hostname}>`,
       to: process.env.CONTACT_RECIPIENT_EMAIL!,
       replyTo: `${name} <${email}>`,
       subject: subject ? `Contacto: ${subject}` : `Contacto de ${name}`,
@@ -55,7 +56,7 @@ export async function sendContactMessage(
         message,
         '',
         '─────────────────────────────',
-        'Este mensaje fue enviado desde el formulario de contacto de tepexidigital.com.mx',
+        `Este mensaje fue enviado desde el formulario de contacto de ${new URL(SITE_URL).hostname}`,
       ].join('\n'),
     })
     return { success: true, error: null }

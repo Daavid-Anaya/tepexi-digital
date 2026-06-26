@@ -4,6 +4,8 @@ import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
+import { SectionHeader } from '@/components/ui/SectionHeader'
+import { SANITY_CDN_BASE, HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Cultura',
@@ -45,24 +47,24 @@ const exploraCards = [
   {
     title: 'Cantera Tlayúa',
     description: 'Fósiles de peces y plantas con 100 millones de años de antigüedad.',
-    image: 'https://cdn.sanity.io/images/45s7lmkb/production/1261bc7e4843023d6f5fd08fb2bd7365a9ab9ede-600x988.jpg',
+    image: `${SANITY_CDN_BASE}/1261bc7e4843023d6f5fd08fb2bd7365a9ab9ede-600x988.jpg`,
   },
   {
     title: 'Pie de Vaca',
     description: 'Huellas petrificadas de camélidos y felinos del Pleistoceno.',
-    image: 'https://cdn.sanity.io/images/45s7lmkb/production/28f81aed1500762097e2dd35149d4adc88c02b24-243x406.jpg',
+    image: `${SANITY_CDN_BASE}/28f81aed1500762097e2dd35149d4adc88c02b24-243x406.jpg`,
   },
   {
     title: 'Tepexi el Viejo',
     description: 'Imponente zona arqueológica de la antigua fortaleza popoloca.',
-    image: 'https://cdn.sanity.io/images/45s7lmkb/production/444a760a14753174e12fd903fc761a3f302fb550-388x485.jpg',
+    image: `${SANITY_CDN_BASE}/444a760a14753174e12fd903fc761a3f302fb550-388x485.jpg`,
   },
   {
     title: 'Ex-convento de Santo Domingo',
     description: 'Joya de la arquitectura religiosa del siglo XVI.',
-    image: 'https://cdn.sanity.io/images/45s7lmkb/production/ebd8da20ffee6a58f859075f7567dd887087bf97-2268x2268.jpg',
+    image: `${SANITY_CDN_BASE}/ebd8da20ffee6a58f859075f7567dd887087bf97-2268x2268.jpg`,
   },
-] as const
+]
 
 const tradicionesItems = [
   {
@@ -88,7 +90,7 @@ export default async function CulturaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/7a5100ea170bd307785b455ecfb340bf96036b54-6000x4000.jpg" imageAlt="Imagen hero de cultura">
+      <PageHero imageUrl={HERO_FALLBACKS.cultura} imageAlt="Imagen hero de cultura">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} />
         <PageHeroHeader
           icon={Palette}
@@ -101,18 +103,11 @@ export default async function CulturaPage() {
       {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
       <section className="bg-cream py-12 md:py-20">
         <Container>
-          {/* Section header */}
-          <div className="mb-8 md:mb-12 animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
-              <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#7B3FA0' }}>
-                Historia
-              </span>
-            </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
-              Crónicas en Piedra y Tiempo
-            </h2>
-          </div>
+          <SectionHeader
+            eyebrow="Historia"
+            title="Crónicas en Piedra y Tiempo"
+            accentColor={CATEGORY_COLORS.cultura}
+          />
 
           {/* Two-column layout */}
           <div className="flex flex-col md:flex-row gap-10 items-start">
@@ -125,9 +120,9 @@ export default async function CulturaPage() {
                 este territorio ha sido testigo de transformaciones profundas.
               </p>
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md">
-                <Image
-                   src="https://cdn.sanity.io/images/45s7lmkb/production/49470ca7b1d24c9be89052657650a0ce7d7ec796-960x1280.jpg"
-                  alt="Crónicas históricas de Tepexi"
+                 <Image
+                    src={`${SANITY_CDN_BASE}/49470ca7b1d24c9be89052657650a0ce7d7ec796-960x1280.jpg`}
+                   alt="Crónicas históricas de Tepexi"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 40vw"
@@ -146,7 +141,7 @@ export default async function CulturaPage() {
                     {/* Icon marker */}
                     <div
                       className="absolute -left-8 top-1 w-7 h-7 rounded-full flex items-center justify-center shadow-sm ring-4 ring-cream"
-                      style={{ backgroundColor: '#7B3FA0' }}
+                      style={{ backgroundColor: CATEGORY_COLORS.cultura }}
                     >
                       <Icon className="w-3.5 h-3.5 text-white" />
                     </div>
@@ -170,22 +165,12 @@ export default async function CulturaPage() {
       {/* ── 3. Explora Tepexi — Card Grid ───────────────────────────────── */}
       <section className="bg-sand py-12 md:py-20">
         <Container>
-          {/* Section header */}
-          <div className="mb-8 md:mb-12 animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#9B59B6' }} />
-              <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#9B59B6' }}>
-                Patrimonio Cultural
-              </span>
-            </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
-              Explora Tepexi
-            </h2>
-            <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
-              Descubre los sitios que hacen de Tepexi un destino único para los amantes de la historia,
-              la paleontología y la arquitectura.
-            </p>
-          </div>
+          <SectionHeader
+            eyebrow="Patrimonio Cultural"
+            title="Explora Tepexi"
+            description="Descubre los sitios que hacen de Tepexi un destino único para los amantes de la historia, la paleontología y la arquitectura."
+            accentColor={CATEGORY_COLORS.cultura}
+          />
 
           {/* 4-col grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
@@ -218,22 +203,12 @@ export default async function CulturaPage() {
       {/* ── 4. Tradiciones Vivas — Accordion ────────────────────────────── */}
       <section className="bg-cream py-12 md:py-20">
         <Container>
-          {/* Section header */}
-          <div className="mb-8 md:mb-12 animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#7B3FA0' }} />
-              <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#7B3FA0' }}>
-                Tradiciones
-              </span>
-            </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
-              Tradiciones Vivas
-            </h2>
-            <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
-              La cultura tepexana se mantiene viva a través de celebraciones, música y lenguas
-              que resisten el paso del tiempo.
-            </p>
-          </div>
+          <SectionHeader
+            eyebrow="Tradiciones"
+            title="Tradiciones Vivas"
+            description="La cultura tepexana se mantiene viva a través de celebraciones, música y lenguas que resisten el paso del tiempo."
+            accentColor={CATEGORY_COLORS.cultura}
+          />
 
           {/* Accordion — zero-JS using details/summary */}
           <div className="max-w-2xl mx-auto">
@@ -260,22 +235,12 @@ export default async function CulturaPage() {
       {/* ── 5. Manos Tepexanas — Two Columns ────────────────────────────── */}
       <section className="bg-sand py-12 md:py-20">
         <Container>
-          {/* Section header */}
-          <div className="mb-8 md:mb-12 animate-fade-in-up">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="block w-8 h-0.5 rounded-full" style={{ backgroundColor: '#9B59B6' }} />
-              <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#9B59B6' }}>
-                Artesanías
-              </span>
-            </div>
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-text-primary">
-              Manos Tepexanas
-            </h2>
-            <p className="mt-2 text-stone text-base max-w-xl leading-relaxed">
-              El trabajo manual que ha definido la identidad económica y cultural de Tepexi
-              durante siglos.
-            </p>
-          </div>
+          <SectionHeader
+            eyebrow="Artesanías"
+            title="Manos Tepexanas"
+            description="El trabajo manual que ha definido la identidad económica y cultural de Tepexi durante siglos."
+            accentColor={CATEGORY_COLORS.cultura}
+          />
 
           {/* Two equal columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -286,7 +251,7 @@ export default async function CulturaPage() {
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'rgba(123,63,160,0.15)' }}
                 >
-                  <Hand className="w-5 h-5" style={{ color: '#7B3FA0' }} />
+                  <Hand className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-primary">
                   El Arte de la Palma
@@ -297,9 +262,9 @@ export default async function CulturaPage() {
                 invaluable que ha pasado de generación en generación.
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
-                <Image
-                   src="https://cdn.sanity.io/images/45s7lmkb/production/4cc6ce3015222e89c267ceb0c96e8a39de367157-654x492.jpg"
-                  alt="Tejido de palma artesanal"
+                 <Image
+                    src={`${SANITY_CDN_BASE}/4cc6ce3015222e89c267ceb0c96e8a39de367157-654x492.jpg`}
+                   alt="Tejido de palma artesanal"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -314,7 +279,7 @@ export default async function CulturaPage() {
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'rgba(123,63,160,0.15)' }}
                 >
-                  <Gem className="w-5 h-5" style={{ color: '#7B3FA0' }} />
+                  <Gem className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-primary">
                   Corte en Piedra
@@ -325,9 +290,9 @@ export default async function CulturaPage() {
                 por expertos.
               </p>
               <div className="relative rounded-xl overflow-hidden aspect-[16/9] mt-6">
-                <Image
-                   src="https://cdn.sanity.io/images/45s7lmkb/production/cc7c743689edf04a4742086ff7829ece7f4fefa4-436x366.jpg"
-                  alt="Piezas de onix"
+                 <Image
+                    src={`${SANITY_CDN_BASE}/cc7c743689edf04a4742086ff7829ece7f4fefa4-436x366.jpg`}
+                   alt="Piezas de onix"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"

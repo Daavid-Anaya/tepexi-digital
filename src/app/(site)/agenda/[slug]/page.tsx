@@ -1,17 +1,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { PortableText, type PortableTextComponents } from '@portabletext/react'
-import type { PortableTextBlock } from '@portabletext/react'
+import { PortableText } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import { getEventoBySlug } from '@/lib/data'
-import { client } from '@/sanity/lib/client'
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
-import { isSafeUrl } from '@/lib/safe-url'
+import { HERO_FALLBACKS } from '@/lib/constants'
+import { fetchStaticSlugs } from '@/lib/sanity-params'
+import { buildSlugMetadata } from '@/lib/metadata'
+import { makeDescriptionComponents } from '@/lib/portable-text-components'
 
 function formatDateFull(dateString: string) {
   return new Date(dateString).toLocaleDateString('es-MX', {
@@ -35,104 +36,18 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  try {
-    const slugs = await client.fetch<{ slug: string }[]>(
-      `*[_type == "evento" && defined(slug.current)]{ "slug": slug.current }`,
-      {},
-      { next: { tags: ['evento'] } },
-    )
-    return slugs.map((e) => ({ slug: e.slug }))
-  } catch {
-    return []
-  }
-}
+export const generateStaticParams = () => fetchStaticSlugs('evento')
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const evento = await getEventoBySlug(slug)
-  if (!evento) return { title: 'No encontrado' }
-  const title = evento.seo?.metaTitle ?? evento.title ?? 'Evento'
-  const description = evento.seo?.metaDescription ?? undefined
-  const url = `https://tepexidigital.com.mx/agenda/${slug}`
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      ...(evento.imageUrl && { images: [{ url: evento.imageUrl, width: 1200, height: 630 }] }),
-    },
-  }
+  return buildSlugMetadata(slug, 'agenda', evento ? {
+    ...evento,
+    ogImageUrl: evento.imageUrl ?? null,
+  } : null, 'Evento')
 }
 
-const descriptionComponents: PortableTextComponents = {
-  block: {
-    normal: ({ children }) => (
-      <p style={{ marginBottom: '1rem', lineHeight: '1.75' }} className="text-stone">
-        {children}
-      </p>
-    ),
-    h2: ({ children }) => (
-      <h2
-        style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '2rem', marginBottom: '0.75rem', lineHeight: '1.3' }}
-        className="font-heading text-text-primary"
-      >
-        {children}
-      </h2>
-    ),
-    h3: ({ children }) => (
-      <h3
-        style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '1.5rem', marginBottom: '0.5rem', lineHeight: '1.4' }}
-        className="font-heading text-text-primary"
-      >
-        {children}
-      </h3>
-    ),
-    blockquote: ({ children }) => (
-      <blockquote
-        style={{
-          borderLeft: '4px solid rgba(46,125,50,0.4)',
-          backgroundColor: 'rgba(46,125,50,0.05)',
-          paddingLeft: '1rem',
-          paddingRight: '1rem',
-          paddingTop: '0.5rem',
-          paddingBottom: '0.5rem',
-          marginTop: '1rem',
-          marginBottom: '1rem',
-          borderRadius: '0 0.5rem 0.5rem 0',
-          fontStyle: 'italic',
-        }}
-        className="text-stone"
-      >
-        {children}
-      </blockquote>
-    ),
-  },
-  marks: {
-    highlight: ({ children }) => (
-      <mark style={{ backgroundColor: 'rgba(46,125,50,0.12)', borderRadius: '2px', padding: '0 2px' }} className="text-secondary not-italic font-medium">
-        {children}
-      </mark>
-    ),
-    link: ({ value, children }) => {
-      const href = value?.href
-      if (!isSafeUrl(href)) return <>{children}</>
-      return (
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-secondary underline underline-offset-4 hover:text-secondary/80 transition-colors"
-        >
-          {children}
-        </a>
-      )
-    },
-  },
-}
+const descriptionComponents = makeDescriptionComponents('secondary')
 
 export default async function EventoDetailPage({ params }: Props) {
   const { slug } = await params
@@ -161,7 +76,7 @@ export default async function EventoDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner — green/calendar accent */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/1207eeb4636baf3a09b4a926173eb07861f3693e-1920x1280.jpg" imageAlt="Imagen hero de la agenda de eventos" size="compact">
+      <PageHero imageUrl={HERO_FALLBACKS.agenda} imageAlt="Imagen hero de la agenda de eventos" size="compact">
         <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
         <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
@@ -233,7 +148,7 @@ export default async function EventoDetailPage({ params }: Props) {
               {evento.description && (
                 <div className="text-base text-stone">
                   <PortableText
-                    value={evento.description as PortableTextBlock[]}
+                    value={evento.description}
                     components={descriptionComponents}
                   />
                 </div>

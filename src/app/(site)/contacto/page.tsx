@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Container'
 import ContactForm from '@/components/contact/ContactForm'
 import { getSettings } from '@/lib/data'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
+import { HERO_FALLBACKS } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Contacto',
@@ -45,7 +46,7 @@ export default async function ContactoPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/c792c5f25303c69523311963917babcf56c4c131-3008x2000.jpg" imageAlt="Imagen hero de contacto">
+      <PageHero imageUrl={HERO_FALLBACKS.contacto} imageAlt="Imagen hero de contacto">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} />
         <PageHeroHeader
           icon={MessageCircle}

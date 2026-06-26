@@ -4,6 +4,7 @@ import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import type { MapMarker } from '@/types'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
+import { TEPEXI_CENTER, HERO_FALLBACKS } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Cómo Llegar',
@@ -14,7 +15,7 @@ const centerMarker: MapMarker = {
   id: 'tepexi-centro',
   title: 'Tepexi de Rodríguez',
   slug: '',
-  coordinates: { lat: 18.5793, lng: -97.9218 },
+  coordinates: TEPEXI_CENTER,
   category: 'Municipio',
   categoryColor: '#0c3ca1',
   type: 'lugar',
@@ -67,7 +68,7 @@ export default function ComoLlegarPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl="https://cdn.sanity.io/images/45s7lmkb/production/97ba498893be9fef6e66f00e11b7fe6c19a023d0-4452x2968.jpg" imageAlt="Imagen hero de aplicación google maps">
+      <PageHero imageUrl={HERO_FALLBACKS.comoLlegar} imageAlt="Imagen hero de aplicación google maps">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} />
         <PageHeroHeader
           icon={Navigation}
@@ -181,7 +182,7 @@ export default function ComoLlegarPage() {
                 </div>
                 <DynamicLeafletMap
                   markers={[centerMarker]}
-                  center={{ lat: 18.5793, lng: -97.9218 }}
+                   center={TEPEXI_CENTER}
                   zoom={12}
                 />
               </div>

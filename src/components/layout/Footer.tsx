@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { MapPin, Share2, AtSign, Mail, Phone, Globe } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { getSettings } from '@/lib/data'
-import { navLinks } from './Navbar'
+import { navLinks } from '@/lib/navigation'
 
 function getSocialIcon(platform: string) {
   const lower = platform.toLowerCase()

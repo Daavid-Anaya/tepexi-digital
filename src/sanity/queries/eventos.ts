@@ -1,18 +1,5 @@
 import { defineQuery } from 'next-sanity'
 
-export const allEventosQuery = defineQuery(`*[_type == "evento"] | order(date asc) {
-  _id,
-  title,
-  slug,
-  "imageUrl": image.asset->url,
-  "imageAlt": image.alt,
-  date,
-  endDate,
-  "locationName": location->title,
-  locationText,
-  isFeatured
-}`)
-
 export const featuredEventosQuery = defineQuery(`*[_type == "evento" && isFeatured == true] | order(date asc) {
   _id,
   title,

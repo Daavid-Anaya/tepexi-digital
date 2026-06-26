@@ -1,36 +1,31 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
-import type { PortableTextBlock } from '@portabletext/react'
 import { getServicioBySlug } from '@/lib/data'
 import { Container } from '@/components/ui/Container'
 import { MapPin, Clock, DollarSign, Star, Map, ConciergeBell } from 'lucide-react'
+import { FichaTecnicaCard } from '@/components/ui/FichaTecnicaCard'
+import type { FichaItem } from '@/components/ui/FichaTecnicaCard'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
+import { fetchStaticSlugs } from '@/lib/sanity-params'
+import { buildSlugMetadata } from '@/lib/metadata'
 
 interface Props {
   params: Promise<{ slug: string }>
 }
 
+export const generateStaticParams = () => fetchStaticSlugs('servicio')
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const servicio = await getServicioBySlug(slug)
-  if (!servicio) return { title: 'Servicio no encontrado' }
-  const title = servicio.seo?.metaTitle ?? servicio.title ?? 'Servicio'
-  const description = servicio.seo?.metaDescription ?? undefined
-  const url = `https://tepexidigital.com.mx/servicios/${slug}`
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      ...(servicio.images?.[0]?.url && { images: [{ url: servicio.images[0].url, width: 1200, height: 630 }] }),
-    },
-  }
+  return buildSlugMetadata(slug, 'servicios', servicio ? {
+    ...servicio,
+    ogImageUrl: servicio.images?.[0]?.url ?? null,
+  } : null, 'Servicio')
 }
 
 export default async function ServicioDetailPage({ params }: Props) {
@@ -44,13 +39,63 @@ export default async function ServicioDetailPage({ params }: Props) {
     alt: img.alt ?? servicio.title ?? '',
   })).filter((img) => img.url)
 
-  const HERO_FALLBACK = 'https://cdn.sanity.io/images/45s7lmkb/production/fd162108faf44809f73b46edd219740140a8c42c-5472x3648.jpg'
+  const HERO_FALLBACK = HERO_FALLBACKS.servicios
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
   const heroImageAlt = images[0]?.alt ?? servicio.title ?? 'Imagen del servicio'
 
   const mapsUrl = servicio.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servicio.address)}`
     : null
+
+  const fichaItems: FichaItem[] = [
+    {
+      icon: Clock,
+      iconColor: CATEGORY_COLORS.servicios,
+      iconBg: 'rgba(55,71,79,0.1)',
+      label: 'Horario',
+      value: servicio.schedule ?? null,
+    },
+    {
+      icon: DollarSign,
+      iconColor: 'var(--color-secondary, #5C7A5C)',
+      iconBg: 'rgba(92,122,92,0.1)',
+      label: 'Costo',
+      value: servicio.cost ?? null,
+    },
+    {
+      icon: MapPin,
+      iconColor: CATEGORY_COLORS.servicios,
+      iconBg: 'rgba(55,71,79,0.1)',
+      label: 'Dirección',
+      value: servicio.address
+        ? mapsUrl
+          ? (
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary underline underline-offset-2 transition-colors"
+            >
+              {servicio.address}
+            </a>
+          )
+          : servicio.address
+        : null,
+    },
+    {
+      icon: Star,
+      iconColor: '#D97706',
+      iconBg: 'rgb(254,243,199)',
+      label: 'Recomendaciones',
+      value: servicio.recommendations
+        ? (
+          <span className="prose prose-sm prose-stone max-w-none">
+            <PortableText value={servicio.recommendations} />
+          </span>
+        )
+        : null,
+    },
+  ]
 
   const markers = servicio.coordinates
     ? [
@@ -60,7 +105,7 @@ export default async function ServicioDetailPage({ params }: Props) {
           slug: servicio.slug?.current ?? slug,
           coordinates: { lat: servicio.coordinates.lat, lng: servicio.coordinates.lng },
           category: servicio.category ?? '',
-          categoryColor: servicio.categoryColor ?? '#37474F',
+          categoryColor: servicio.categoryColor ?? CATEGORY_COLORS.servicios,
           type: 'servicios' as const,
         },
       ]
@@ -109,87 +154,17 @@ export default async function ServicioDetailPage({ params }: Props) {
               {/* Description */}
               {servicio.description && (
                 <div className="prose prose-stone max-w-none prose-headings:font-heading prose-headings:text-primary prose-a:underline-offset-4 prose-strong:text-primary-dark prose-p:leading-relaxed prose-p:text-stone">
-                  <PortableText value={servicio.description as PortableTextBlock[]} />
+                  <PortableText value={servicio.description} />
                 </div>
               )}
             </div>
 
             {/* Sidebar */}
-            <aside className="space-y-4">
-              <div className="bg-cream rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
-                {/* Sidebar header */}
-                <div className="px-5 py-4" style={{ backgroundColor: '#37474F' }}>
-                  <h2 className="font-heading font-semibold text-white text-sm tracking-wide uppercase">
-                    Información del Servicio
-                  </h2>
-                </div>
-
-                <div className="p-5 space-y-5">
-                  {servicio.schedule && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
-                        <Clock className="w-4 h-4" style={{ color: '#37474F' }} />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Horario</dt>
-                        <dd className="text-sm text-stone leading-snug">{servicio.schedule}</dd>
-                      </div>
-                    </div>
-                  )}
-
-                  {servicio.cost && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
-                        <DollarSign className="w-4 h-4 text-secondary" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Costo</dt>
-                        <dd className="text-sm text-stone leading-snug">{servicio.cost}</dd>
-                      </div>
-                    </div>
-                  )}
-
-                  {servicio.address && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
-                        <MapPin className="w-4 h-4" style={{ color: '#37474F' }} />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Dirección</dt>
-                        <dd className="text-sm text-stone leading-snug">
-                          {mapsUrl ? (
-                            <a
-                              href={mapsUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-primary underline underline-offset-2 transition-colors"
-                            >
-                              {servicio.address}
-                            </a>
-                          ) : (
-                            servicio.address
-                          )}
-                        </dd>
-                      </div>
-                    </div>
-                  )}
-
-                  {servicio.recommendations && (
-                    <div className="flex gap-3.5">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
-                        <Star className="w-4 h-4 text-amber-600" />
-                      </div>
-                      <div>
-                        <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Recomendaciones</dt>
-                        <dd className="text-sm text-stone leading-snug prose prose-sm prose-stone max-w-none">
-                          <PortableText value={servicio.recommendations as PortableTextBlock[]} />
-                        </dd>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </aside>
+            <FichaTecnicaCard
+              title="Información del Servicio"
+              headerColor={CATEGORY_COLORS.servicios}
+              items={fichaItems}
+            />
           </div>
 
           {/* Map section */}
@@ -197,10 +172,10 @@ export default async function ServicioDetailPage({ params }: Props) {
             <div className="mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-6 py-4">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
-                  <Map className="w-4 h-4" style={{ color: '#37474F' }} />
+                   <Map className="w-4 h-4" style={{ color: CATEGORY_COLORS.servicios }} />
                 </div>
                 <h2 className="font-heading font-semibold text-text-primary text-lg">
-                  Ubicacion
+                   Ubicación
                 </h2>
               </div>
               <DynamicLeafletMap markers={markers} center={markers[0].coordinates} zoom={16} />

@@ -2,6 +2,7 @@
  * Mock data for Tepexi de Rodríguez, Puebla, México.
  * Used when NEXT_PUBLIC_SANITY_PROJECT_ID is not set.
  */
+import { TEPEXI_CENTER } from './constants'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -17,9 +18,9 @@ function portableText(text: string) {
     {
       _type: 'block' as const,
       _key: key(),
-      style: 'normal',
+      style: 'normal' as const,
       children: [{ _type: 'span' as const, text, marks: [] as string[] }],
-      markDefs: [] as unknown[],
+      markDefs: [] as { [key: string]: unknown; _type: string; _key: string }[],
     },
   ]
 }
@@ -28,9 +29,9 @@ function portableTextMulti(...paragraphs: string[]) {
   return paragraphs.map((text) => ({
     _type: 'block' as const,
     _key: key(),
-    style: 'normal',
+    style: 'normal' as const,
     children: [{ _type: 'span' as const, text, marks: [] as string[] }],
-    markDefs: [] as unknown[],
+    markDefs: [] as { [key: string]: unknown; _type: string; _key: string }[],
   }))
 }
 
@@ -67,6 +68,7 @@ export interface MockLugar {
   slug: { current: string }
   category: string
   categoryColor: string
+  categoryType: 'lugar' | 'gastronomia' | 'cultura' | 'servicios'
   imageUrl: string
   imageAlt: string
   description: ReturnType<typeof portableTextMulti>
@@ -93,7 +95,7 @@ export interface MockGastronomia {
   images: MockImage[]
   descriptionImage: { url: string; alt: string } | null
   cost: string | null
-  dishType: string
+  dishType: string[]
   priceRange: string
   origin: string | null
   season: string | null
@@ -180,6 +182,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'huellas-de-dinosaurio' },
     category: 'Paleontología',
     categoryColor: '#00838F',
+    categoryType: 'lugar',
     imageUrl: 'https://picsum.photos/seed/huellas-dino-main/800/600',
     imageAlt: 'Huellas fósiles de dinosaurio en Tepexi de Rodríguez',
     description: portableTextMulti(
@@ -211,6 +214,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'ex-convento-de-san-francisco' },
     category: 'Historia y Arqueología',
     categoryColor: '#8B4513',
+    categoryType: 'lugar',
     imageUrl: 'https://picsum.photos/seed/convento-sf-main/800/600',
     imageAlt: 'Fachada del Ex-Convento de San Francisco en Tepexi',
     description: portableTextMulti(
@@ -223,7 +227,7 @@ export const mockLugares: MockLugar[] = [
       img('convento-sf-2', 'Claustro interior con jardín', 1200, 800),
       img('convento-sf-3', 'Detalle de frescos coloniales', 1200, 800),
     ],
-    coordinates: { lat: 18.5793, lng: -97.9218 },
+    coordinates: TEPEXI_CENTER,
     address: 'Calle Francisco I. Madero s/n, Centro, Tepexi de Rodríguez, Puebla',
     schedule: 'Martes a domingo, 9:00 am – 6:00 pm',
     cost: 'Entrada gratuita',
@@ -242,6 +246,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'manantiales-de-axamilpa' },
     category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
+    categoryType: 'lugar',
     imageUrl: 'https://picsum.photos/seed/manantiales-main/800/600',
     imageAlt: 'Manantiales de aguas cristalinas de Axamilpa',
     description: portableTextMulti(
@@ -273,6 +278,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'cerro-de-nopala' },
     category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
+    categoryType: 'lugar',
     imageUrl: 'https://picsum.photos/seed/cerro-nopala-main/800/600',
     imageAlt: 'Vista panorámica desde el Cerro de Nopala',
     description: portableTextMulti(
@@ -303,6 +309,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'museo-comunitario-de-tepexi' },
     category: 'Cultura y Espacios Públicos',
     categoryColor: '#7B1FA2',
+    categoryType: 'cultura',
     imageUrl: 'https://picsum.photos/seed/museo-tepexi-main/800/600',
     imageAlt: 'Sala de exposición del Museo Comunitario de Tepexi',
     description: portableTextMulti(
@@ -334,6 +341,7 @@ export const mockLugares: MockLugar[] = [
     slug: { current: 'puente-de-dios' },
     category: 'Ecoturismo y Naturaleza',
     categoryColor: '#2E7D32',
+    categoryType: 'lugar',
     imageUrl: 'https://picsum.photos/seed/puente-dios-main/800/600',
     imageAlt: 'Formación rocosa del Puente de Dios con río',
     description: portableTextMulti(
@@ -388,7 +396,7 @@ export const mockGastronomia: MockGastronomia[] = [
     ],
     descriptionImage: { url: 'https://picsum.photos/seed/mole-desc/600/800', alt: 'Detalle del mole de caderas' },
     cost: '$80–$120 MXN por porción',
-    dishType: 'platillo-tipico',
+    dishType: ['platillo-tipico'],
     priceRange: 'medio',
     origin: 'Mixteca Poblana, Puebla',
     season: 'Octubre – Noviembre',
@@ -440,7 +448,7 @@ export const mockGastronomia: MockGastronomia[] = [
     ],
     descriptionImage: null,
     cost: 'Menú promedio $120–$180 MXN por persona',
-    dishType: 'restaurante',
+    dishType: ['restaurante'],
     priceRange: 'medio',
     origin: null,
     season: null,
@@ -476,7 +484,7 @@ export const mockGastronomia: MockGastronomia[] = [
     ],
     descriptionImage: null,
     cost: 'Antojitos desde $20 MXN, comida corrida $50–$80 MXN',
-    dishType: 'mercado',
+    dishType: ['mercado'],
     priceRange: 'bajo',
     origin: null,
     season: null,
@@ -512,7 +520,7 @@ export const mockGastronomia: MockGastronomia[] = [
     ],
     descriptionImage: null,
     cost: '$150–$350 MXN por botella 750 ml según productor',
-    dishType: 'bebida',
+    dishType: ['bebida'],
     priceRange: 'medio',
     origin: null,
     season: null,
@@ -548,7 +556,7 @@ export const mockGastronomia: MockGastronomia[] = [
     ],
     descriptionImage: null,
     cost: '$20–$30 MXN por tamal',
-    dishType: 'platillo-tipico',
+    dishType: ['platillo-tipico'],
     priceRange: 'bajo',
     origin: null,
     season: null,

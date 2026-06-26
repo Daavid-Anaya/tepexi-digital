@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import React from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
@@ -46,19 +46,15 @@ export function Button({
     className,
   )
 
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<{ className?: string }>, {
-      className: cn(classes, (children as React.ReactElement<{ className?: string }>).props.className),
-    })
-  }
+  const Comp = asChild ? Slot : 'button'
 
   return (
-    <button
+    <Comp
       className={classes}
       disabled={disabled}
       {...props}
     >
       {children}
-    </button>
+    </Comp>
   )
 }
