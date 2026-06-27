@@ -46,9 +46,8 @@ export default async function SiteLayout({
           rel="preload"
           as="image"
           href={heroPreloadHref}
-          // @ts-expect-error — imagesrcset/imagesizes are valid HTML but not yet in React types
-          imagesrcset={heroPreloadSrcSet}
-          imagesizes={heroPreloadSizes}
+          imageSrcSet={heroPreloadSrcSet}
+          imageSizes={heroPreloadSizes}
           fetchPriority="high"
         />
       )}
