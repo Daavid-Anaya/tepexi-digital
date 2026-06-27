@@ -87,7 +87,7 @@ export default async function HomePage() {
         {/* Content */}
         <Container className="relative z-10 text-center py-12 md:py-24">
           {/* Eyebrow label */}
-          <p className="inline-flex items-center gap-2 text-cream/70 text-sm font-medium uppercase tracking-[0.2em] mb-6 animate-fade-in">
+          <p className="inline-flex items-center gap-2 text-cream/90 text-sm font-medium uppercase tracking-[0.2em] mb-6 animate-fade-in">
             <span className="w-6 h-px bg-cream/50" />
             Mixteca Poblana, México
             <span className="w-6 h-px bg-cream/50" />
