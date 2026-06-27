@@ -203,7 +203,14 @@ button,
 }
 
 /* Staggered children */
+/* F-28: start visible (opacity: 1) by default; JS adds .is-animating when the
+   element enters the viewport. This prevents the visible→invisible→fade flash
+   (CLS) that happens when elements start at opacity:0 but JS hasn't run yet. */
 .stagger-children > * {
+  opacity: 1;
+}
+
+.stagger-children.is-animating > * {
   animation: fadeInUp 0.5s ease forwards;
   opacity: 0;
 }
@@ -217,23 +224,20 @@ button,
 .stagger-children > *:nth-child(7) { animation-delay: 480ms; }
 .stagger-children > *:nth-child(8) { animation-delay: 560ms; }
 
-/* ===  Leaflet popup overrides === */
-.leaflet-popup-content-wrapper {
-  border-radius: 12px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
-  padding: 0 !important;
-  border: 1px solid rgba(120, 113, 108, 0.12);
+/* F-27: respect user's motion preferences — disable all decorative animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-slide-in-left,
+  .animate-bounce-slow,
+  .stagger-children > *,
+  .stagger-children.is-animating > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
-.leaflet-popup-content {
-  margin: 12px 14px !important;
-  line-height: 1.4 !important;
-}
-
-.leaflet-popup-tip-container {
-  margin-top: -1px;
-}
-
-.leaflet-popup-tip {
-  box-shadow: none !important;
-}
+/* F-31: Leaflet popup overrides moved to src/components/map/leaflet-overrides.css
+   and imported only by LeafletMap.tsx — avoids loading them on every route. */

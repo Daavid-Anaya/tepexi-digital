@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Utensils, Leaf, Flame, Hammer, Sun, Wheat } from 'lucide-react'
 import { getAllGastronomia } from '@/lib/data'
+
+// F-21: ISR — revalidate list pages every hour.
+export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import { PlaceGrid } from '@/components/places/PlaceGrid'

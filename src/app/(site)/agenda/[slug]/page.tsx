@@ -4,6 +4,9 @@ import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 import { getEventoBySlug } from '@/lib/data'
+
+// F-21: ISR — event detail pages revalidate every hour (events can be updated).
+export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'

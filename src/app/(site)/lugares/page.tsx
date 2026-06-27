@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { MapPin } from 'lucide-react'
 import { getAllLugares } from '@/lib/data'
+
+// F-21: ISR — revalidate list pages every hour so new entries appear without a full redeploy.
+export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { CategoryNav, type CategoryNavItem } from '@/components/places/CategoryNav'
 import { CategorySection } from '@/components/places/CategorySection'

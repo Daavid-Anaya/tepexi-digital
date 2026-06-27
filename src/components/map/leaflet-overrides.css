@@ -1,0 +1,26 @@
+/**
+ * F-31: Leaflet popup overrides — scoped to this file and imported only by
+ * LeafletMap.tsx so these styles don't load on pages that don't use the map.
+ *
+ * Previously these rules lived in globals.css and loaded on every route.
+ */
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  padding: 0 !important;
+  border: 1px solid rgba(120, 113, 108, 0.12);
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip-container {
+  margin-top: -1px;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none !important;
+}

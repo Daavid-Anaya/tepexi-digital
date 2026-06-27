@@ -22,10 +22,10 @@ import {
   type SeoDefaults,
 } from './mock-data'
 import { sanityFetch } from '@/sanity/lib/live'
-import { allLugaresQuery, lugarBySlugQuery, allLugaresMapQuery } from '@/sanity/queries/lugares'
+import { allLugaresQuery, lugarBySlugQuery, allLugaresMapQuery, featuredLugaresHomeQuery } from '@/sanity/queries/lugares'
 import { servicioBySlugQuery, allServiciosMapQuery } from '@/sanity/queries/servicios'
-import { allGastronomiaQuery, gastronomiaBySlugQuery } from '@/sanity/queries/gastronomia'
-import { upcomingEventosQuery, eventoBySlugQuery } from '@/sanity/queries/eventos'
+import { allGastronomiaQuery, gastronomiaBySlugQuery, latestGastronomiaHomeQuery } from '@/sanity/queries/gastronomia'
+import { upcomingEventosQuery, upcomingEventosPreviewQuery, eventoBySlugQuery } from '@/sanity/queries/eventos'
 import { settingsQuery } from '@/sanity/queries/settings'
 
 const USE_SANITY = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
@@ -324,6 +324,54 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
   } catch (err) {
     logMockFallback('getGastronomiaBySlug', 'fetch-error', err)
     return null
+  }
+}
+
+// F-19: home page — only featured lugares, max 4, only card fields.
+export async function getFeaturedLugaresForHome(): Promise<LugarListItem[]> {
+  if (!USE_SANITY) {
+    logMockFallback('getFeaturedLugaresForHome', 'no-sanity-config')
+    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
+  }
+
+  try {
+    const { data } = await sanityFetch({ query: featuredLugaresHomeQuery })
+    const results = (data ?? []) as LugarListItem[]
+    if (results.length > 0) return results
+    logMockFallback('getFeaturedLugaresForHome', 'empty-results')
+    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
+  } catch (err) {
+    logMockFallback('getFeaturedLugaresForHome', 'fetch-error', err)
+    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
+  }
+}
+
+// F-19: home page — only the 3 most recent gastronomia items, only card fields.
+export async function getLatestGastronomiaForHome(): Promise<GastronomiaListItem[]> {
+  if (!USE_SANITY) return []
+
+  try {
+    const { data } = await sanityFetch({ query: latestGastronomiaHomeQuery })
+    return (data ?? []) as GastronomiaListItem[]
+  } catch (err) {
+    logMockFallback('getLatestGastronomiaForHome', 'fetch-error', err)
+    return []
+  }
+}
+
+// F-20: home page — only the 3 next upcoming events, limited at GROQ level.
+export async function getUpcomingEventosPreview(): Promise<EventoListItem[]> {
+  if (!USE_SANITY) return []
+
+  try {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const now = today.toISOString()
+    const { data } = await sanityFetch({ query: upcomingEventosPreviewQuery, params: { now } })
+    return (data ?? []) as EventoListItem[]
+  } catch (err) {
+    logMockFallback('getUpcomingEventosPreview', 'fetch-error', err)
+    return []
   }
 }
 
