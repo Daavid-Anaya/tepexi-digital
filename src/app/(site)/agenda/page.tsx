@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { CalendarDays } from 'lucide-react'
 import { getUpcomingEventos } from '@/lib/data'
+
+// F-21: ISR — agenda revalidates every hour so new events appear quickly.
+export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { EventCard } from '@/components/events/EventCard'
 import type { EventCardProps } from '@/types'

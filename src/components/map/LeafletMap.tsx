@@ -1,6 +1,8 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
+// F-31: Leaflet popup overrides scoped here — only loads when the map is rendered
+import './leaflet-overrides.css'
 import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import Link from 'next/link'

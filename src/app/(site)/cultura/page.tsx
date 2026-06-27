@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from 'lucide-react'
+
+// F-21: ISR — static-ish page, revalidate once per day.
+export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'

@@ -6,7 +6,7 @@ import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import { EventCard } from '@/components/events/EventCard'
-import { getAllLugares, getAllGastronomia, getUpcomingEventos, getSettings } from '@/lib/data'
+import { getFeaturedLugaresForHome, getLatestGastronomiaForHome, getUpcomingEventosPreview, getSettings } from '@/lib/data'
 import type { PlaceCardProps, EventCardProps } from '@/types'
 
 export const metadata: Metadata = {
@@ -16,27 +16,26 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
+  // F-19/F-20: use dedicated home queries that fetch only what the page needs.
+  // No more getAllLugares() + filter/slice — GROQ does the filtering at source.
   const [lugaresData, gastronomiaData, eventosData, settings] = await Promise.all([
-    getAllLugares(),
-    getAllGastronomia(),
-    getUpcomingEventos(),
+    getFeaturedLugaresForHome(),
+    getLatestGastronomiaForHome(),
+    getUpcomingEventosPreview(),
     getSettings(),
   ])
 
-  const featuredLugares: PlaceCardProps[] = lugaresData
-    .filter((l) => l.isFeatured)
-    .slice(0, 4)
-    .map((l) => ({
-      title: l.title,
-      slug: l.slug.current,
-      category: l.category,
-      categoryColor: l.categoryColor,
-      imageUrl: l.imageUrl,
-      imageAlt: l.imageAlt,
-      excerpt: l.address ?? undefined,
-    }))
+  const featuredLugares: PlaceCardProps[] = lugaresData.map((l) => ({
+    title: l.title,
+    slug: l.slug.current,
+    category: l.category,
+    categoryColor: l.categoryColor,
+    imageUrl: l.imageUrl,
+    imageAlt: l.imageAlt,
+    excerpt: l.address ?? undefined,
+  }))
 
-  const featuredGastronomia: PlaceCardProps[] = gastronomiaData.slice(0, 3).map((g) => ({
+  const featuredGastronomia: PlaceCardProps[] = gastronomiaData.map((g) => ({
     title: g.title,
     slug: g.slug.current,
     category: g.category,
@@ -46,7 +45,7 @@ export default async function HomePage() {
     excerpt: undefined,
   }))
 
-  const upcomingEvents: EventCardProps[] = eventosData.slice(0, 3).map((e) => ({
+  const upcomingEvents: EventCardProps[] = eventosData.map((e) => ({
     title: e.title,
     slug: e.slug.current,
     date: e.date,

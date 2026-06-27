@@ -16,22 +16,39 @@ export default async function SiteLayout({
   const headersList = await headers()
   const nonce = headersList.get('x-nonce') ?? undefined
 
-  // Use Sanity CDN's native image transformation API directly for the preload.
-  // This eliminates the Vercel optimizer middleman (Vercel → Sanity → browser)
-  // and serves the image in one hop (Sanity CDN → browser) at the exact size
-  // needed for mobile (828px wide = 414px * 2x DPR) in WebP format.
-  const heroPreloadUrl = settings.heroImageUrl
-    ? `${settings.heroImageUrl}?w=828&h=560&fit=crop&auto=format&q=75`
+  // F-10/F-33: detect current pathname to scope hero preload to home only.
+  // Injecting it on every route wastes bandwidth competing with page-specific heroes.
+  const pathname = headersList.get('x-pathname') ?? headersList.get('x-invoke-path') ?? '/'
+  const isHomePage = pathname === '/'
+
+  // F-38: hero preload with full srcset so each device downloads the right size.
+  // F-06: transformation params applied directly on the Sanity CDN URL.
+  const heroBaseUrl = settings.heroImageUrl ?? null
+  const heroPreloadSrcSet = heroBaseUrl
+    ? [
+        `${heroBaseUrl}?w=412&h=280&fit=crop&auto=format&q=80 412w`,
+        `${heroBaseUrl}?w=828&h=560&fit=crop&auto=format&q=80 828w`,
+        `${heroBaseUrl}?w=1200&h=800&fit=crop&auto=format&q=80 1200w`,
+        `${heroBaseUrl}?w=1920&h=1080&fit=crop&auto=format&q=80 1920w`,
+      ].join(', ')
+    : null
+  const heroPreloadSizes = '(max-width: 412px) 412px, (max-width: 828px) 828px, (max-width: 1200px) 1200px, 1920px'
+  // Fallback href for browsers that don't support imagesrcset (rare)
+  const heroPreloadHref = heroBaseUrl
+    ? `${heroBaseUrl}?w=828&h=560&fit=crop&auto=format&q=80`
     : null
 
   return (
     <>
-      {/* Preload LCP hero image — injected into <head> by Next.js App Router */}
-      {heroPreloadUrl && (
+      {/* F-10/F-33: Preload LCP hero only on the home page — not on every route */}
+      {isHomePage && heroPreloadSrcSet && heroPreloadHref && (
         <link
           rel="preload"
           as="image"
-          href={heroPreloadUrl}
+          href={heroPreloadHref}
+          // @ts-expect-error — imagesrcset/imagesizes are valid HTML but not yet in React types
+          imagesrcset={heroPreloadSrcSet}
+          imagesizes={heroPreloadSizes}
           fetchPriority="high"
         />
       )}

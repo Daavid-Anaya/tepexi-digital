@@ -2,6 +2,16 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   headers: async () => [
+    // F-37: long-lived immutable cache for static assets in /public/images/
+    {
+      source: '/images/(.*)',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
+        },
+      ],
+    },
     {
       source: '/(.*)',
       headers: [

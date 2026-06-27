@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import { getServicioBySlug } from '@/lib/data'
+
+// F-21: ISR — detail pages rarely change; revalidate once per day.
+export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { MapPin, Clock, DollarSign, Star, Map, ConciergeBell } from 'lucide-react'
 import { FichaTecnicaCard } from '@/components/ui/FichaTecnicaCard'

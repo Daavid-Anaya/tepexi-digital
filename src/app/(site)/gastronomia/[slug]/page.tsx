@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import { getGastronomiaBySlug } from '@/lib/data'
+
+// F-21: ISR — detail pages rarely change; revalidate once per day.
+export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
 import { QuoteCard } from '@/components/ui/QuoteCard'
@@ -158,11 +161,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             {item.descriptionImage && (
               <div className="relative">
                 <div className="w-full rounded-2xl overflow-hidden shadow-lg">
+                  {/* F-09: add sizes so the browser downloads the right resolution */}
                   <Image
                     src={item.descriptionImage.url}
                     alt={item.descriptionImage.alt ?? item.title ?? ''}
                     width={800}
                     height={600}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="w-full h-auto rounded-2xl object-cover"
                   />
                 </div>

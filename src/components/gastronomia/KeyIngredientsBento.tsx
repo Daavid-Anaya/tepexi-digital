@@ -101,14 +101,16 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
               style={{ minHeight: '200px' }}
             >
               {ingredients[3].imageUrl ? (
-                <Image
-                  src={ingredients[3].imageUrl}
-                  alt={ingredients[3].name ?? 'Ingrediente'}
-                  width={800}
-                  height={400}
-                  className="w-full h-full object-cover"
-                  style={{ minHeight: '200px' }}
-                />
+                /* F-08: use fill + sizes instead of fixed width/height to avoid wrong-size downloads */
+                <div className="relative w-full" style={{ minHeight: '200px' }}>
+                  <Image
+                    src={ingredients[3].imageUrl}
+                    alt={ingredients[3].name ?? 'Ingrediente'}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
               ) : (
                 <div
                   className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100"

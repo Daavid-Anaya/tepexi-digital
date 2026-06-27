@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Map, MapPin, Utensils, Palette, ConciergeBell, Info, type LucideIcon } from 'lucide-react'
 import { getAllMapMarkers } from '@/lib/data'
+
+// F-21: ISR — map markers change infrequently, revalidate every hour.
+export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'

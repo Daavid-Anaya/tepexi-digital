@@ -62,6 +62,7 @@ export default function ImageCarousel({
       >
         {images.map((image, index) => (
           <div key={index} className="relative min-w-full h-full flex-shrink-0">
+            {/* F-11: only the first slide is eager — the rest lazy-load to save bandwidth */}
             <Image
               src={image.url}
               alt={image.alt}
@@ -69,6 +70,7 @@ export default function ImageCarousel({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
               className="object-cover"
               priority={index === 0}
+              loading={index === 0 ? 'eager' : 'lazy'}
             />
           </div>
         ))}

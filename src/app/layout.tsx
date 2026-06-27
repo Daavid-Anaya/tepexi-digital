@@ -64,6 +64,10 @@ export default async function RootLayout({
         {/* Preconnect to Sanity CDN so hero image DNS+TLS is ready before it's requested */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        {/* F-17: preconnect to OpenStreetMap tile servers used by LeafletMap */}
+        <link rel="preconnect" href="https://a.tile.openstreetmap.org" />
+        <link rel="preconnect" href="https://b.tile.openstreetmap.org" />
+        <link rel="preconnect" href="https://c.tile.openstreetmap.org" />
       </head>
       <body className="bg-sand antialiased">
         {children}
