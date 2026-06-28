@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface CarouselImage {
@@ -23,8 +23,6 @@ export default function ImageCarousel({
 }: ImageCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   function goNext() {
@@ -40,14 +38,14 @@ export default function ImageCarousel({
   }
 
   useEffect(() => {
-    if (!autoPlay || isHovered || isPaused || isFocused || images.length <= 1) return
+    if (!autoPlay || isHovered || images.length <= 1) return
 
     timerRef.current = setInterval(goNext, interval)
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [autoPlay, interval, isHovered, isPaused, isFocused, images.length])
+  }, [autoPlay, interval, isHovered, images.length])
 
   if (images.length === 0) return null
 
@@ -56,8 +54,6 @@ export default function ImageCarousel({
       className="relative w-full aspect-video overflow-hidden rounded-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
     >
       {/* Slides */}
       <div
@@ -92,7 +88,7 @@ export default function ImageCarousel({
               'rounded-full p-1.5 transition-colors',
             )}
           >
-            <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={goNext}
@@ -103,21 +99,10 @@ export default function ImageCarousel({
               'rounded-full p-1.5 transition-colors',
             )}
           >
-            <ChevronRight className="w-5 h-5" aria-hidden="true" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </>
       )}
-
-      {/* Pause/play — always visible, not hover-dependent (REQ-A6) */}
-      <button
-        type="button"
-        onClick={() => setIsPaused((p) => !p)}
-        aria-pressed={isPaused}
-        aria-label={isPaused ? 'Reproducir carrusel' : 'Pausar carrusel'}
-        className="absolute bottom-4 right-4 z-10 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors"
-      >
-        {isPaused ? <Play className="w-4 h-4" aria-hidden="true" /> : <Pause className="w-4 h-4" aria-hidden="true" />}
-      </button>
 
       {/* Dot indicators */}
       {images.length > 1 && (
@@ -127,9 +112,8 @@ export default function ImageCarousel({
               key={index}
               onClick={() => goTo(index)}
               aria-label={`Ir a imagen ${index + 1}`}
-              aria-pressed={index === activeIndex}
               className={cn(
-                'w-2 h-2 rounded-full transition-all p-2 -m-2 box-content',
+                'w-2 h-2 rounded-full transition-all',
                 index === activeIndex
                   ? 'bg-white scale-110'
                   : 'bg-white/50 hover:bg-white/75',
@@ -138,16 +122,6 @@ export default function ImageCarousel({
           ))}
         </div>
       )}
-
-      {/* Live region for AT slide announcements (REQ-A9) */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      >
-        Imagen {activeIndex + 1} de {images.length}
-      </div>
     </div>
   )
 }
