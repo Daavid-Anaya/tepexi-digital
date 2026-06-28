@@ -11,7 +11,11 @@ interface ImageCarouselProps {
 const ImageCarousel = dynamic(() => import('./ImageCarousel'), {
   ssr: false,
   loading: () => (
-    <div className="w-full aspect-video bg-sand animate-pulse rounded-2xl shadow-md" />
+    <div
+      role="status"
+      aria-label="Cargando imágenes"
+      className="w-full aspect-video bg-sand animate-pulse rounded-2xl shadow-md"
+    />
   ),
 })
 
