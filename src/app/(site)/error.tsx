@@ -13,7 +13,7 @@ export default function Error({ error, reset }: Props) {
   }, [error])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-4">
+    <div role="alert" className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-4">
       <h2 className="font-heading text-xl text-text-primary">Algo salió mal</h2>
       <p className="text-sm text-text-secondary text-center max-w-md">
         Ocurrió un error inesperado. Por favor, intenta nuevamente.
