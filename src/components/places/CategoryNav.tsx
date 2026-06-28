@@ -56,6 +56,10 @@ export function CategoryNav({ categories }: CategoryNavProps) {
     const yOffset = -100 // account for sticky nav + page header
     const y = el.getBoundingClientRect().top + window.scrollY + yOffset
     window.scrollTo({ top: y, behavior: 'smooth' })
+    // Move focus to the target section for AT users (REQ-C7)
+    const currentTabIndex = el.getAttribute('tabindex')
+    if (!currentTabIndex) el.setAttribute('tabindex', '-1')
+    el.focus({ preventScroll: true })
   }
 
   if (categories.length <= 1) return null
@@ -66,6 +70,8 @@ export function CategoryNav({ categories }: CategoryNavProps) {
       className="sticky top-16 z-30 bg-cream/95 backdrop-blur-sm border-b border-primary/10 -mx-4 px-4 md:mx-0 md:px-0"
     >
       <div
+        tabIndex={0}
+        aria-label="Filtrar por categoría"
         className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none"
         style={{
           maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
@@ -78,9 +84,10 @@ export function CategoryNav({ categories }: CategoryNavProps) {
             <button
               key={cat.id}
               type="button"
+              aria-pressed={isActive}
               onClick={() => handleClick(cat.id)}
               className={cn(
-                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200',
+                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200 min-h-[24px]',
                 isActive
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-stone hover:bg-primary/10 hover:text-primary'
