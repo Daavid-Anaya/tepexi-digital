@@ -52,7 +52,7 @@ export async function Footer() {
                 </span>
               </Link>
 
-              <p className="text-cream/70 text-sm leading-relaxed max-w-xs">
+              <p className="text-cream/80 text-sm leading-relaxed max-w-xs">
                 {settings.siteDescription}
               </p>
 
@@ -171,7 +171,7 @@ export async function Footer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-8 md:mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/40">
+          <div className="mt-8 md:mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/60">
             <p>
               © {currentYear} {settings.siteName}. Todos los derechos reservados.
             </p>

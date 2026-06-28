@@ -38,13 +38,13 @@ function SubmitButton() {
 }
 
 const inputClass = cn(
-  'w-full rounded-xl border border-stone/25 bg-white px-4 py-3 text-sm text-stone',
+  'w-full rounded-xl border border-stone/50 bg-white px-4 py-3 text-sm text-stone',
   'placeholder:text-stone/50',
-  'focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20',
+  'focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
   'transition-all duration-150',
 )
 
-const labelClass = 'block text-xs font-semibold text-stone/70 uppercase tracking-wide mb-1.5'
+const labelClass = 'block text-xs font-semibold text-stone uppercase tracking-wide mb-1.5'
 
 export default function ContactForm() {
   const [state, formAction] = useActionState(sendContactMessage, initialState)

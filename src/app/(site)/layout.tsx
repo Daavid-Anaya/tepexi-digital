@@ -52,8 +52,14 @@ export default async function SiteLayout({
         />
       )}
 
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-cream focus:rounded focus:outline-none focus:ring-2 focus:ring-cream"
+      >
+        Saltar al contenido
+      </a>
       <Navbar />
-      <main className="min-h-screen">{children}</main>
+      <main id="main-content" tabIndex={-1} className="min-h-screen">{children}</main>
       <Footer />
 
       {/* Google Analytics — lazyOnload so it never blocks LCP or TBT */}

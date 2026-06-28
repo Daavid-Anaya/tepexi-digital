@@ -228,17 +228,19 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     </h2>
                   </div>
 
-                  <div className="p-4 sm:p-5 space-y-5" style={{ background: '#FDFAF8' }}>
+                  <dl className="p-4 sm:p-5 space-y-5" style={{ background: '#FDFAF8' }}>
                     {item.difficulty && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <Flame className="w-4 h-4 text-accent" />
+                          <Flame className="w-4 h-4 text-accent" aria-hidden="true" />
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-1 text-stone">
                             Dificultad
                           </dt>
-                          <DifficultyFlames difficulty={item.difficulty} />
+                          <dd>
+                            <DifficultyFlames difficulty={item.difficulty} />
+                          </dd>
                         </div>
                       </div>
                     )}
@@ -294,7 +296,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
                             Rango de precios
                           </dt>
-                          <PriceSymbols priceRange={item.priceRange} />
+                          <dd><PriceSymbols priceRange={item.priceRange} /></dd>
                         </div>
                       </div>
                     )}
@@ -326,7 +328,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </dl>
                 </div>
               )}
 

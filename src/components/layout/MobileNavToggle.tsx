@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { Menu, X, MapPin, Compass, Mountain } from 'lucide-react'
@@ -23,6 +23,9 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
 
   const close = useCallback(() => setIsOpen(false), [])
 
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const firstLinkRef = useRef<HTMLAnchorElement>(null)
+
   // Portal needs document.body — only available after mount
   useEffect(() => setMounted(true), [])
 
@@ -44,6 +47,54 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     return () => {
       document.body.style.overflow = ''
     }
+  }, [isOpen])
+
+  // Focus management: first link on open, toggle on close (REQ-A4)
+  useEffect(() => {
+    if (isOpen) {
+      firstLinkRef.current?.focus()
+    } else {
+      if (mounted) toggleRef.current?.focus()
+    }
+  }, [isOpen, mounted])
+
+  // Inert background content while nav is open (REQ-A5)
+  useEffect(() => {
+    const mainEl = document.querySelector('main')
+    const footerEl = document.querySelector('footer')
+    if (isOpen) {
+      mainEl?.setAttribute('inert', '')
+      footerEl?.setAttribute('inert', '')
+    } else {
+      mainEl?.removeAttribute('inert')
+      footerEl?.removeAttribute('inert')
+    }
+    return () => {
+      mainEl?.removeAttribute('inert')
+      footerEl?.removeAttribute('inert')
+    }
+  }, [isOpen])
+
+  // Tab focus trap inside mobile nav panel (REQ-A3, REQ-A5)
+  useEffect(() => {
+    if (!isOpen) return
+    const panel = document.getElementById('mobile-nav')
+    if (!panel) return
+    const focusableSelector = 'a[href], button:not([disabled])'
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      const focusable = Array.from(panel.querySelectorAll<HTMLElement>(focusableSelector))
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus() }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
+    panel.addEventListener('keydown', handleKeyDown)
+    return () => panel.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
   // Overlay rendered via Portal so it escapes the header's stacking context
@@ -69,6 +120,9 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
           {/* Slide-in panel */}
           <div
             id="mobile-nav"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación"
             className={cn(
               'absolute inset-0',
               'bg-cream flex flex-col',
@@ -96,12 +150,13 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
                       style={{ transitionDelay: isOpen ? `${i * 40 + 60}ms` : '0ms' }}
                     >
                       <Link
+                        ref={i === 0 ? firstLinkRef : undefined}
                         href={link.href}
                         onClick={close}
                         className="flex items-center gap-4 px-5 py-4 rounded-xl text-base font-medium text-stone hover:text-primary hover:bg-primary/6 active:bg-primary/10 transition-colors duration-150"
                       >
                         <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/8 text-primary flex-shrink-0">
-                          <Icon size={16} />
+                          <Icon size={16} aria-hidden="true" />
                         </span>
                         {link.label}
                       </Link>
@@ -127,6 +182,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     <>
       {/* Hamburger button — only visible below md */}
       <button
+        ref={toggleRef}
         type="button"
         aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
         aria-expanded={isOpen}
