@@ -5,9 +5,9 @@ interface IngredientIconProps {
 }
 
 export function IngredientIcon({ icon }: IngredientIconProps) {
-  if (icon === 'utensils') return <Utensils className="w-5 h-5 text-accent" />
-  if (icon === 'flame') return <Flame className="w-5 h-5 text-accent" />
-  if (icon === 'leaf') return <Leaf className="w-5 h-5 text-accent" />
-  if (icon === 'grain') return <CircleDot className="w-5 h-5 text-accent" />
-  return <Utensils className="w-5 h-5 text-accent" />
+  if (icon === 'utensils') return <Utensils className="w-5 h-5 text-accent" aria-hidden="true" />
+  if (icon === 'flame') return <Flame className="w-5 h-5 text-accent" aria-hidden="true" />
+  if (icon === 'leaf') return <Leaf className="w-5 h-5 text-accent" aria-hidden="true" />
+  if (icon === 'grain') return <CircleDot className="w-5 h-5 text-accent" aria-hidden="true" />
+  return <Utensils className="w-5 h-5 text-accent" aria-hidden="true" />
 }

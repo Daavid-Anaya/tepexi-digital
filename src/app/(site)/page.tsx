@@ -132,7 +132,7 @@ export default async function HomePage() {
             <Button asChild variant="primary" size="lg">
               <Link href="/lugares">
                 Explorar lugares
-                <ArrowRight size={18} />
+                <ArrowRight size={18} aria-hidden="true" />
               </Link>
             </Button>
             <Button
@@ -142,7 +142,7 @@ export default async function HomePage() {
               className="border-cream/50 text-cream hover:bg-cream hover:text-primary"
             >
               <Link href="/mapa">
-                <Map size={18} />
+                <Map size={18} aria-hidden="true" />
                 Ver mapa
               </Link>
             </Button>
@@ -169,7 +169,7 @@ export default async function HomePage() {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1 text-cream/70 z-10">
           <span className="text-[10px] uppercase tracking-widest">Desliza</span>
-          <ChevronDown size={18} className="animate-bounce-slow" />
+          <ChevronDown size={18} className="animate-bounce-slow" aria-hidden="true" />
         </div>
       </section>
 
@@ -197,10 +197,11 @@ export default async function HomePage() {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark group shrink-0 transition-colors duration-200"
             >
               Ver todos
-              <ArrowRight
-                size={15}
-                className="group-hover:translate-x-0.5 transition-transform duration-200"
-              />
+                <ArrowRight
+                  size={15}
+                  className="group-hover:translate-x-0.5 transition-transform duration-200"
+                  aria-hidden="true"
+                />
             </Link>
           </div>
 
@@ -249,10 +250,11 @@ export default async function HomePage() {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark group shrink-0 transition-colors duration-200"
             >
               Ver agenda completa
-              <ArrowRight
-                size={15}
-                className="group-hover:translate-x-0.5 transition-transform duration-200"
-              />
+                <ArrowRight
+                  size={15}
+                  className="group-hover:translate-x-0.5 transition-transform duration-200"
+                  aria-hidden="true"
+                />
             </Link>
           </div>
 
@@ -341,7 +343,7 @@ export default async function HomePage() {
                 className="group flex items-start gap-4 p-4 sm:p-6 rounded-xl bg-cream/5 border border-cream/10 hover:bg-cream/10 hover:border-cream/20 transition-all duration-200"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-cream/10 text-cream/80 group-hover:bg-primary-400/30 transition-colors duration-200 flex-shrink-0">
-                  <Icon size={20} />
+                  <Icon size={20} aria-hidden="true" />
                 </span>
                 <div>
                   <h3 className="font-heading font-semibold text-cream leading-tight mb-1 group-hover:text-primary-300 transition-colors duration-200">
@@ -390,14 +392,14 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild variant="primary" size="lg">
               <Link href="/mapa">
-                <Map size={18} />
+                 <Map size={18} aria-hidden="true" />
                 Ver mapa interactivo
               </Link>
             </Button>
             <Button asChild variant="ghost" size="lg">
               <Link href="/contacto">
                 Contáctanos
-                <ArrowRight size={18} />
+                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
             </Button>
           </div>

@@ -72,7 +72,7 @@ export function PlaceCard({
           {/* Hover CTA */}
           <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary-500 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200">
             Explorar
-            <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+            <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
           </span>
         </div>
       </Link>

@@ -91,7 +91,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           {item.category && (
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-              <Utensils className="w-3 h-3" />
+              <Utensils className="w-3 h-3" aria-hidden="true" />
               {item.category}
             </span>
           )}
@@ -112,13 +112,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
             {item.origin && (
               <p className="flex items-center gap-2 text-white/70 text-sm">
-                <Globe className="w-4 h-4 flex-shrink-0" />
+                 <Globe className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                 <span>{item.origin}</span>
               </p>
             )}
             {item.season && (
               <p className="flex items-center gap-2 text-white/70 text-sm">
-                <CalendarDays className="w-4 h-4 flex-shrink-0" />
+                 <CalendarDays className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                 <span>Temporada: {item.season}</span>
               </p>
             )}
@@ -248,7 +248,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.preparationTime && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <Timer className="w-4 h-4 text-accent" />
+                           <Timer className="w-4 h-4 text-accent" aria-hidden="true" />
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
@@ -262,7 +262,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.servings && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <Users className="w-4 h-4 text-accent" />
+                           <Users className="w-4 h-4 text-accent" aria-hidden="true" />
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
@@ -276,7 +276,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.season && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <CalendarDays className="w-4 h-4 text-accent" />
+                           <CalendarDays className="w-4 h-4 text-accent" aria-hidden="true" />
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
@@ -290,7 +290,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.priceRange && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <span className="text-sm font-bold text-accent">$</span>
+                          <span className="text-sm font-bold text-accent" aria-hidden="true">$</span>
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
@@ -304,7 +304,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.origin && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <Globe className="w-4 h-4 text-accent" />
+                           <Globe className="w-4 h-4 text-accent" aria-hidden="true" />
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">
@@ -318,7 +318,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                     {item.cost && (
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5 bg-accent/10">
-                          <span className="text-sm font-bold text-accent">$</span>
+                          <span className="text-sm font-bold text-accent" aria-hidden="true">$</span>
                         </div>
                         <div>
                           <dt className="text-[11px] uppercase tracking-widest font-semibold mb-0.5 text-stone">

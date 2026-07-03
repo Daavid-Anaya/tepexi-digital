@@ -55,7 +55,7 @@ export default async function AgendaPage() {
                 <div className="absolute inset-0 rounded-2xl bg-secondary/10 rotate-6" />
                 <div className="absolute inset-0 rounded-2xl bg-secondary/10 -rotate-3" />
                 <div className="relative w-24 h-24 rounded-2xl bg-cream border border-stone/10 flex items-center justify-center">
-                  <span className="text-4xl">📅</span>
+                  <span className="text-4xl"><span aria-hidden="true">📅</span><span className="sr-only">Agenda</span></span>
                 </div>
               </div>
               <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">

@@ -116,7 +116,7 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
                   className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100"
                   style={{ minHeight: '200px' }}
                 >
-                  <Utensils className="w-10 h-10 text-accent/20" />
+                    <Utensils className="w-10 h-10 text-accent/20" aria-hidden="true" />
                 </div>
               )}
             </div>

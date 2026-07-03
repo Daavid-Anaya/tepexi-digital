@@ -12,6 +12,7 @@ export function DifficultyFlames({ difficulty }: DifficultyFlamesProps) {
       {[1, 2, 3].map((n) => (
         <Flame
           key={n}
+          aria-hidden="true"
           className={`w-4 h-4 ${n <= filled ? 'text-accent fill-accent' : 'text-stone/40 fill-stone/40'}`}
         />
       ))}

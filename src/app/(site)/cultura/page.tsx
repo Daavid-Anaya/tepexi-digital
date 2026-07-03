@@ -146,7 +146,7 @@ export default async function CulturaPage() {
                       className="absolute -left-8 top-1 w-7 h-7 rounded-full flex items-center justify-center shadow-sm ring-4 ring-cream"
                       style={{ backgroundColor: CATEGORY_COLORS.cultura }}
                     >
-                      <Icon className="w-3.5 h-3.5 text-white" />
+                       <Icon className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                     </div>
 
                     <div className="bg-primary-50 rounded-xl p-4 sm:p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
@@ -223,7 +223,7 @@ export default async function CulturaPage() {
                 <summary className="p-4 sm:p-5 cursor-pointer font-heading font-semibold text-primary hover:bg-primary-100 transition-colors list-none flex items-center justify-between">
                   <span>{title}</span>
                   <span className="chevron transition-transform duration-200 group-open:rotate-180 flex-shrink-0 ml-3">
-                    <ChevronDown className="w-5 h-5 text-primary/50" />
+                     <ChevronDown className="w-5 h-5 text-primary/50" aria-hidden="true" />
                   </span>
                 </summary>
                 <div className="p-4 sm:p-5 pt-0 text-stone text-sm leading-relaxed">
@@ -254,7 +254,7 @@ export default async function CulturaPage() {
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'rgba(123,63,160,0.15)' }}
                 >
-                  <Hand className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} />
+                   <Hand className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} aria-hidden="true" />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-primary">
                   El Arte de la Palma
@@ -282,7 +282,7 @@ export default async function CulturaPage() {
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: 'rgba(123,63,160,0.15)' }}
                 >
-                  <Gem className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} />
+                   <Gem className="w-5 h-5" style={{ color: CATEGORY_COLORS.cultura }} aria-hidden="true" />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-primary">
                   Corte en Piedra

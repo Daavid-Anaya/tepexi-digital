@@ -132,8 +132,8 @@ export function PageHeroHeader({ icon: Icon, title, description }: PageHeroHeade
   return (
     <div className="flex items-start gap-5">
       {Icon && (
-        <div className="flex-shrink-0 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center bg-white/15">
-          <Icon className="w-7 h-7 text-white" />
+          <div className="flex-shrink-0 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center bg-white/15">
+            <Icon className="w-7 h-7 text-white" aria-hidden="true" />
         </div>
       )}
       <div>
@@ -178,7 +178,7 @@ export function PageHeroBackLink({ href, label }: PageHeroBackLinkProps) {
       href={href}
       className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-8 group"
     >
-      <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+      <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" aria-hidden="true" />
       {label}
     </Link>
   )

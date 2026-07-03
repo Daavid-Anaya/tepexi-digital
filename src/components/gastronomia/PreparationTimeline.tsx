@@ -56,7 +56,7 @@ export function PreparationTimeline({ steps }: PreparationTimelineProps) {
                       </h3>
                       {step.duration && (
                         <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border flex-shrink-0 text-accent border-accent/20 bg-accent/5">
-                          <Clock className="w-3 h-3" />
+                          <Clock className="w-3 h-3" aria-hidden="true" />
                           {step.duration}
                         </span>
                       )}

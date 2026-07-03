@@ -124,7 +124,7 @@ export default async function ServicioDetailPage({ params }: Props) {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           {servicio.category && (
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-              <ConciergeBell className="w-3 h-3" />
+              <ConciergeBell className="w-3 h-3" aria-hidden="true" />
               {servicio.category}
             </span>
           )}
@@ -136,7 +136,7 @@ export default async function ServicioDetailPage({ params }: Props) {
 
         {servicio.address && (
           <p className="flex items-center gap-2 text-white/70 mt-3">
-            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <MapPin className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             <span>{servicio.address}</span>
           </p>
         )}
@@ -175,7 +175,7 @@ export default async function ServicioDetailPage({ params }: Props) {
             <div className="mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-6 py-4">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(55,71,79,0.1)' }}>
-                   <Map className="w-4 h-4" style={{ color: CATEGORY_COLORS.servicios }} />
+                   <Map className="w-4 h-4" style={{ color: CATEGORY_COLORS.servicios }} aria-hidden="true" />
                 </div>
                 <h2 className="font-heading font-semibold text-text-primary text-lg">
                    Ubicación
