@@ -47,8 +47,6 @@ export default async function LugarDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.lugares
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
-  const heroImageAlt = images[0]?.alt ?? `Vista de ${lugar.title}`
-
   const mapsUrl = lugar.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar.address)}`
     : null
@@ -120,7 +118,7 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <PageHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} size="compact">
+      <PageHero imageUrl={heroImageUrl} size="compact">
         <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
 
         {/* Category badge */}

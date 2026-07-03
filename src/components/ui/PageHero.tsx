@@ -11,8 +11,6 @@ import { Container } from '@/components/ui/Container'
 export interface PageHeroProps {
   /** Background image URL */
   imageUrl: string
-  /** Alt text for the background image */
-  imageAlt?: string
   /** Overlay opacity — default 0.6 (range 0-1) */
   overlayOpacity?: number
   /** Section padding variant */
@@ -54,7 +52,6 @@ export interface PageHeroBackLinkProps {
 
 export function PageHero({
   imageUrl,
-  imageAlt = '',
   overlayOpacity = 0.6,
   size = 'default',
   children,
@@ -71,7 +68,7 @@ export function PageHero({
       {/* Background image */}
       <Image
         src={imageUrl}
-        alt={imageAlt}
+        alt=""
         fill
         priority
         className="object-cover"
@@ -156,17 +153,18 @@ export function PageHeroStats({ stats }: PageHeroStatsProps) {
   if (stats.length === 0) return null
 
   return (
-    <div className="mt-6 md:mt-10 flex gap-6 flex-wrap">
+    <dl className="mt-6 md:mt-10 flex gap-6 flex-wrap">
       {stats.map((stat, index) => (
         <div
           key={index}
           className="rounded-xl px-5 py-3 text-white bg-white/10"
         >
-          <div className="text-2xl font-bold font-heading">{stat.value}</div>
-          <div className="text-xs text-white/70 uppercase tracking-wide">{stat.label}</div>
+          <dt className="sr-only">{stat.label}</dt>
+          <dd className="text-2xl font-bold font-heading">{stat.value}</dd>
+          <dd aria-hidden="true" className="text-xs text-white/70 uppercase tracking-wide">{stat.label}</dd>
         </div>
       ))}
-    </div>
+    </dl>
   )
 }
 

@@ -14,8 +14,23 @@ const DEFAULT_ZOOM = 14
 
 const HEX_COLOR_RE = /^#[0-9A-Fa-f]{3,8}$/
 
-function createCategoryIcon(color: string): L.DivIcon {
+const MARKER_SHAPES = {
+  lugar: 'circle',
+  gastronomia: 'square',
+  cultura: 'triangle',
+  servicios: 'diamond',
+} as const
+
+type MarkerShape = (typeof MARKER_SHAPES)[keyof typeof MARKER_SHAPES]
+
+function createCategoryIcon(color: string, shape: MarkerShape): L.DivIcon {
   const fill = HEX_COLOR_RE.test(color) ? color : '#8B4513'
+  const innerShape = {
+    circle: `<circle cx="12" cy="8" r="5" fill="white" stroke="${fill}" stroke-width="1.5" />`,
+    square: `<rect x="7" y="3" width="10" height="10" rx="1.5" fill="white" stroke="${fill}" stroke-width="1.5" />`,
+    triangle: `<polygon points="12,3 19,13 5,13" fill="white" stroke="${fill}" stroke-width="1.5" stroke-linejoin="round" />`,
+    diamond: `<polygon points="12,3 19,8 12,13 5,8" fill="white" stroke="${fill}" stroke-width="1.5" stroke-linejoin="round" />`,
+  }[shape]
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 44" width="32" height="44">
       <defs>
@@ -28,7 +43,9 @@ function createCategoryIcon(color: string): L.DivIcon {
         d="M16 0C7.163 0 0 7.163 0 16c0 6.04 3.35 11.3 8.3 14.06L16 44l7.7-13.94C28.65 27.3 32 22.04 32 16 32 7.163 24.837 0 16 0z"
         fill="${fill}"
       />
-      <circle cx="16" cy="15" r="6.5" fill="white" opacity="0.95"/>
+      <g transform="translate(4 7)">
+        ${innerShape}
+      </g>
     </svg>
   `
   return L.divIcon({
@@ -64,13 +81,18 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {markers.map((marker) => {
-          const icon = createCategoryIcon(marker.categoryColor)
+          const icon = createCategoryIcon(
+            marker.categoryColor,
+            MARKER_SHAPES[marker.type] ?? MARKER_SHAPES.lugar,
+          )
           const basePath = TYPE_PATHS[marker.type] ?? '/lugares'
           return (
             <Marker
               key={marker.id}
               position={[marker.coordinates.lat, marker.coordinates.lng]}
               icon={icon}
+              keyboard={true}
+              title={marker.title}
             >
               <Popup minWidth={180} className="leaflet-popup-custom">
                 <div className="text-sm leading-snug" style={{ fontFamily: 'inherit' }}>

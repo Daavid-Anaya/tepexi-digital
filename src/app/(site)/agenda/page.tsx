@@ -36,7 +36,7 @@ export default async function AgendaPage() {
   return (
     <>
       {/* Page hero — calendar inspired */}
-      <PageHero imageUrl={HERO_FALLBACKS.agenda} imageAlt="Imagen hero de la agenda de eventos">
+      <PageHero imageUrl={HERO_FALLBACKS.agenda}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} />
         <PageHeroHeader
           icon={CalendarDays}
@@ -106,13 +106,13 @@ export default async function AgendaPage() {
                   {/* Timeline layout */}
                   <div className="relative">
                     {/* Vertical timeline line */}
-                    <div className="absolute left-6 top-0 bottom-0 w-px bg-stone/15 hidden sm:block" />
+                    <div aria-hidden="true" className="absolute left-6 top-0 bottom-0 w-px bg-stone/15 hidden sm:block" />
 
                     <div className="space-y-4">
                       {regular.map((event, index) => (
                         <div key={event.slug} className="relative sm:pl-14">
                           {/* Timeline dot */}
-                          <div className="absolute left-4 top-6 w-4 h-4 rounded-full border-2 border-stone/30 bg-sand hidden sm:block" />
+                          <div aria-hidden="true" className="absolute left-4 top-6 w-4 h-4 rounded-full border-2 border-stone/30 bg-sand hidden sm:block" />
                           <EventCard {...event} />
                         </div>
                       ))}

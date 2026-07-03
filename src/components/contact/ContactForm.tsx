@@ -3,10 +3,11 @@
 import { useActionState, useRef, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 import { sendContactMessage } from '@/actions/contact'
+import type { ContactFormState } from '@/actions/contact'
 import { cn } from '@/lib/utils'
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
-const initialState = { success: false, error: null }
+const initialState = { success: false, error: null, fieldErrors: {} } satisfies ContactFormState
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -46,9 +47,15 @@ const inputClass = cn(
 
 const labelClass = 'block text-xs font-semibold text-stone uppercase tracking-wide mb-1.5'
 
+const fieldErrorClass = 'mt-1.5 text-xs font-medium text-accent'
+
 export default function ContactForm() {
-  const [state, formAction] = useActionState(sendContactMessage, initialState)
+  const [state, formAction] = useActionState<ContactFormState, FormData>(sendContactMessage, initialState)
   const successRef = useRef<HTMLHeadingElement>(null)
+
+  const nameError = state.fieldErrors?.name ?? null
+  const emailError = state.fieldErrors?.email ?? null
+  const messageError = state.fieldErrors?.message ?? null
 
   useEffect(() => {
     if (state.success) successRef.current?.focus()
@@ -83,69 +90,96 @@ export default function ContactForm() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <fieldset className="space-y-5">
+        <legend className="sr-only">Información de contacto (campos requeridos)</legend>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label htmlFor="name" className={labelClass}>
+              Nombre <span className="text-accent">*</span>
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autoComplete="name"
+              aria-invalid={!!nameError}
+              aria-describedby={nameError ? 'name-error' : undefined}
+              placeholder="Tu nombre completo"
+              className={inputClass}
+            />
+            {nameError && (
+              <p id="name-error" className={fieldErrorClass}>
+                {nameError}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="email" className={labelClass}>
+              Correo electrónico <span className="text-accent">*</span>
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              aria-invalid={!!emailError}
+              aria-describedby={emailError ? 'email-error' : undefined}
+              placeholder="tu@correo.com"
+              className={inputClass}
+            />
+            {emailError && (
+              <p id="email-error" className={fieldErrorClass}>
+                {emailError}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div>
-          <label htmlFor="name" className={labelClass}>
-            Nombre <span className="text-accent">*</span>
+          <label htmlFor="subject" className={labelClass}>
+            Asunto
           </label>
           <input
-            id="name"
-            name="name"
+            id="subject"
+            name="subject"
             type="text"
-            required
-            placeholder="Tu nombre completo"
+            placeholder="¿En qué podemos ayudarte?"
             className={inputClass}
           />
         </div>
 
         <div>
-          <label htmlFor="email" className={labelClass}>
-            Correo electrónico <span className="text-accent">*</span>
+          <label htmlFor="message" className={labelClass}>
+            Mensaje <span className="text-accent">*</span>
           </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
+          <textarea
+            id="message"
+            name="message"
             required
-            placeholder="tu@correo.com"
-            className={inputClass}
+            rows={6}
+            aria-invalid={!!messageError}
+            aria-describedby={messageError ? 'message-error' : undefined}
+            placeholder="Escribe tu mensaje aquí…"
+            className={cn(inputClass, 'resize-y min-h-[140px]')}
           />
+          {messageError && (
+            <p id="message-error" className={fieldErrorClass}>
+              {messageError}
+            </p>
+          )}
         </div>
-      </div>
-
-      <div>
-        <label htmlFor="subject" className={labelClass}>
-          Asunto
-        </label>
-        <input
-          id="subject"
-          name="subject"
-          type="text"
-          placeholder="¿En qué podemos ayudarte?"
-          className={inputClass}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="message" className={labelClass}>
-          Mensaje <span className="text-accent">*</span>
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          rows={6}
-          placeholder="Escribe tu mensaje aquí…"
-          className={cn(inputClass, 'resize-y min-h-[140px]')}
-        />
-      </div>
-
-      <SubmitButton />
+      </fieldset>
 
       <p className="text-center text-xs text-stone/50">
         Al enviar este formulario aceptas que utilicemos tus datos únicamente
         para responderte.
       </p>
+
+      <SubmitButton />
     </form>
   )
 }

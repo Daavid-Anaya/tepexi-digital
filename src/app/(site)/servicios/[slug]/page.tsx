@@ -44,8 +44,6 @@ export default async function ServicioDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.servicios
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
-  const heroImageAlt = images[0]?.alt ?? servicio.title ?? 'Imagen del servicio'
-
   const mapsUrl = servicio.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servicio.address)}`
     : null
@@ -117,7 +115,7 @@ export default async function ServicioDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner */}
-      <PageHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} size="compact">
+      <PageHero imageUrl={heroImageUrl} size="compact">
         <PageHeroBackLink href="/mapa" label="Volver al Mapa" />
 
         {/* Category badge */}

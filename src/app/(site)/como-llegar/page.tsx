@@ -68,7 +68,7 @@ export default function ComoLlegarPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl={HERO_FALLBACKS.comoLlegar} imageAlt="Imagen hero de aplicación google maps">
+      <PageHero imageUrl={HERO_FALLBACKS.comoLlegar}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} />
         <PageHeroHeader
           icon={Navigation}

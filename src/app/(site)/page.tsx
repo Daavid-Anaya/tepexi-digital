@@ -149,7 +149,7 @@ export default async function HomePage() {
           </div>
 
           {/* Stats strip */}
-          <div
+          <dl
             className="mt-8 md:mt-16 flex flex-wrap justify-center gap-8 sm:gap-12 animate-fade-in"
             style={{ animationDelay: '400ms' }}
           >
@@ -159,11 +159,14 @@ export default async function HomePage() {
               { value: '200+', label: 'Años de historia' },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
-                <p className="font-heading font-bold text-3xl text-primary-300 leading-none">{value}</p>
-                <p className="text-xs mt-1 uppercase tracking-wide" style={{ color: '#FFFBF0' }}>{label}</p>
+                <dt className="sr-only">{label}</dt>
+                <dd className="font-heading font-bold text-3xl text-primary-300 leading-none">{value}</dd>
+                <dd aria-hidden="true" className="text-xs mt-1 uppercase tracking-wide" style={{ color: '#FFFBF0' }}>
+                  {label}
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </Container>
 
         {/* Scroll indicator */}

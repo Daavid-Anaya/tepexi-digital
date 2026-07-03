@@ -11,8 +11,20 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 // 5 emails per 15 minutes per IP
 const CONTACT_RATE_LIMIT = { limit: 5, windowSeconds: 900 }
 
+export interface ContactFormFieldErrors {
+  name?: string
+  email?: string
+  message?: string
+}
+
+export interface ContactFormState {
+  success: boolean
+  error: string | null
+  fieldErrors?: ContactFormFieldErrors
+}
+
 export async function sendContactMessage(
-  prevState: { success: boolean; error: string | null },
+  prevState: ContactFormState,
   formData: FormData,
 ) {
   const headersList = await headers()
@@ -32,13 +44,24 @@ export async function sendContactMessage(
 
   // Server-side validation
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
+    const fieldErrors = {
+      ...(name?.trim() ? {} : { name: 'Ingresa tu nombre.' }),
+      ...(email?.trim() ? {} : { email: 'Ingresa tu correo electrónico.' }),
+      ...(message?.trim() ? {} : { message: 'Escribe tu mensaje.' }),
+    }
+
     return {
       success: false,
       error: 'Todos los campos obligatorios deben ser completados.',
+      fieldErrors,
     }
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { success: false, error: 'El correo electrónico no es válido.' }
+    return {
+      success: false,
+      error: 'El correo electrónico no es válido.',
+      fieldErrors: { email: 'Ingresa un correo electrónico válido.' },
+    }
   }
 
   try {
@@ -59,11 +82,12 @@ export async function sendContactMessage(
         `Este mensaje fue enviado desde el formulario de contacto de ${new URL(SITE_URL).hostname}`,
       ].join('\n'),
     })
-    return { success: true, error: null }
+    return { success: true, error: null, fieldErrors: {} }
   } catch {
     return {
       success: false,
       error: 'Error al enviar el mensaje. Intente más tarde.',
+      fieldErrors: {},
     }
   }
 }
