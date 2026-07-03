@@ -3,10 +3,11 @@
 import { useActionState, useRef, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 import { sendContactMessage } from '@/actions/contact'
+import type { ContactFormState } from '@/actions/contact'
 import { cn } from '@/lib/utils'
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
-const initialState = { success: false, error: null }
+const initialState = { success: false, error: null, fieldErrors: {} } satisfies ContactFormState
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -46,22 +47,15 @@ const inputClass = cn(
 
 const labelClass = 'block text-xs font-semibold text-stone uppercase tracking-wide mb-1.5'
 
-const REQUIRED_FIELDS_ERROR = 'Todos los campos obligatorios deben ser completados.'
-const INVALID_EMAIL_ERROR = 'El correo electrónico no es válido.'
 const fieldErrorClass = 'mt-1.5 text-xs font-medium text-accent'
 
 export default function ContactForm() {
-  const [state, formAction] = useActionState(sendContactMessage, initialState)
+  const [state, formAction] = useActionState<ContactFormState, FormData>(sendContactMessage, initialState)
   const successRef = useRef<HTMLHeadingElement>(null)
 
-  const nameError = state.error === REQUIRED_FIELDS_ERROR ? 'Ingresa tu nombre.' : null
-  const emailError =
-    state.error === REQUIRED_FIELDS_ERROR
-      ? 'Ingresa tu correo electrónico.'
-      : state.error === INVALID_EMAIL_ERROR
-        ? 'Ingresa un correo electrónico válido.'
-        : null
-  const messageError = state.error === REQUIRED_FIELDS_ERROR ? 'Escribe tu mensaje.' : null
+  const nameError = state.fieldErrors?.name ?? null
+  const emailError = state.fieldErrors?.email ?? null
+  const messageError = state.fieldErrors?.message ?? null
 
   useEffect(() => {
     if (state.success) successRef.current?.focus()
