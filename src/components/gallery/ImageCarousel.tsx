@@ -88,7 +88,7 @@ export default function ImageCarousel({
               'rounded-full p-1.5 transition-colors',
             )}
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5" aria-hidden="true" />
           </button>
           <button
             onClick={goNext}
@@ -99,7 +99,7 @@ export default function ImageCarousel({
               'rounded-full p-1.5 transition-colors',
             )}
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5" aria-hidden="true" />
           </button>
         </>
       )}

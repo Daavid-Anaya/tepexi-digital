@@ -1,6 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Compass, Home } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
+
+export const metadata: Metadata = {
+  title: 'Página no encontrada — Tepexi Digital',
+}
 
 export default function NotFound() {
   return (
@@ -14,7 +19,7 @@ export default function NotFound() {
               <div className="absolute w-32 h-32 rounded-full bg-primary/5" />
               <div className="absolute w-24 h-24 rounded-full bg-primary/8" />
               <div className="relative w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center shadow-sm">
-                <Compass className="w-10 h-10 text-primary" strokeWidth={1.5} />
+                <Compass className="w-10 h-10 text-primary" strokeWidth={1.5} aria-hidden="true" />
               </div>
             </div>
 
@@ -61,7 +66,7 @@ export default function NotFound() {
               href="/"
               className="inline-flex items-center gap-2.5 bg-primary text-white font-heading font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors text-sm shadow-sm"
             >
-              <Home className="w-4 h-4" />
+              <Home className="w-4 h-4" aria-hidden="true" />
               Volver al inicio
             </Link>
 

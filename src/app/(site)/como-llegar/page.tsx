@@ -107,7 +107,7 @@ export default function ComoLlegarPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
-                            <Icon className="w-4.5 h-4.5 text-white" />
+                            <Icon className="w-4.5 h-4.5 text-white" aria-hidden="true" />
                           </div>
                           <div>
                             <div className="text-white/70 text-xs font-medium uppercase tracking-wide">Desde</div>
@@ -118,11 +118,11 @@ export default function ComoLlegarPage() {
                         </div>
                         <div className="text-right text-white">
                           <div className="flex items-center gap-1.5 justify-end">
-                            <Clock className="w-3.5 h-3.5 opacity-70" />
+                            <Clock className="w-3.5 h-3.5 opacity-70" aria-hidden="true" />
                             <span className="font-bold font-heading">{route.duration}</span>
                           </div>
                           <div className="text-white/60 text-xs flex items-center gap-1 justify-end">
-                            <Milestone className="w-3 h-3" />
+                            <Milestone className="w-3 h-3" aria-hidden="true" />
                             {route.distance}
                           </div>
                         </div>
@@ -140,7 +140,7 @@ export default function ComoLlegarPage() {
                         className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${route.textColor} hover:opacity-75 transition-opacity`}
                       >
                         Ver en Google Maps
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </a>
                     </div>
                   </div>
@@ -150,7 +150,7 @@ export default function ComoLlegarPage() {
               {/* Tips card */}
               <div className="bg-amber-50 rounded-2xl border border-amber-200/60 overflow-hidden">
                 <div className="bg-amber-100 px-5 py-3 flex items-center gap-2">
-                  <Lightbulb className="w-4.5 h-4.5 text-amber-600" />
+                  <Lightbulb className="w-4.5 h-4.5 text-amber-600" aria-hidden="true" />
                   <h3 className="font-heading font-semibold text-amber-900 text-sm">
                     Consejos de viaje
                   </h3>
@@ -176,7 +176,7 @@ export default function ComoLlegarPage() {
               <div className="rounded-2xl border border-stone/10 overflow-hidden shadow-md sticky top-6">
                 <div className="flex items-center gap-2 bg-cream border-b border-stone/10 px-5 py-3">
                   <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Navigation className="w-3.5 h-3.5 text-primary" />
+                    <Navigation className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
                   </div>
                   <span className="text-sm text-stone font-medium">Tepexi de Rodríguez, Puebla</span>
                 </div>

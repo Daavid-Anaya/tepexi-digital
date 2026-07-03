@@ -55,7 +55,15 @@ export function CategoryNav({ categories }: CategoryNavProps) {
     if (!el) return
     const yOffset = -100 // account for sticky nav + page header
     const y = el.getBoundingClientRect().top + window.scrollY + yOffset
-    window.scrollTo({ top: y, behavior: 'smooth' })
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    window.scrollTo({ top: y, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
+    // Move focus to the target section for AT users (REQ-C7)
+    const currentTabIndex = el.getAttribute('tabindex')
+    if (!currentTabIndex) el.setAttribute('tabindex', '-1')
+    el.focus({ preventScroll: true })
   }
 
   if (categories.length <= 1) return null
@@ -78,9 +86,10 @@ export function CategoryNav({ categories }: CategoryNavProps) {
             <button
               key={cat.id}
               type="button"
+              aria-pressed={isActive}
               onClick={() => handleClick(cat.id)}
               className={cn(
-                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200',
+                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200 min-h-[24px]',
                 isActive
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-stone hover:bg-primary/10 hover:text-primary'

@@ -127,7 +127,7 @@ export default async function LugarDetailPage({ params }: Props) {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           {lugar.category && (
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
-              <MapPin className="w-3 h-3" />
+              <MapPin className="w-3 h-3" aria-hidden="true" />
               {lugar.category}
             </span>
           )}
@@ -139,7 +139,7 @@ export default async function LugarDetailPage({ params }: Props) {
 
         {lugar.address && (
           <p className="flex items-center gap-2 text-white/70 mt-3">
-            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <MapPin className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             <span>{lugar.address}</span>
           </p>
         )}
@@ -176,7 +176,7 @@ export default async function LugarDetailPage({ params }: Props) {
               footer={
                 <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                   <p className="text-sm text-primary/80 leading-relaxed">
-                    💡 Estamos trabajando para completar la información de este lugar, Gracias por su paciencia! ¿Tenés datos o fotos que compartir?{' '}
+                    <span aria-hidden="true">💡</span><span className="sr-only">Consejo</span> Estamos trabajando para completar la información de este lugar, Gracias por su paciencia! ¿Tenés datos o fotos que compartir?{' '}
                     <a href="/contacto" className="underline underline-offset-2 hover:text-primary transition-colors">
                       Contactanos
                     </a>
@@ -192,7 +192,7 @@ export default async function LugarDetailPage({ params }: Props) {
             <div className="mt-8 md:mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-4 sm:px-6 py-4">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Map className="w-4 h-4 text-primary" />
+                  <Map className="w-4 h-4 text-primary" aria-hidden="true" />
                 </div>
                 <h2 className="font-heading font-semibold text-text-primary text-lg">
                   Ubicación

@@ -60,14 +60,14 @@ export function EventCard({
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {location && (
               <span className="flex items-center gap-1 text-stone text-xs max-w-full overflow-hidden">
-                <MapPin size={11} className="text-stone/60 flex-shrink-0" />
+                <MapPin size={11} className="text-stone/60 flex-shrink-0" aria-hidden="true" />
                 <span className="truncate">{location}</span>
               </span>
             )}
 
             {endDate && (
               <span className="flex items-center gap-1 text-stone/50 text-xs">
-                <Calendar size={11} className="flex-shrink-0" />
+                <Calendar size={11} className="flex-shrink-0" aria-hidden="true" />
                 Hasta {new Date(endDate).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
               </span>
             )}
@@ -76,7 +76,7 @@ export function EventCard({
 
         {/* Hover arrow */}
         <div className="flex-shrink-0 flex items-center self-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-200">
-          <span className="text-primary/40 text-lg leading-none">→</span>
+          <span className="text-primary/40 text-lg leading-none" aria-hidden="true">→</span>
         </div>
       </div>
     </Link>

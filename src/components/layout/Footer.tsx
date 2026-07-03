@@ -44,7 +44,7 @@ export async function Footer() {
               {/* Logo */}
               <Link href="/" className="inline-flex items-center gap-2.5 group">
                 <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/10 group-hover:bg-cream/20 transition-colors duration-200">
-                  <MapPin size={18} className="text-cream" />
+                  <MapPin size={18} className="text-cream" aria-hidden="true" />
                 </span>
                 <span className="font-heading leading-none">
                   <span className="font-bold text-xl text-cream">Tepexi</span>
@@ -69,7 +69,7 @@ export async function Footer() {
                       aria-label={social.platform}
                       className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                     >
-                      <Icon size={16} />
+                      <Icon size={16} aria-hidden="true" />
                     </a>
                   )
                 })}
@@ -78,7 +78,7 @@ export async function Footer() {
                   aria-label="Correo"
                   className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                 >
-                  <Mail size={16} />
+                  <Mail size={16} aria-hidden="true" />
                 </Link>
                 {settings.contactPhone && (
                   <a
@@ -86,7 +86,7 @@ export async function Footer() {
                     aria-label="Teléfono"
                     className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
                   >
-                    <Phone size={16} />
+                    <Phone size={16} aria-hidden="true" />
                   </a>
                 )}
               </div>
@@ -104,7 +104,7 @@ export async function Footer() {
                       href={link.href}
                       className="text-sm text-cream/80 hover:text-cream transition-colors duration-200 flex items-center gap-1.5 group"
                     >
-                      <span className="w-0 overflow-hidden group-hover:w-2.5 transition-all duration-200 text-primary-400">→</span>
+                      <span aria-hidden="true" className="w-0 overflow-hidden group-hover:w-2.5 transition-all duration-200 text-primary-400">→</span>
                       {link.label}
                     </Link>
                   </li>
@@ -119,7 +119,7 @@ export async function Footer() {
               </h3>
               <address className="not-italic space-y-3.5">
                 <div className="flex items-start gap-2.5">
-                  <MapPin size={15} className="text-primary-400 flex-shrink-0 mt-0.5" />
+                  <MapPin size={15} className="text-primary-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <div className="text-sm text-cream/80 leading-relaxed">
                     {settings.address ? (
                       settings.address.split(',').map((line, i) => (
@@ -135,7 +135,7 @@ export async function Footer() {
                 </div>
                 {settings.contactEmail && (
                   <div className="flex items-center gap-2.5">
-                    <Mail size={15} className="text-primary-400 flex-shrink-0" />
+                    <Mail size={15} className="text-primary-400 flex-shrink-0" aria-hidden="true" />
                     <a
                       href={`mailto:${settings.contactEmail}`}
                       className="text-sm text-cream/80 hover:text-cream transition-colors duration-200"
@@ -146,7 +146,7 @@ export async function Footer() {
                 )}
                 {settings.contactPhone && (
                   <div className="flex items-center gap-2.5">
-                    <Phone size={15} className="text-primary-400 flex-shrink-0" />
+                    <Phone size={15} className="text-primary-400 flex-shrink-0" aria-hidden="true" />
                     <a
                       href={`tel:${settings.contactPhone}`}
                       className="text-sm text-cream/80 hover:text-cream transition-colors duration-200"
@@ -163,7 +163,7 @@ export async function Footer() {
                   href="/mapa"
                   className="inline-flex items-center gap-2 text-xs font-medium text-cream bg-cream/10 hover:bg-cream/18 px-4 py-2 rounded-lg transition-all duration-200"
                 >
-                  <MapPin size={13} />
+                  <MapPin size={13} aria-hidden="true" />
                   Ver mapa interactivo
                 </Link>
               </div>

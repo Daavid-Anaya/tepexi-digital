@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useRef, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 import { sendContactMessage } from '@/actions/contact'
 import { cn } from '@/lib/utils'
@@ -48,14 +48,19 @@ const labelClass = 'block text-xs font-semibold text-stone uppercase tracking-wi
 
 export default function ContactForm() {
   const [state, formAction] = useActionState(sendContactMessage, initialState)
+  const successRef = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    if (state.success) successRef.current?.focus()
+  }, [state.success])
 
   if (state.success) {
     return (
       <div className="rounded-2xl bg-secondary/8 border border-secondary/20 p-8 text-center space-y-3">
         <div className="w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center mx-auto">
-          <CheckCircle className="w-8 h-8 text-secondary" />
+          <CheckCircle className="w-8 h-8 text-secondary" aria-hidden="true" />
         </div>
-        <h3 className="font-heading font-semibold text-primary text-lg">
+        <h3 ref={successRef} tabIndex={-1} className="font-heading font-semibold text-primary text-lg">
           ¡Mensaje enviado!
         </h3>
         <p className="text-stone text-sm leading-relaxed">
@@ -69,8 +74,8 @@ export default function ContactForm() {
     <form action={formAction} className="space-y-5">
       {/* Error state */}
       {state.error && (
-        <div className="rounded-xl border border-accent/25 bg-accent/8 px-4 py-3.5 flex items-start gap-3">
-          <AlertCircle className="w-4.5 h-4.5 text-accent flex-shrink-0 mt-0.5" />
+        <div role="alert" className="rounded-xl border border-accent/25 bg-accent/8 px-4 py-3.5 flex items-start gap-3">
+          <AlertCircle className="w-4.5 h-4.5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <p className="text-sm font-medium text-accent">Error al enviar</p>
             <p className="text-xs text-accent/80 mt-0.5">{state.error}</p>

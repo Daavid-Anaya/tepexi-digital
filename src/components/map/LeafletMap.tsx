@@ -52,60 +52,62 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
   const mapZoom = zoom ?? DEFAULT_ZOOM
 
   return (
-    <MapContainer
-      center={[mapCenter.lat, mapCenter.lng]}
-      zoom={mapZoom}
-      className="w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-lg z-0"
-      scrollWheelZoom={false}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {markers.map((marker) => {
-        const icon = createCategoryIcon(marker.categoryColor)
-        const basePath = TYPE_PATHS[marker.type] ?? '/lugares'
-        return (
-          <Marker
-            key={marker.id}
-            position={[marker.coordinates.lat, marker.coordinates.lng]}
-            icon={icon}
-          >
-            <Popup minWidth={180} className="leaflet-popup-custom">
-              <div className="text-sm leading-snug" style={{ fontFamily: 'inherit' }}>
-                <p
-                  className="font-semibold mb-0.5 text-stone-800"
-                  style={{ fontSize: '0.875rem' }}
-                >
-                  {marker.title}
-                </p>
-                <p
-                  className="capitalize mb-3"
-                  style={{ fontSize: '0.75rem', color: '#78716c' }}
-                >
-                  {marker.category}
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <Link
-                    href={`${basePath}/${marker.slug}`}
-                    style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
+    <div role="application" aria-label="Mapa interactivo de Tepexi de Rodríguez">
+      <MapContainer
+        center={[mapCenter.lat, mapCenter.lng]}
+        zoom={mapZoom}
+        className="w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-lg z-0"
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {markers.map((marker) => {
+          const icon = createCategoryIcon(marker.categoryColor)
+          const basePath = TYPE_PATHS[marker.type] ?? '/lugares'
+          return (
+            <Marker
+              key={marker.id}
+              position={[marker.coordinates.lat, marker.coordinates.lng]}
+              icon={icon}
+            >
+              <Popup minWidth={180} className="leaflet-popup-custom">
+                <div className="text-sm leading-snug" style={{ fontFamily: 'inherit' }}>
+                  <p
+                    className="font-semibold mb-0.5 text-stone-800"
+                    style={{ fontSize: '0.875rem' }}
                   >
-                    Ver detalle →
-                  </Link>
-                  <a
-                    href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ fontSize: '0.75rem', color: '#2563eb', textDecoration: 'underline' }}
+                    {marker.title}
+                  </p>
+                  <p
+                    className="capitalize mb-3"
+                    style={{ fontSize: '0.75rem', color: '#78716c' }}
                   >
-                    Abrir en Google Maps ↗
-                  </a>
+                    {marker.category}
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <Link
+                      href={`${basePath}/${marker.slug}`}
+                      style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
+                    >
+                      Ver detalle →
+                    </Link>
+                    <a
+                      href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '0.75rem', color: '#2563eb', textDecoration: 'underline' }}
+                    >
+                      Abrir en Google Maps ↗
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </Popup>
-          </Marker>
-        )
-      })}
-    </MapContainer>
+              </Popup>
+            </Marker>
+          )
+        })}
+      </MapContainer>
+    </div>
   )
 }

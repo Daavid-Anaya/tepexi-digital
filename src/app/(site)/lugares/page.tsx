@@ -125,7 +125,7 @@ export default async function LugaresPage() {
           {totalPlaces === 0 ? (
             <div className="text-center py-20">
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                <MapPin className="w-10 h-10 text-primary/50" />
+                 <MapPin className="w-10 h-10 text-primary/50" aria-hidden="true" />
               </div>
               <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">
                 Sin lugares disponibles

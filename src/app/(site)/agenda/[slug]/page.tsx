@@ -106,12 +106,12 @@ export default async function EventoDetailPage({ params }: Props) {
             {/* Date info */}
             <div className="flex flex-wrap items-center gap-4 mt-3">
               <p className="flex items-center gap-2 text-white/70 text-sm">
-                <Calendar className="w-4 h-4 flex-shrink-0" />
+                <Calendar className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                 <span className="capitalize">{formatDateFull(evento.date)}</span>
               </p>
               {evento.endDate && (
                 <p className="flex items-center gap-2 text-white/60 text-sm">
-                  <Clock className="w-4 h-4 flex-shrink-0" />
+                  <Clock className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                   <span>
                     Hasta {formatDateFull(evento.endDate)}
                   </span>
@@ -121,7 +121,7 @@ export default async function EventoDetailPage({ params }: Props) {
 
             {locationLabel && (
               <p className="flex items-center gap-2 text-white/70 mt-2 text-sm">
-                <MapPin className="w-4 h-4 flex-shrink-0" />
+                <MapPin className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                 <span>{locationLabel}</span>
               </p>
             )}
@@ -172,7 +172,7 @@ export default async function EventoDetailPage({ params }: Props) {
                   {/* Date */}
                   <div className="flex gap-3.5">
                     <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
-                      <Calendar className="w-4 h-4 text-secondary" />
+                      <Calendar className="w-4 h-4 text-secondary" aria-hidden="true" />
                     </div>
                     <div>
                       <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Fecha</dt>
@@ -191,7 +191,7 @@ export default async function EventoDetailPage({ params }: Props) {
                   {locationLabel && (
                     <div className="flex gap-3.5">
                       <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <MapPin className="w-4 h-4 text-primary" />
+                        <MapPin className="w-4 h-4 text-primary" aria-hidden="true" />
                       </div>
                       <div>
                         <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Ubicación</dt>
@@ -210,7 +210,7 @@ export default async function EventoDetailPage({ params }: Props) {
                 href="/agenda"
                 className="flex items-center justify-center gap-2 bg-secondary/10 hover:bg-secondary/20 text-secondary font-medium text-sm px-4 py-3 rounded-xl transition-colors duration-200"
               >
-                <CalendarDays className="w-4 h-4" />
+                <CalendarDays className="w-4 h-4" aria-hidden="true" />
                 Ver toda la agenda
               </Link>
             </aside>
@@ -221,7 +221,7 @@ export default async function EventoDetailPage({ params }: Props) {
             <div className="mt-8 md:mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-4 sm:px-6 py-4">
                 <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
-                  <Map className="w-4 h-4 text-secondary" />
+                  <Map className="w-4 h-4 text-secondary" aria-hidden="true" />
                 </div>
                 <h2 className="font-heading font-semibold text-text-primary text-lg">
                   Ubicación del evento

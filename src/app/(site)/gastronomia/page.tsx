@@ -170,7 +170,7 @@ export default async function GastronomiaPage() {
                   <div key={idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 120}ms` }}>
                     {/* Icon marker */}
                     <div className="absolute -left-8 top-1 w-7 h-7 rounded-full bg-accent flex items-center justify-center shadow-sm ring-4 ring-cream">
-                      <Icon className="w-3.5 h-3.5 text-white" />
+                      <Icon className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                     </div>
 
                     <div className="bg-primary-50 rounded-xl p-4 sm:p-6 border border-primary-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
@@ -282,7 +282,7 @@ export default async function GastronomiaPage() {
               >
                 {/* Large icon in colored circle */}
                 <div className="w-16 h-16 rounded-full bg-accent/15 border-2 border-accent/25 flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300">
-                  <Icon className="w-8 h-8 text-accent" />
+                  <Icon className="w-8 h-8 text-accent" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="font-heading font-semibold text-primary text-base mb-2">
@@ -320,7 +320,7 @@ export default async function GastronomiaPage() {
           {places.length === 0 ? (
             <div className="text-center py-20">
               <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
-                <Utensils className="w-10 h-10 text-accent/50" />
+                 <Utensils className="w-10 h-10 text-accent/50" aria-hidden="true" />
               </div>
               <h2 className="font-heading font-semibold text-xl text-text-primary mb-2">
                 Sin platillos disponibles

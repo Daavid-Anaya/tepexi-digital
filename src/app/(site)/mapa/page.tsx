@@ -116,7 +116,7 @@ export default async function MapaPage() {
                     >
                       {/* Type header */}
                       <div className="flex items-center gap-2.5 px-4 py-3 border-b border-stone/10">
-                        <Icon className="w-4 h-4 text-primary/70 flex-shrink-0" />
+                        <Icon className="w-4 h-4 text-primary/70 flex-shrink-0" aria-hidden="true" />
                         <span className="font-heading font-semibold text-sm text-primary">
                           {type.label}
                         </span>
@@ -143,7 +143,7 @@ export default async function MapaPage() {
               {/* Map tip */}
               <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                 <div className="flex items-start gap-2">
-                  <Info className="w-4 h-4 text-primary/70 flex-shrink-0 mt-0.5" />
+                  <Info className="w-4 h-4 text-primary/70 flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <p className="text-xs text-stone leading-relaxed">
                     Haz clic en cualquier marcador del mapa para ver el nombre y acceder a
                     la información completa del lugar.
