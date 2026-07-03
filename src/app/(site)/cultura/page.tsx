@@ -93,7 +93,7 @@ export default async function CulturaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <PageHero imageUrl={HERO_FALLBACKS.cultura} imageAlt="Imagen hero de cultura">
+      <PageHero imageUrl={HERO_FALLBACKS.cultura}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} />
         <PageHeroHeader
           icon={Palette}
@@ -136,13 +136,14 @@ export default async function CulturaPage() {
             {/* Right — timeline */}
             <div className="flex-1 relative pl-8">
               {/* Vertical line */}
-              <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
+              <div aria-hidden="true" className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
 
               <div className="space-y-10">
                 {timelineItems.map(({ icon: Icon, title, description }, idx) => (
                   <div key={idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 120}ms` }}>
                     {/* Icon marker */}
                     <div
+                      aria-hidden="true"
                       className="absolute -left-8 top-1 w-7 h-7 rounded-full flex items-center justify-center shadow-sm ring-4 ring-cream"
                       style={{ backgroundColor: CATEGORY_COLORS.cultura }}
                     >

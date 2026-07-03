@@ -62,8 +62,6 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.gastronomia
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
-  const heroImageAlt = images[0]?.alt ?? item.title ?? 'Imagen de gastronomía'
-
   const dishTypeLabels = item.dishType?.length
     ? item.dishType.map((t) => DISH_TYPE_LABELS[t] ?? t)
     : null
@@ -84,7 +82,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* ================================================================ */}
       {/* 1. HERO                                                           */}
       {/* ================================================================ */}
-      <PageHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} size="compact">
+      <PageHero imageUrl={heroImageUrl} size="compact">
         <PageHeroBackLink href="/gastronomia" label="Volver a Gastronomía" />
 
         {/* Category + dish type badges */}

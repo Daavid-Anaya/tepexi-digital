@@ -109,7 +109,7 @@ export default async function LugaresPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl={HERO_FALLBACKS.lugares} imageAlt="Imagen hero de una mapa y una camara encima" className="mb-10 md:mb-16">
+      <PageHero imageUrl={HERO_FALLBACKS.lugares} className="mb-10 md:mb-16">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Lugares Turísticos' }]} />
         <PageHeroHeader
           icon={MapPin}

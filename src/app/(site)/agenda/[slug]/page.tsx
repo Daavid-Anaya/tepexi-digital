@@ -79,7 +79,7 @@ export default async function EventoDetailPage({ params }: Props) {
   return (
     <>
       {/* Hero banner — green/calendar accent */}
-      <PageHero imageUrl={HERO_FALLBACKS.agenda} imageAlt="Imagen hero de la agenda de eventos" size="compact">
+      <PageHero imageUrl={HERO_FALLBACKS.agenda} size="compact">
         <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
         <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">

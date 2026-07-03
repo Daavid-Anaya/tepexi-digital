@@ -110,7 +110,7 @@ export default async function GastronomiaPage() {
   return (
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <PageHero imageUrl={HERO_FALLBACKS.gastronomia} imageAlt="Imagen hero de gastronomía mostrando diferentes platillos">
+      <PageHero imageUrl={HERO_FALLBACKS.gastronomia}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} />
         <PageHeroHeader
           icon={Utensils}
@@ -163,13 +163,13 @@ export default async function GastronomiaPage() {
             {/* Right — timeline */}
             <div className="flex-1 relative pl-8">
               {/* Vertical line */}
-              <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
+              <div aria-hidden="true" className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
 
               <div className="space-y-10">
                 {timelineItems.map(({ icon: Icon, title, description, tagLabel, tagItems }, idx) => (
                   <div key={idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 120}ms` }}>
                     {/* Icon marker */}
-                    <div className="absolute -left-8 top-1 w-7 h-7 rounded-full bg-accent flex items-center justify-center shadow-sm ring-4 ring-cream">
+                    <div aria-hidden="true" className="absolute -left-8 top-1 w-7 h-7 rounded-full bg-accent flex items-center justify-center shadow-sm ring-4 ring-cream">
                       <Icon className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                     </div>
 

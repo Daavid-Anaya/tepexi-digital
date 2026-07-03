@@ -46,7 +46,7 @@ export default async function ContactoPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl={HERO_FALLBACKS.contacto} imageAlt="Imagen hero de contacto">
+      <PageHero imageUrl={HERO_FALLBACKS.contacto}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} />
         <PageHeroHeader
           icon={MessageCircle}
@@ -110,15 +110,15 @@ export default async function ContactoPage() {
               <div className="bg-primary/5 rounded-2xl border border-primary/15 p-5">
                 <p className="text-sm text-stone leading-relaxed">
                   También puedes explorar nuestra plataforma para conocer los{' '}
-                  <Link href="/lugares" className="text-primary font-medium hover:underline underline-offset-4">
+                  <Link href="/lugares" className="text-primary font-medium underline underline-offset-4 hover:opacity-80 transition-opacity">
                     lugares turísticos
                   </Link>
                   ,{' '}
-                  <Link href="/gastronomia" className="text-accent font-medium hover:underline underline-offset-4">
+                  <Link href="/gastronomia" className="text-accent font-medium underline underline-offset-4 hover:opacity-80 transition-opacity">
                     gastronomía
                   </Link>{' '}
                   y{' '}
-                  <Link href="/cultura" className="text-primary font-medium hover:underline underline-offset-4">
+                  <Link href="/cultura" className="text-primary font-medium underline underline-offset-4 hover:opacity-80 transition-opacity">
                     cultura
                   </Link>{' '}
                   de Tepexi de Rodríguez.

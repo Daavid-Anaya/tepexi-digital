@@ -70,7 +70,7 @@ export default async function MapaPage() {
   return (
     <>
       {/* Page hero */}
-      <PageHero imageUrl={HERO_FALLBACKS.mapa} imageAlt="Imagen hero de un mapa">
+      <PageHero imageUrl={HERO_FALLBACKS.mapa}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} />
         <PageHeroHeader
           icon={Map}
