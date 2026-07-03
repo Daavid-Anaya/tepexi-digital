@@ -55,7 +55,11 @@ export function CategoryNav({ categories }: CategoryNavProps) {
     if (!el) return
     const yOffset = -100 // account for sticky nav + page header
     const y = el.getBoundingClientRect().top + window.scrollY + yOffset
-    window.scrollTo({ top: y, behavior: 'smooth' })
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    window.scrollTo({ top: y, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
     // Move focus to the target section for AT users (REQ-C7)
     const currentTabIndex = el.getAttribute('tabindex')
     if (!currentTabIndex) el.setAttribute('tabindex', '-1')
@@ -70,8 +74,6 @@ export function CategoryNav({ categories }: CategoryNavProps) {
       className="sticky top-16 z-30 bg-cream/95 backdrop-blur-sm border-b border-primary/10 -mx-4 px-4 md:mx-0 md:px-0"
     >
       <div
-        tabIndex={0}
-        aria-label="Filtrar por categoría"
         className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none"
         style={{
           maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
