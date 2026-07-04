@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -25,9 +25,9 @@ export default function ImageCarousel({
   const [isHovered, setIsHovered] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  function goNext() {
+  const goNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % images.length)
-  }
+  }, [images.length])
 
   function goPrev() {
     setActiveIndex((prev) => (prev - 1 + images.length) % images.length)
@@ -45,7 +45,7 @@ export default function ImageCarousel({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [autoPlay, interval, isHovered, images.length])
+  }, [autoPlay, goNext, interval, isHovered, images.length])
 
   if (images.length === 0) return null
 
@@ -85,7 +85,7 @@ export default function ImageCarousel({
             className={cn(
               'absolute left-2 top-1/2 -translate-y-1/2 z-10',
               'bg-black/40 hover:bg-black/60 text-white',
-              'rounded-full p-1.5 transition-colors',
+              'rounded-full min-h-11 min-w-11 flex items-center justify-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white touch-manipulation',
             )}
           >
             <ChevronLeft className="w-5 h-5" aria-hidden="true" />
@@ -96,7 +96,7 @@ export default function ImageCarousel({
             className={cn(
               'absolute right-2 top-1/2 -translate-y-1/2 z-10',
               'bg-black/40 hover:bg-black/60 text-white',
-              'rounded-full p-1.5 transition-colors',
+              'rounded-full min-h-11 min-w-11 flex items-center justify-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white touch-manipulation',
             )}
           >
             <ChevronRight className="w-5 h-5" aria-hidden="true" />

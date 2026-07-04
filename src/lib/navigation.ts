@@ -3,6 +3,7 @@ export const navLinks = [
   { href: '/lugares', label: 'Lugares' },
   { href: '/gastronomia', label: 'Gastronomía' },
   { href: '/cultura', label: 'Cultura' },
+  { href: '/servicios', label: 'Servicios' },
   { href: '/como-llegar', label: 'Cómo llegar' },
   { href: '/mapa', label: 'Mapa' },
   { href: '/agenda', label: 'Agenda' },

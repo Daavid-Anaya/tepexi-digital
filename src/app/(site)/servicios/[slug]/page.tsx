@@ -11,7 +11,7 @@ import { FichaTecnicaCard } from '@/components/ui/FichaTecnicaCard'
 import type { FichaItem } from '@/components/ui/FichaTecnicaCard'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
-import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { PageHero, PageHeroBackLink, PageHeroBreadcrumb } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
 import { fetchStaticSlugs } from '@/lib/sanity-params'
 import { buildSlugMetadata } from '@/lib/metadata'
@@ -104,6 +104,7 @@ export default async function ServicioDetailPage({ params }: Props) {
           id: servicio._id,
           title: servicio.title ?? '',
           slug: servicio.slug?.current ?? slug,
+          sourceType: 'servicio' as const,
           coordinates: { lat: servicio.coordinates.lat, lng: servicio.coordinates.lng },
           category: servicio.category ?? '',
           categoryColor: servicio.categoryColor ?? CATEGORY_COLORS.servicios,
@@ -116,7 +117,14 @@ export default async function ServicioDetailPage({ params }: Props) {
     <>
       {/* Hero banner */}
       <PageHero imageUrl={heroImageUrl} size="compact">
-        <PageHeroBackLink href="/mapa" label="Volver al Mapa" />
+        <PageHeroBreadcrumb
+          items={[
+            { label: 'Inicio', href: '/' },
+            { label: 'Servicios', href: '/servicios' },
+            { label: servicio.title },
+          ]}
+        />
+        <PageHeroBackLink href="/servicios" label="Volver a Servicios" />
 
         {/* Category badge */}
         <div className="flex flex-wrap items-center gap-3 mb-4">

@@ -69,9 +69,8 @@ export function PlaceCard({
           {excerpt && (
             <p className="text-stone text-sm line-clamp-2 leading-relaxed">{excerpt}</p>
           )}
-          {/* Hover CTA */}
-          <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary-500 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200">
-            Explorar
+          <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-500 transition-all duration-200 group-hover:text-primary-dark">
+            Ver detalle
             <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform duration-200" aria-hidden="true" />
           </span>
         </div>

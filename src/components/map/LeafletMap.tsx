@@ -8,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import Link from 'next/link'
 import type { LeafletMapProps } from '@/types'
 import { TEPEXI_CENTER } from '@/lib/constants'
+import { getMapMarkerRoute } from '@/lib/map-marker-route'
 
 const DEFAULT_CENTER = TEPEXI_CENTER
 const DEFAULT_ZOOM = 14
@@ -57,13 +58,6 @@ function createCategoryIcon(color: string, shape: MarkerShape): L.DivIcon {
   })
 }
 
-const TYPE_PATHS: Record<string, string> = {
-  lugar: '/lugares',
-  gastronomia: '/lugares',
-  cultura: '/lugares',
-  servicios: '/servicios',
-}
-
 export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
   const mapCenter = center ?? DEFAULT_CENTER
   const mapZoom = zoom ?? DEFAULT_ZOOM
@@ -85,7 +79,7 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
             marker.categoryColor,
             MARKER_SHAPES[marker.type] ?? MARKER_SHAPES.lugar,
           )
-          const basePath = TYPE_PATHS[marker.type] ?? '/lugares'
+          const { detailHref } = getMapMarkerRoute(marker)
           return (
             <Marker
               key={marker.id}
@@ -110,7 +104,7 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <Link
-                      href={`${basePath}/${marker.slug}`}
+                      href={detailHref}
                       style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
                     >
                       Ver detalle →

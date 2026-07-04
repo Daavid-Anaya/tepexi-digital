@@ -74,7 +74,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
       className="sticky top-16 z-30 bg-cream/95 backdrop-blur-sm border-b border-primary/10 -mx-4 px-4 md:mx-0 md:px-0"
     >
       <div
-        className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none"
+        className="flex items-center gap-2 overflow-x-auto py-3 scrollbar-none"
         style={{
           maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
           WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
@@ -89,7 +89,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
               aria-pressed={isActive}
               onClick={() => handleClick(cat.id)}
               className={cn(
-                'flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-all duration-200 min-h-[24px]',
+                'flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
                 isActive
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-stone hover:bg-primary/10 hover:text-primary'
@@ -113,6 +113,9 @@ export function CategoryNav({ categories }: CategoryNavProps) {
           )
         })}
       </div>
+      <p className="pb-3 text-xs text-stone/70 md:hidden">
+        Desliza para ver más categorías.
+      </p>
     </nav>
   )
 }

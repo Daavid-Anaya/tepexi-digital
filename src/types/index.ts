@@ -1,3 +1,12 @@
+export const MAP_MARKER_SOURCE = {
+  LUGAR: 'lugar',
+  SERVICIO: 'servicio',
+  GASTRONOMIA: 'gastronomia',
+  STATIC: 'static',
+} as const
+
+export type MapMarkerSource = (typeof MAP_MARKER_SOURCE)[keyof typeof MAP_MARKER_SOURCE]
+
 export interface Coordinates {
   lat: number
   lng: number
@@ -23,6 +32,7 @@ export interface MapMarker {
   id: string
   title: string
   slug: string
+  sourceType: MapMarkerSource
   coordinates: Coordinates
   category: string
   categoryColor: string

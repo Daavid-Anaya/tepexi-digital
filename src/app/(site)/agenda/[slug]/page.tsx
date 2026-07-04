@@ -11,7 +11,7 @@ import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
-import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { PageHero, PageHeroBackLink, PageHeroBreadcrumb } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 import { fetchStaticSlugs } from '@/lib/sanity-params'
 import { buildSlugMetadata } from '@/lib/metadata'
@@ -68,6 +68,7 @@ export default async function EventoDetailPage({ params }: Props) {
           id: evento._id,
           title: evento.title ?? '',
           slug: evento.slug?.current ?? slug,
+          sourceType: 'lugar' as const,
           coordinates: { lat: locationCoords.lat, lng: locationCoords.lng },
           category: 'Evento',
           categoryColor: '#2E7D32',
@@ -80,6 +81,13 @@ export default async function EventoDetailPage({ params }: Props) {
     <>
       {/* Hero banner — green/calendar accent */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda} size="compact">
+        <PageHeroBreadcrumb
+          items={[
+            { label: 'Inicio', href: '/' },
+            { label: 'Agenda', href: '/agenda' },
+            { label: evento.title },
+          ]}
+        />
         <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
         <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">

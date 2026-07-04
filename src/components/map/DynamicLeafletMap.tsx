@@ -15,7 +15,8 @@ const LeafletMap = dynamic(() => import('./LeafletMap'), {
       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center animate-bounce">
         <Map className="w-6 h-6 text-primary/40" aria-hidden="true" />
       </div>
-      <span className="text-stone/60 text-sm font-medium">Cargando mapa...</span>
+      <span className="text-stone/70 text-sm font-medium">Cargando mapa…</span>
+      <span className="text-stone/55 text-xs">Si tarda demasiado, revisa la información disponible en esta página.</span>
     </div>
   ),
 })

@@ -15,19 +15,17 @@ interface MobileNavToggleProps {
   navLinks: NavLink[]
 }
 
-const navIcons = [MapPin, Compass, Mountain, MapPin, Compass, Mountain, MapPin, Compass]
+const navIcons = [MapPin, Compass, Mountain, MapPin, Compass, Mountain, MapPin, Compass, Mountain]
 
 export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const canUseDocument = typeof document !== 'undefined'
 
   const close = useCallback(() => setIsOpen(false), [])
 
   const toggleRef = useRef<HTMLButtonElement>(null)
   const firstLinkRef = useRef<HTMLAnchorElement>(null)
-
-  // Portal needs document.body — only available after mount
-  useEffect(() => setMounted(true), [])
+  const wasOpenRef = useRef(false)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,10 +51,12 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
   useEffect(() => {
     if (isOpen) {
       firstLinkRef.current?.focus()
-    } else {
-      if (mounted) toggleRef.current?.focus()
+    } else if (wasOpenRef.current) {
+      toggleRef.current?.focus()
     }
-  }, [isOpen, mounted])
+
+    wasOpenRef.current = isOpen
+  }, [isOpen])
 
   // Inert background content while nav is open (REQ-A5)
   useEffect(() => {
@@ -98,20 +98,19 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
   }, [isOpen])
 
   // Overlay rendered via Portal so it escapes the header's stacking context
-  const overlay = mounted
+  const overlay = canUseDocument && isOpen
     ? createPortal(
         <div
           className={cn(
             'md:hidden fixed top-[63px] inset-x-0 bottom-0 z-[60] transition-all duration-300',
-            isOpen ? 'pointer-events-auto' : 'pointer-events-none'
+            'pointer-events-auto'
           )}
-          aria-hidden={!isOpen}
         >
           {/* Backdrop */}
           <div
             className={cn(
               'absolute inset-0 bg-primary-900/60 backdrop-blur-sm transition-opacity duration-300',
-              isOpen ? 'opacity-100' : 'opacity-0'
+              'opacity-100'
             )}
             onClick={close}
             aria-hidden="true"
@@ -127,7 +126,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
               'absolute inset-0',
               'bg-cream flex flex-col',
               'transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]',
-              isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+              'opacity-100 translate-y-0'
             )}
           >
             {/* Decorative top border */}
@@ -143,11 +142,9 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
                       key={link.href}
                       className={cn(
                         'transition-all duration-300',
-                        isOpen
-                          ? 'opacity-100 translate-x-0'
-                          : 'opacity-0 -translate-x-6'
+                        'opacity-100 translate-x-0'
                       )}
-                      style={{ transitionDelay: isOpen ? `${i * 40 + 60}ms` : '0ms' }}
+                      style={{ transitionDelay: `${i * 40 + 60}ms` }}
                     >
                       <Link
                         ref={i === 0 ? firstLinkRef : undefined}
@@ -188,7 +185,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
         aria-expanded={isOpen}
         aria-controls="mobile-nav"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-stone hover:text-primary hover:bg-primary/8 active:scale-95 transition-all duration-150"
+        className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-stone hover:text-primary hover:bg-primary/8 active:scale-95 transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary touch-manipulation"
       >
         <span
           className={cn(

@@ -67,8 +67,8 @@ export async function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.platform}
-                      className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
-                    >
+                       className="flex items-center justify-center w-11 h-11 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream touch-manipulation"
+                     >
                       <Icon size={16} aria-hidden="true" />
                     </a>
                   )
@@ -76,16 +76,16 @@ export async function Footer() {
                 <Link
                   href="/contacto"
                   aria-label="Correo"
-                  className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
-                >
+                   className="flex items-center justify-center w-11 h-11 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream touch-manipulation"
+                 >
                   <Mail size={16} aria-hidden="true" />
                 </Link>
                 {settings.contactPhone && (
                   <a
                     href={`tel:${settings.contactPhone}`}
                     aria-label="Teléfono"
-                    className="flex items-center justify-center w-9 h-9 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200"
-                  >
+                     className="flex items-center justify-center w-11 h-11 rounded-lg bg-cream/8 text-cream/80 hover:bg-cream/15 hover:text-cream transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream touch-manipulation"
+                   >
                     <Phone size={16} aria-hidden="true" />
                   </a>
                 )}
@@ -161,8 +161,8 @@ export async function Footer() {
               <div className="mt-6">
                 <Link
                   href="/mapa"
-                  className="inline-flex items-center gap-2 text-xs font-medium text-cream bg-cream/10 hover:bg-cream/18 px-4 py-2 rounded-lg transition-all duration-200"
-                >
+                   className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-cream bg-cream/10 hover:bg-cream/18 px-4 py-2 rounded-lg transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream touch-manipulation"
+                 >
                   <MapPin size={13} aria-hidden="true" />
                   Ver mapa interactivo
                 </Link>

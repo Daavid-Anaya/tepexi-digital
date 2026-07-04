@@ -1,6 +1,9 @@
+import Link from 'next/link'
 import type { Metadata } from 'next'
-import { Map, MapPin, Utensils, Palette, ConciergeBell, Info, type LucideIcon } from 'lucide-react'
+import { Map, MapPin, Utensils, Palette, ConciergeBell, ExternalLink, Info, type LucideIcon } from 'lucide-react'
 import { getAllMapMarkers } from '@/lib/data'
+import type { MapMarker } from '@/types'
+import { getMapMarkerRoute } from '@/lib/map-marker-route'
 
 // F-21: ISR — map markers change infrequently, revalidate every hour.
 export const revalidate = 3600
@@ -24,6 +27,12 @@ interface LegendType {
   icon: LucideIcon
   showCounter: boolean
   categories: LegendCategory[]
+}
+
+interface MarkerGroup {
+  title: string
+  description: string
+  markers: MapMarker[]
 }
 
 const LEGEND_TYPES: LegendType[] = [
@@ -64,8 +73,39 @@ const LEGEND_TYPES: LegendType[] = [
   },
 ]
 
+const MARKER_GROUP_META = {
+  lugar: {
+    title: 'Lugares turísticos',
+    description: 'Sitios naturales, arqueológicos y de interés general.',
+  },
+  gastronomia: {
+    title: 'Gastronomía',
+    description: 'Platillos, sabores locales y puntos gastronómicos.',
+  },
+  cultura: {
+    title: 'Cultura',
+    description: 'Espacios públicos y referentes culturales del municipio.',
+  },
+  servicios: {
+    title: 'Servicios',
+    description: 'Hospedaje, bancos y puntos útiles para tu visita.',
+  },
+} as const
+
+function buildMarkerGroups(markers: MapMarker[]): MarkerGroup[] {
+  return Object.entries(MARKER_GROUP_META)
+    .map(([type, meta]) => ({
+      ...meta,
+      markers: markers
+        .filter((marker) => marker.type === type)
+        .toSorted((a, b) => a.title.localeCompare(b.title, 'es-MX')),
+    }))
+    .filter((group) => group.markers.length > 0)
+}
+
 export default async function MapaPage() {
   const markers = await getAllMapMarkers()
+  const markerGroups = buildMarkerGroups(markers)
 
   return (
     <>
@@ -150,6 +190,7 @@ export default async function MapaPage() {
                   </p>
                 </div>
               </div>
+
             </aside>
 
             {/* Map card */}
@@ -166,10 +207,71 @@ export default async function MapaPage() {
 
                 <DynamicLeafletMap
                   markers={markers}
-                   center={TEPEXI_CENTER}
+                  center={TEPEXI_CENTER}
                   zoom={13}
                 />
               </div>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-stone/10 bg-cream p-5 shadow-sm md:mt-10">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="font-heading text-2xl font-semibold text-text-primary">
+                  Directorio de lugares y servicios
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone">
+                  Esta lista funciona como alternativa accesible al mapa interactivo y te permite ir directo al detalle o abrir la ubicación en Google Maps.
+                </p>
+              </div>
+              <Link
+                href="/servicios"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <ConciergeBell className="h-4 w-4" aria-hidden="true" />
+                Ver todos los servicios
+              </Link>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-2">
+              {markerGroups.map((group) => (
+                <section key={group.title} className="rounded-2xl border border-stone/10 bg-white p-4">
+                  <h3 className="font-heading text-lg font-semibold text-primary">{group.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-stone">{group.description}</p>
+
+                  <ul className="mt-4 space-y-3" role="list">
+                    {group.markers.map((marker) => (
+                      <li key={marker.id} className="rounded-xl border border-stone/10 bg-cream px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-medium text-text-primary">{marker.title}</p>
+                            <p className="mt-1 text-sm text-stone">{marker.category}</p>
+                          </div>
+                          <span className="mt-1 inline-flex h-3 w-3 flex-shrink-0 rounded-full" style={{ backgroundColor: marker.categoryColor }} aria-hidden="true" />
+                        </div>
+
+                        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                          <Link
+                            href={getMapMarkerRoute(marker).detailHref}
+                            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                          >
+                            Ver detalle
+                          </Link>
+                          <a
+                            href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                          >
+                            Abrir en Google Maps
+                            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                          </a>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
             </div>
           </div>
         </Container>

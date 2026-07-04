@@ -15,6 +15,7 @@ const centerMarker: MapMarker = {
   id: 'tepexi-centro',
   title: 'Tepexi de Rodríguez',
   slug: '',
+  sourceType: 'static',
   coordinates: TEPEXI_CENTER,
   category: 'Municipio',
   categoryColor: '#0c3ca1',
