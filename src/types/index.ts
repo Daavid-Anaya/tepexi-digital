@@ -7,6 +7,15 @@ export const MAP_MARKER_SOURCE = {
 
 export type MapMarkerSource = (typeof MAP_MARKER_SOURCE)[keyof typeof MAP_MARKER_SOURCE]
 
+export const MAP_MARKER_TYPE = {
+  LUGAR: 'lugar',
+  GASTRONOMIA: 'gastronomia',
+  CULTURA: 'cultura',
+  SERVICIOS: 'servicios',
+} as const
+
+export type MapMarkerType = (typeof MAP_MARKER_TYPE)[keyof typeof MAP_MARKER_TYPE]
+
 export interface Coordinates {
   lat: number
   lng: number
@@ -36,7 +45,7 @@ export interface MapMarker {
   coordinates: Coordinates
   category: string
   categoryColor: string
-  type: 'lugar' | 'gastronomia' | 'cultura' | 'servicios'
+  type: MapMarkerType
 }
 
 export interface EventCardProps {
