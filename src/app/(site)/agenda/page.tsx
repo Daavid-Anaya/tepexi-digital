@@ -109,7 +109,7 @@ export default async function AgendaPage() {
                     <div aria-hidden="true" className="absolute left-6 top-0 bottom-0 w-px bg-stone/15 hidden sm:block" />
 
                     <div className="space-y-4">
-                      {regular.map((event, index) => (
+                      {regular.map((event) => (
                         <div key={event.slug} className="relative sm:pl-14">
                           {/* Timeline dot */}
                           <div aria-hidden="true" className="absolute left-4 top-6 w-4 h-4 rounded-full border-2 border-stone/30 bg-sand hidden sm:block" />

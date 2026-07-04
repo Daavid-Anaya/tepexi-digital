@@ -42,7 +42,7 @@ export default function NotFound() {
             {/* Card with links */}
             <div className="bg-cream rounded-2xl border border-stone/10 shadow-sm p-6 mb-6 text-left space-y-3">
               <p className="font-heading font-semibold text-primary text-sm uppercase tracking-wide mb-4">
-                Explorá el sitio
+                Explora el sitio
               </p>
               {[
                 { href: '/lugares', label: 'Lugares turísticos', color: 'text-primary' },

@@ -107,6 +107,7 @@ export default async function LugarDetailPage({ params }: Props) {
           id: lugar._id,
           title: lugar.title ?? '',
           slug: lugar.slug?.current ?? slug,
+          sourceType: 'lugar' as const,
           coordinates: { lat: lugar.coordinates.lat, lng: lugar.coordinates.lng },
           category: lugar.category ?? '',
           categoryColor: lugar.categoryColor ?? '#8B4513',
@@ -174,9 +175,9 @@ export default async function LugarDetailPage({ params }: Props) {
               footer={
                 <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                   <p className="text-sm text-primary/80 leading-relaxed">
-                    <span aria-hidden="true">💡</span><span className="sr-only">Consejo</span> Estamos trabajando para completar la información de este lugar, Gracias por su paciencia! ¿Tenés datos o fotos que compartir?{' '}
+                    <span aria-hidden="true">💡</span><span className="sr-only">Consejo</span> Estamos trabajando para completar la información de este lugar. Gracias por su paciencia. ¿Tienes datos o fotos que compartir?{' '}
                     <a href="/contacto" className="underline underline-offset-2 hover:text-primary transition-colors">
-                      Contactanos
+                      Contáctanos
                     </a>
                     .
                   </p>

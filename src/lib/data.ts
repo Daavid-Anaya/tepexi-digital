@@ -12,7 +12,7 @@ import { CATEGORY_COLORS } from './constants'
 
 import { cache } from 'react'
 import type { PortableTextBlock } from '@portabletext/react'
-import type { MapMarker } from '@/types'
+import { MAP_MARKER_SOURCE, type MapMarker } from '@/types'
 import {
   mockLugares,
   mockSettings,
@@ -232,6 +232,7 @@ function getMockMapMarkers(): MapMarker[] {
       id: l._id,
       title: l.title,
       slug: l.slug.current,
+      sourceType: MAP_MARKER_SOURCE.LUGAR,
       coordinates: l.coordinates!,
       category: l.category,
       categoryColor: l.categoryColor,
@@ -421,13 +422,14 @@ type SanityMapRow = {
   coordinates: { lat: number; lng: number } | null
 }
 
-function sanityRowsToMarkers(rows: SanityMapRow[]): MapMarker[] {
+function sanityRowsToMarkers(rows: SanityMapRow[], sourceType: MapMarker['sourceType']): MapMarker[] {
   return rows
     .filter((r) => r.coordinates && (r.coordinates.lat !== 0 || r.coordinates.lng !== 0))
     .map((r) => ({
       id: r._id,
       title: r.title ?? '',
       slug: r.slug?.current ?? '',
+      sourceType,
       coordinates: { lat: r.coordinates!.lat, lng: r.coordinates!.lng },
       category: r.category ?? '',
       categoryColor: r.categoryColor ?? CATEGORY_COLORS.default,
@@ -456,7 +458,10 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
       return getMockMapMarkers()
     }
 
-    return sanityRowsToMarkers(allRows)
+    return [
+      ...sanityRowsToMarkers(lugarRows, MAP_MARKER_SOURCE.LUGAR),
+      ...sanityRowsToMarkers(servicioRows, MAP_MARKER_SOURCE.SERVICIO),
+    ]
   } catch (err) {
     logMockFallback('getAllMapMarkers', 'fetch-error', err)
     return getMockMapMarkers()

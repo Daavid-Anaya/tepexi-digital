@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Calendar } from 'lucide-react'
+import { ArrowRight, MapPin, Calendar } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/utils'
 import type { EventCardProps } from '@/types'
@@ -74,9 +74,11 @@ export function EventCard({
           </div>
         </div>
 
-        {/* Hover arrow */}
-        <div className="flex-shrink-0 flex items-center self-center opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-200">
-          <span className="text-primary/40 text-lg leading-none" aria-hidden="true">→</span>
+        <div className="flex-shrink-0 flex items-center self-center text-sm font-medium text-primary/70 transition-colors duration-200 group-hover:text-primary">
+          <span className="inline-flex items-center gap-1">
+            <span className="hidden sm:inline">Ver detalle</span>
+            <ArrowRight size={14} aria-hidden="true" className="group-hover:translate-x-0.5 transition-transform duration-200" />
+          </span>
         </div>
       </div>
     </Link>

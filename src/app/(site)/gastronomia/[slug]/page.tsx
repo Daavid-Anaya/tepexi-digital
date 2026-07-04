@@ -6,7 +6,7 @@ import { getGastronomiaBySlug } from '@/lib/data'
 // F-21: ISR — detail pages rarely change; revalidate once per day.
 export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
-import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { PageHero, PageHeroBackLink, PageHeroBreadcrumb } from '@/components/ui/PageHero'
 import { QuoteCard } from '@/components/ui/QuoteCard'
 import { HERO_FALLBACKS } from '@/lib/constants'
 import { fetchStaticSlugs } from '@/lib/sanity-params'
@@ -83,6 +83,13 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       {/* 1. HERO                                                           */}
       {/* ================================================================ */}
       <PageHero imageUrl={heroImageUrl} size="compact">
+        <PageHeroBreadcrumb
+          items={[
+            { label: 'Inicio', href: '/' },
+            { label: 'Gastronomía', href: '/gastronomia' },
+            { label: item.title },
+          ]}
+        />
         <PageHeroBackLink href="/gastronomia" label="Volver a Gastronomía" />
 
         {/* Category + dish type badges */}
