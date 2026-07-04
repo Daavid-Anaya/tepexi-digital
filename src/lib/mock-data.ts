@@ -13,18 +13,6 @@ function key(): string {
   return `mock-key-${++_keyCounter}`
 }
 
-function portableText(text: string) {
-  return [
-    {
-      _type: 'block' as const,
-      _key: key(),
-      style: 'normal' as const,
-      children: [{ _type: 'span' as const, text, marks: [] as string[] }],
-      markDefs: [] as { [key: string]: unknown; _type: string; _key: string }[],
-    },
-  ]
-}
-
 function portableTextMulti(...paragraphs: string[]) {
   return paragraphs.map((text) => ({
     _type: 'block' as const,

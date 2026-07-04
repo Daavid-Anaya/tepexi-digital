@@ -14,6 +14,10 @@ interface CategoryNavProps {
   categories: CategoryNavItem[]
 }
 
+function isElementSection(value: HTMLElement | null): value is HTMLElement {
+  return value instanceof HTMLElement
+}
+
 export function CategoryNav({ categories }: CategoryNavProps) {
   const [activeId, setActiveId] = useState(categories[0]?.id ?? '')
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -22,7 +26,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
     // Track which sections are visible via IntersectionObserver
     const sectionEls = categories
       .map((cat) => document.getElementById(cat.id))
-      .filter(Boolean) as HTMLElement[]
+      .filter(isElementSection)
 
     if (sectionEls.length === 0) return
 
