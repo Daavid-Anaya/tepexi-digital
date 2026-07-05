@@ -26,9 +26,11 @@ describe('sendContactMessage', () => {
     sendEmailMock.mockResolvedValue({ id: 'email-1' })
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
     process.env.CONTACT_RECIPIENT_EMAIL = 'destino@example.com'
+    process.env.RESEND_API_KEY = 'test-api-key'
   })
 
   afterEach(() => {
+    vi.resetModules()
     vi.restoreAllMocks()
     vi.clearAllMocks()
   })
@@ -70,11 +72,51 @@ describe('sendContactMessage', () => {
       fieldErrors: {},
     })
     expect(console.error).toHaveBeenCalledWith('[contact] sendContactMessage failed', {
+      route: '/contacto',
+      runtime: 'server',
       source: 'sendContactMessage',
-      hasSubject: true,
+      statusCode: 502,
+      timestamp: expect.any(String),
+      metadata: {
+        hasSubject: true,
+        provider: 'resend',
+      },
       error: {
+        digest: null,
         name: 'Error',
         message: 'provider unavailable',
+      },
+    })
+  })
+
+  it('returns a generic error and does not send mail when contact env configuration is missing', async () => {
+    delete process.env.RESEND_API_KEY
+    delete process.env.CONTACT_RECIPIENT_EMAIL
+    const { sendContactMessage } = await import('@/actions/contact')
+    const formData = new FormData()
+    formData.set('name', 'Ana')
+    formData.set('email', 'ana@example.com')
+    formData.set('subject', 'Consulta')
+    formData.set('message', 'Hola')
+
+    const result = await sendContactMessage({ success: true, error: null }, formData)
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Error al enviar el mensaje. Intente más tarde.',
+      fieldErrors: {},
+    })
+    expect(sendEmailMock).not.toHaveBeenCalled()
+    expect(console.error).toHaveBeenCalledWith('[contact] contact form configuration is incomplete', {
+      route: '/contacto',
+      runtime: 'server',
+      source: 'sendContactMessage',
+      statusCode: 500,
+      timestamp: expect.any(String),
+      metadata: {
+        hasContactRecipientEmail: false,
+        hasResendApiKey: false,
+        provider: 'resend',
       },
     })
   })

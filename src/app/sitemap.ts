@@ -9,6 +9,17 @@ const allSlugsQuery = defineQuery(`{
   "servicios": *[_type == "servicio"]{ "slug": slug.current, _updatedAt }
 }`)
 
+interface SitemapSlugEntry {
+  _updatedAt: string
+  slug: string | null
+}
+
+interface SitemapQueryResult {
+  gastronomia?: SitemapSlugEntry[]
+  lugares?: SitemapSlugEntry[]
+  servicios?: SitemapSlugEntry[]
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL
 
@@ -28,22 +39,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   try {
-    const { data } = await sanityFetch({ query: allSlugsQuery })
-
-    type SlugEntry = { slug: string | null; _updatedAt: string }
+    const response = await sanityFetch({ query: allSlugsQuery }) as { data: SitemapQueryResult | null }
+    const data = response.data
 
     const dynamicRoutes = [
-      ...(data?.lugares ?? []).map((l: SlugEntry) => ({
-        url: `${baseUrl}/lugares/${l.slug}`,
-        lastModified: new Date(l._updatedAt),
+      ...(data?.lugares ?? []).map((lugar) => ({
+        url: `${baseUrl}/lugares/${lugar.slug}`,
+        lastModified: new Date(lugar._updatedAt),
       })),
-      ...(data?.gastronomia ?? []).map((g: SlugEntry) => ({
-        url: `${baseUrl}/gastronomia/${g.slug}`,
-        lastModified: new Date(g._updatedAt),
+      ...(data?.gastronomia ?? []).map((item) => ({
+        url: `${baseUrl}/gastronomia/${item.slug}`,
+        lastModified: new Date(item._updatedAt),
       })),
-      ...(data?.servicios ?? []).map((s: SlugEntry) => ({
-        url: `${baseUrl}/servicios/${s.slug}`,
-        lastModified: new Date(s._updatedAt),
+      ...(data?.servicios ?? []).map((service) => ({
+        url: `${baseUrl}/servicios/${service.slug}`,
+        lastModified: new Date(service._updatedAt),
       })),
     ]
 

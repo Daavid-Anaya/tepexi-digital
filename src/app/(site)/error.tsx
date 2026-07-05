@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { logError } from '@/lib/observability'
 
 interface Props {
   error: Error & { digest?: string }
@@ -10,7 +11,14 @@ interface Props {
 
 export default function Error({ error, reset }: Props) {
   useEffect(() => {
-    console.error(error)
+    logError('[site-error-boundary] route segment render failed', {
+      source: 'siteErrorBoundary',
+      route: '(site)',
+      error,
+      metadata: {
+        digest: error.digest ?? null,
+      },
+    })
   }, [error])
 
   return (

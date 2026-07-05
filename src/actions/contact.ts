@@ -5,6 +5,7 @@ import { Resend } from 'resend'
 import { headers } from 'next/headers'
 import { rateLimit } from '@/lib/rate-limit'
 import { RATE_LIMITS, SITE_URL } from '@/lib/constants'
+import { logError } from '@/lib/observability'
 import {
   type ContactFormFieldErrors,
   validateContactFormData,
@@ -14,19 +15,6 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 function sanitizeEmailHeaderValue(value: string): string {
   return value.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim()
-}
-
-function getErrorLogDetails(error: unknown): { name?: string; message: string } {
-  if (error instanceof Error) {
-    return {
-      name: error.name,
-      message: error.message,
-    }
-  }
-
-  return {
-    message: 'Unknown error',
-  }
 }
 
 export interface ContactFormState {
@@ -61,11 +49,32 @@ export async function sendContactMessage(
   const { name, email, subject, message } = validationResult.data
   const safeName = sanitizeEmailHeaderValue(name) || 'Visitante'
   const safeSubject = subject ? sanitizeEmailHeaderValue(subject) || null : null
+  const hasResendApiKey = Boolean(process.env.RESEND_API_KEY)
+  const contactRecipientEmail = process.env.CONTACT_RECIPIENT_EMAIL
+
+  if (!hasResendApiKey || !contactRecipientEmail) {
+    logError('[contact] contact form configuration is incomplete', {
+      source: 'sendContactMessage',
+      route: '/contacto',
+      metadata: {
+        hasContactRecipientEmail: Boolean(contactRecipientEmail),
+        hasResendApiKey,
+        provider: 'resend',
+      },
+      statusCode: 500,
+    })
+
+    return {
+      success: false,
+      error: 'Error al enviar el mensaje. Intente más tarde.',
+      fieldErrors: {},
+    }
+  }
 
   try {
     await resend.emails.send({
       from: `Tepexi Digital <noreply@${new URL(SITE_URL).hostname}>`,
-      to: process.env.CONTACT_RECIPIENT_EMAIL!,
+      to: contactRecipientEmail,
       replyTo: `${safeName} <${email}>`,
       subject: safeSubject ? `Contacto: ${safeSubject}` : `Contacto de ${safeName}`,
       text: [
@@ -82,10 +91,15 @@ export async function sendContactMessage(
     })
     return { success: true, error: null, fieldErrors: {} }
   } catch (error) {
-    console.error('[contact] sendContactMessage failed', {
+    logError('[contact] sendContactMessage failed', {
       source: 'sendContactMessage',
-      hasSubject: !!safeSubject,
-      error: getErrorLogDetails(error),
+      route: '/contacto',
+      metadata: {
+        hasSubject: Boolean(safeSubject),
+        provider: 'resend',
+      },
+      error,
+      statusCode: 502,
     })
 
     return {

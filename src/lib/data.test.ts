@@ -90,7 +90,16 @@ describe('data normalization helpers', () => {
     })
 
     expect(result).toBe(fallbackRows)
-    expect(console.warn).toHaveBeenCalledWith('[mock-fallback] test-empty: Sanity returned empty results', '')
+    expect(console.warn).toHaveBeenCalledWith('[mock-fallback] test-empty: Sanity returned empty results', {
+      metadata: {
+        isProd: false,
+        reason: 'empty-results',
+        usesFallbackData: true,
+      },
+      runtime: 'server',
+      source: 'test-empty',
+      timestamp: expect.any(String),
+    })
   })
 
   it('returns fallback data when the Sanity fetch throws', async () => {
@@ -110,7 +119,21 @@ describe('data normalization helpers', () => {
     expect(result).toBe(fallbackRows)
     expect(console.warn).toHaveBeenCalledWith(
       '[mock-fallback] test-error: Sanity fetch failed',
-      expect.any(Error),
+      {
+        error: {
+          digest: null,
+          message: 'boom',
+          name: 'Error',
+        },
+        metadata: {
+          isProd: false,
+          reason: 'fetch-error',
+          usesFallbackData: true,
+        },
+        runtime: 'server',
+        source: 'test-error',
+        timestamp: expect.any(String),
+      },
     )
   })
 
@@ -189,7 +212,16 @@ describe('data normalization helpers', () => {
 
     expect(console.warn).toHaveBeenCalledWith(
       '[mock-fallback] getLugarBySlug: Sanity returned empty results',
-      '',
+      {
+        metadata: {
+          isProd: false,
+          reason: 'empty-results',
+          usesFallbackData: true,
+        },
+        runtime: 'server',
+        source: 'getLugarBySlug',
+        timestamp: expect.any(String),
+      },
     )
     expect(result).toMatchObject({
       _id: mockLugares[0]._id,
@@ -214,7 +246,16 @@ describe('data normalization helpers', () => {
 
     expect(console.warn).toHaveBeenCalledWith(
       '[mock-fallback] getSettings: Sanity returned empty results',
-      '',
+      {
+        metadata: {
+          isProd: false,
+          reason: 'empty-results',
+          usesFallbackData: true,
+        },
+        runtime: 'server',
+        source: 'getSettings',
+        timestamp: expect.any(String),
+      },
     )
     expect(result).toEqual(mockSettings)
   })
@@ -266,7 +307,21 @@ describe('data normalization helpers', () => {
     )
     expect(console.warn).toHaveBeenCalledWith(
       '[mock-fallback] getAllMapMarkers: Sanity fetch failed',
-      expect.any(Error),
+      {
+        error: {
+          digest: null,
+          message: 'servicios failed',
+          name: 'Error',
+        },
+        metadata: {
+          isProd: false,
+          reason: 'fetch-error',
+          usesFallbackData: true,
+        },
+        runtime: 'server',
+        source: 'getAllMapMarkers',
+        timestamp: expect.any(String),
+      },
     )
   })
 })

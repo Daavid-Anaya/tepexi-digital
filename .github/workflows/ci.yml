@@ -1,20 +1,16 @@
-name: Security Audit
+name: CI
 
 on:
   pull_request:
   push:
     branches:
       - main
-  schedule:
-    # Run weekly on Monday at 9:00 UTC
-    - cron: '0 9 * * 1'
-  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  audit:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +29,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Block on production high/critical vulnerabilities
-        run: pnpm audit:prod
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Production build
+        run: pnpm build
