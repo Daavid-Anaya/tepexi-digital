@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
-import iconPng from '@/app/icon.png'
 import { MobileNavToggle } from './MobileNavToggle'
 import { NavLinks } from './NavLinks'
 import { navLinks } from '@/lib/navigation'
@@ -25,7 +24,7 @@ export function Navbar() {
               className="flex items-center gap-2 group"
             >
               <Image
-                src={iconPng}
+                src="/icon.png"
                 alt="Tepexi Digital"
                 width={32}
                 height={32}

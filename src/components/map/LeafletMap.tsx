@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 // F-31: Leaflet popup overrides scoped here — only loads when the map is rendered
 import './leaflet-overrides.css'
@@ -9,9 +10,14 @@ import Link from 'next/link'
 import type { LeafletMapProps } from '@/types'
 import { TEPEXI_CENTER } from '@/lib/constants'
 import { getMapMarkerRoute } from '@/lib/map-marker-route'
+import { logWarn } from '@/lib/observability'
 
 const DEFAULT_CENTER = TEPEXI_CENTER
 const DEFAULT_ZOOM = 14
+const MAP_STATUS = {
+  READY: 'ready',
+  TILE_ERROR: 'tile-error',
+} as const
 
 const HEX_COLOR_RE = /^#[0-9A-Fa-f]{3,8}$/
 
@@ -61,9 +67,28 @@ function createCategoryIcon(color: string, shape: MarkerShape): L.DivIcon {
 export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
   const mapCenter = center ?? DEFAULT_CENTER
   const mapZoom = zoom ?? DEFAULT_ZOOM
+  const [mapStatus, setMapStatus] = useState<(typeof MAP_STATUS)[keyof typeof MAP_STATUS]>(MAP_STATUS.READY)
+
+  function handleTileError(): void {
+    setMapStatus((currentStatus) => {
+      if (currentStatus === MAP_STATUS.TILE_ERROR) {
+        return currentStatus
+      }
+
+      logWarn('[map] tile provider failed to load one or more tiles', {
+        source: 'LeafletMap',
+        route: '/mapa',
+        metadata: {
+          provider: 'openstreetmap',
+        },
+      })
+
+      return MAP_STATUS.TILE_ERROR
+    })
+  }
 
   return (
-    <div role="application" aria-label="Mapa interactivo de Tepexi de Rodríguez">
+    <div role="application" aria-label="Mapa interactivo de Tepexi de Rodríguez" className="space-y-3">
       <MapContainer
         center={[mapCenter.lat, mapCenter.lng]}
         zoom={mapZoom}
@@ -72,6 +97,7 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          eventHandlers={{ tileerror: handleTileError }}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {markers.map((marker) => {
@@ -124,6 +150,11 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
           )
         })}
       </MapContainer>
+      {mapStatus === MAP_STATUS.TILE_ERROR && (
+        <p className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          El mapa no pudo cargar todos sus mosaicos. Puedes seguir usando la información de esta página o abrir una ubicación puntual desde cada ficha.
+        </p>
+      )}
     </div>
   )
 }

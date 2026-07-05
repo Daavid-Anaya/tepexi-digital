@@ -13,6 +13,7 @@ import { CATEGORY_COLORS, HOME_PREVIEW_LIMITS } from './constants'
 import { cache } from 'react'
 import type { PortableTextBlock } from '@portabletext/react'
 import { MAP_MARKER_SOURCE, MAP_MARKER_TYPE, type MapMarker, type MapMarkerType } from '@/types'
+import { logError, logWarn } from '@/lib/observability'
 import {
   mockLugares,
   mockSettings,
@@ -50,10 +51,25 @@ function logMockFallback(source: string, reason: FallbackReason, error?: unknown
   const message = `[mock-fallback] ${source}: ${reasons[reason]}`
 
   if (IS_PROD) {
-    // In production, mock data should NEVER be served — treat as an error
-    console.error(message, error ?? '')
+    logError(message, {
+      source,
+      metadata: {
+        isProd: IS_PROD,
+        reason,
+        usesFallbackData: true,
+      },
+      ...(error !== undefined ? { error } : {}),
+    })
   } else {
-    console.warn(message, error ?? '')
+    logWarn(message, {
+      source,
+      metadata: {
+        isProd: IS_PROD,
+        reason,
+        usesFallbackData: true,
+      },
+      ...(error !== undefined ? { error } : {}),
+    })
   }
 }
 
