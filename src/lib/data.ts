@@ -68,7 +68,7 @@ export interface LugarListItem {
   slug: { current: string }
   category: string
   categoryColor: string
-  imageUrl: string
+  imageUrl: string | null
   imageAlt: string
   address: string | null
   coordinates: { lat: number; lng: number } | null
@@ -378,7 +378,7 @@ export function normalizeLugarListItem(value: unknown): LugarListItem | null {
   const category = readString(value.category)
   const imageUrl = readString(value.imageUrl)
 
-  if (!_id || !title || !slug || !category || !imageUrl) {
+  if (!_id || !title || !slug || !category) {
     return null
   }
 

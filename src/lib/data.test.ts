@@ -33,6 +33,7 @@ describe('data normalization helpers', () => {
         data: [
           null,
           { _id: 'missing-title', slug: { current: 'broken' }, category: 'cultura', imageUrl: '/bad.jpg' },
+          { _id: 'missing-image', title: 'Lugar sin imagen', slug: { current: 'sin-imagen' }, category: 'cultura' },
           {
             _id: 'lugar-1',
             title: 'Ex Convento',
@@ -49,6 +50,18 @@ describe('data normalization helpers', () => {
     expect(fallback).not.toHaveBeenCalled()
     expect(console.warn).not.toHaveBeenCalled()
     expect(result).toEqual([
+      {
+        _id: 'missing-image',
+        title: 'Lugar sin imagen',
+        slug: { current: 'sin-imagen' },
+        category: 'cultura',
+        categoryColor: CATEGORY_COLORS.default,
+        imageUrl: null,
+        imageAlt: 'Lugar sin imagen',
+        address: null,
+        coordinates: null,
+        isFeatured: false,
+      },
       {
         _id: 'lugar-1',
         title: 'Ex Convento',
