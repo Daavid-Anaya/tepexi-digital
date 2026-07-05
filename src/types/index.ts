@@ -26,7 +26,7 @@ export interface PlaceCardProps {
   slug: string
   category: string
   categoryColor?: string
-  imageUrl: string
+  imageUrl: string | null
   imageAlt: string
   excerpt?: string
 }
