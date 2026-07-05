@@ -131,7 +131,7 @@ export interface MockSettings {
   heroTitle: string
   heroSubtitle: string
   contactEmail: string
-  contactPhone: string
+  contactPhone: string | null
   address: string
   socialLinks: SocialLink[] | null
   seoDefaults: SeoDefaults | null
@@ -689,7 +689,7 @@ export const mockSettings: MockSettings = {
   heroSubtitle:
     'Explora la riqueza turística, cultural y gastronómica de la Mixteca Poblana',
   contactEmail: 'turismo@tepexi.gob.mx',
-  contactPhone: '+52 243 436 0001',
+  contactPhone: null,
   address: 'Palacio Municipal, Centro, Tepexi de Rodríguez, Puebla, México',
   socialLinks: null,
   seoDefaults: {
