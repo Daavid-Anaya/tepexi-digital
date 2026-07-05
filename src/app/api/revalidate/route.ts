@@ -1,10 +1,8 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
+import { RATE_LIMITS } from '@/lib/constants'
 import { rateLimit } from '@/lib/rate-limit'
-
-// 30 revalidations per minute per IP
-const REVALIDATE_RATE_LIMIT = { limit: 30, windowSeconds: 60 }
 
 // Sanity document types mapped to their paths
 const TYPE_TO_PATHS: Record<string, string[]> = {
@@ -19,7 +17,7 @@ const TYPE_TO_PATHS: Record<string, string[]> = {
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-    const { allowed } = rateLimit(`revalidate:${ip}`, REVALIDATE_RATE_LIMIT)
+    const { allowed } = rateLimit(`revalidate:${ip}`, RATE_LIMITS.REVALIDATE)
     if (!allowed) {
       return NextResponse.json(
         { message: 'Too many requests' },

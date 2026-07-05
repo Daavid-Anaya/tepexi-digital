@@ -1,4 +1,5 @@
 import { defineQuery } from 'next-sanity'
+import { HOME_PREVIEW_LIMITS, SANITY_FETCH_LIMITS } from '@/lib/constants'
 
 // F-06: imageUrl uses Sanity CDN params — card thumbnails 600×400 px, quality 75.
 export const featuredEventosQuery = defineQuery(`*[_type == "evento" && isFeatured == true] | order(date asc) {
@@ -36,7 +37,7 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
 
 // F-20: dedicated home preview — always fetches exactly 3 upcoming events.
 // Avoids the limit:50 fetch in getUpcomingEventos() + slice(0,3) in home page.
-export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...3] {
+export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...${HOME_PREVIEW_LIMITS.UPCOMING_EVENTOS}] {
   _id,
   title,
   slug,
@@ -49,7 +50,7 @@ export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && d
   isFeatured
 }`)
 
-export const upcomingEventosQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...$limit] {
+export const upcomingEventosQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...${SANITY_FETCH_LIMITS.UPCOMING_EVENTOS}] {
   _id,
   title,
   slug,
