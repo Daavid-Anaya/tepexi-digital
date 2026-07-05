@@ -12,6 +12,10 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SANITY_PROJECT_ID: 45s7lmkb
+      NEXT_PUBLIC_SANITY_DATASET: production
+      NEXT_PUBLIC_SITE_URL: https://tepexidigital.com.mx
 
     steps:
       - name: Checkout repository
