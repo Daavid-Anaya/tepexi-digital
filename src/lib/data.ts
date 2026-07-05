@@ -1,5 +1,5 @@
 import 'server-only'
-import { CATEGORY_COLORS } from './constants'
+import { CATEGORY_COLORS, HOME_PREVIEW_LIMITS } from './constants'
 
 /**
  * Data abstraction layer.
@@ -12,7 +12,7 @@ import { CATEGORY_COLORS } from './constants'
 
 import { cache } from 'react'
 import type { PortableTextBlock } from '@portabletext/react'
-import { MAP_MARKER_SOURCE, type MapMarker } from '@/types'
+import { MAP_MARKER_SOURCE, MAP_MARKER_TYPE, type MapMarker, type MapMarkerType } from '@/types'
 import {
   mockLugares,
   mockSettings,
@@ -30,6 +30,9 @@ import { settingsQuery } from '@/sanity/queries/settings'
 
 const USE_SANITY = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const IS_PROD = process.env.NODE_ENV === 'production'
+type SanityFetcherParams = Parameters<typeof sanityFetch>[0]
+type SanityFetcherResult = { data: unknown }
+type SanityDataFetcher = (params: SanityFetcherParams) => Promise<SanityFetcherResult>
 
 // ---------------------------------------------------------------------------
 // Mock fallback logging — visibility into when/why mock data is served
@@ -65,7 +68,7 @@ export interface LugarListItem {
   slug: { current: string }
   category: string
   categoryColor: string
-  imageUrl: string
+  imageUrl: string | null
   imageAlt: string
   address: string | null
   coordinates: { lat: number; lng: number } | null
@@ -226,18 +229,535 @@ function getMockLugaresList(): LugarListItem[] {
 }
 
 function getMockMapMarkers(): MapMarker[] {
-  return mockLugares
-    .filter((l) => l.coordinates)
-    .map((l) => ({
-      id: l._id,
-      title: l.title,
-      slug: l.slug.current,
-      sourceType: MAP_MARKER_SOURCE.LUGAR,
-      coordinates: l.coordinates!,
-      category: l.category,
-      categoryColor: l.categoryColor,
-      type: l.categoryType,
-    }))
+  return mockLugares.map((l) => ({
+    id: l._id,
+    title: l.title,
+    slug: l.slug.current,
+    sourceType: MAP_MARKER_SOURCE.LUGAR,
+    coordinates: l.coordinates,
+    category: l.category,
+    categoryColor: l.categoryColor,
+    type: l.categoryType,
+  }))
+}
+
+type UnknownRecord = Record<string, unknown>
+
+function isRecord(value: unknown): value is UnknownRecord {
+  return typeof value === 'object' && value !== null
+}
+
+function readString(value: unknown): string | null {
+  return typeof value === 'string' ? value : null
+}
+
+function readBoolean(value: unknown, fallback = false): boolean {
+  return typeof value === 'boolean' ? value : fallback
+}
+
+function readNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function readStringArray(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null
+
+  const results = value.filter((item): item is string => typeof item === 'string')
+  return results.length > 0 ? results : null
+}
+
+function readSlug(value: unknown): { current: string } | null {
+  if (!isRecord(value)) return null
+
+  const current = readString(value.current)
+  return current ? { current } : null
+}
+
+function readCoordinates(value: unknown): { lat: number; lng: number } | null {
+  if (!isRecord(value)) return null
+
+  const lat = readNumber(value.lat)
+  const lng = readNumber(value.lng)
+
+  return lat === null || lng === null ? null : { lat, lng }
+}
+
+function isPortableTextBlockArray(value: unknown): value is PortableTextBlock[] {
+  return Array.isArray(value) && value.every((item) => isRecord(item) && typeof item._type === 'string')
+}
+
+function readPortableText(value: unknown): PortableTextBlock[] | null {
+  return isPortableTextBlockArray(value) ? value : null
+}
+
+function readSeo(value: unknown): { metaTitle: string | null; metaDescription: string | null } | null {
+  if (!isRecord(value)) return null
+
+  return {
+    metaTitle: readString(value.metaTitle),
+    metaDescription: readString(value.metaDescription),
+  }
+}
+
+function normalizeImageList(value: unknown): LugarDetail['images'] {
+  if (!Array.isArray(value)) return []
+
+  return value.flatMap((item) => {
+    if (!isRecord(item)) return []
+
+    const asset = isRecord(item.asset) ? item.asset : null
+    const assetUrl = asset ? readString(asset.url) : null
+    const url = readString(item.url) ?? assetUrl
+
+    if (!url) return []
+
+    return [{
+      url,
+      alt: readString(item.alt) ?? '',
+      asset: { url: assetUrl ?? url },
+    }]
+  })
+}
+
+function normalizeDescriptionImage(value: unknown): { url: string; alt: string } | null {
+  if (!isRecord(value)) return null
+
+  const url = readString(value.url)
+  if (!url) return null
+
+  return {
+    url,
+    alt: readString(value.alt) ?? '',
+  }
+}
+
+function normalizeKeyIngredients(value: unknown): GastronomiaDetail['keyIngredients'] {
+  if (!Array.isArray(value)) return null
+
+  const results = value.flatMap((item) => {
+    if (!isRecord(item)) return []
+
+    return [{
+      name: readString(item.name),
+      description: readString(item.description),
+      icon: readString(item.icon),
+      imageUrl: readString(item.imageUrl),
+    }]
+  })
+
+  return results.length > 0 ? results : null
+}
+
+function normalizePreparationSteps(value: unknown): GastronomiaDetail['preparationSteps'] {
+  if (!Array.isArray(value)) return null
+
+  const results = value.flatMap((item) => {
+    if (!isRecord(item)) return []
+
+    const title = readString(item.title)
+    const description = readString(item.description)
+
+    if (!title || !description) return []
+
+    return [{
+      title,
+      description,
+      duration: readString(item.duration),
+    }]
+  })
+
+  return results.length > 0 ? results : null
+}
+
+export function normalizeLugarListItem(value: unknown): LugarListItem | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const category = readString(value.category)
+  const imageUrl = readString(value.imageUrl)
+
+  if (!_id || !title || !slug || !category) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    category,
+    categoryColor: readString(value.categoryColor) ?? CATEGORY_COLORS.default,
+    imageUrl,
+    imageAlt: readString(value.imageAlt) ?? title,
+    address: readString(value.address),
+    coordinates: readCoordinates(value.coordinates),
+    isFeatured: readBoolean(value.isFeatured),
+  }
+}
+
+function normalizeLugarDetail(value: unknown): LugarDetail | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const category = readString(value.category)
+
+  if (!_id || !title || !slug || !category) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    category,
+    categoryColor: readString(value.categoryColor) ?? CATEGORY_COLORS.default,
+    description: readPortableText(value.description),
+    images: normalizeImageList(value.images),
+    coordinates: readCoordinates(value.coordinates),
+    address: readString(value.address),
+    schedule: readString(value.schedule),
+    cost: readString(value.cost),
+    recommendations: readPortableText(value.recommendations),
+    seo: readSeo(value.seo),
+  }
+}
+
+function normalizeGastronomiaListItem(value: unknown): GastronomiaListItem | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const category = readString(value.category)
+  const imageUrl = readString(value.imageUrl)
+
+  if (!_id || !title || !slug || !category || !imageUrl) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    category,
+    categoryColor: readString(value.categoryColor) ?? CATEGORY_COLORS.default,
+    imageUrl,
+    imageAlt: readString(value.imageAlt) ?? title,
+    priceRange: readString(value.priceRange),
+    dishType: readStringArray(value.dishType),
+  }
+}
+
+function normalizeGastronomiaDetail(value: unknown): GastronomiaDetail | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const category = readString(value.category)
+
+  if (!_id || !title || !slug || !category) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    category,
+    categoryColor: readString(value.categoryColor) ?? CATEGORY_COLORS.default,
+    introduction: readPortableText(value.introduction),
+    description: readPortableText(value.description),
+    images: normalizeImageList(value.images),
+    descriptionImage: normalizeDescriptionImage(value.descriptionImage),
+    cost: readString(value.cost),
+    dishType: readStringArray(value.dishType),
+    priceRange: readString(value.priceRange),
+    origin: readString(value.origin),
+    season: readString(value.season),
+    quote: isRecord(value.quote)
+      ? {
+          text: readString(value.quote.text) ?? '',
+          author: readString(value.quote.author) ?? '',
+        }
+      : null,
+    preparationTime: readString(value.preparationTime),
+    difficulty: readString(value.difficulty),
+    servings: readString(value.servings),
+    keyIngredients: normalizeKeyIngredients(value.keyIngredients),
+    preparationSteps: normalizePreparationSteps(value.preparationSteps),
+    seo: readSeo(value.seo),
+  }
+}
+
+function normalizeEventoListItem(value: unknown): EventoListItem | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const date = readString(value.date)
+
+  if (!_id || !title || !slug || !date) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    imageUrl: readString(value.imageUrl),
+    imageAlt: readString(value.imageAlt),
+    date,
+    endDate: readString(value.endDate),
+    locationName: readString(value.locationName),
+    locationText: readString(value.locationText),
+    isFeatured: readBoolean(value.isFeatured),
+  }
+}
+
+function normalizeEventoLocation(value: unknown): EventoDetail['location'] {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+
+  if (!_id || !title || !slug) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    coordinates: readCoordinates(value.coordinates),
+    address: readString(value.address),
+  }
+}
+
+function normalizeEventoDetail(value: unknown): EventoDetail | null {
+  if (!isRecord(value)) return null
+
+  const _id = readString(value._id)
+  const title = readString(value.title)
+  const slug = readSlug(value.slug)
+  const date = readString(value.date)
+
+  if (!_id || !title || !slug || !date) {
+    return null
+  }
+
+  return {
+    _id,
+    title,
+    slug,
+    description: readPortableText(value.description),
+    imageUrl: readString(value.imageUrl),
+    imageAlt: readString(value.imageAlt),
+    date,
+    endDate: readString(value.endDate),
+    location: normalizeEventoLocation(value.location),
+    locationText: readString(value.locationText),
+    isFeatured: readBoolean(value.isFeatured),
+    seo: readSeo(value.seo),
+  }
+}
+
+export function normalizeSiteSettings(value: unknown): SiteSettings | null {
+  if (!isRecord(value)) return null
+
+  const siteName = readString(value.siteName)
+  if (!siteName) return null
+
+  const normalizedSocialLinks = Array.isArray(value.socialLinks)
+    ? value.socialLinks.flatMap((item) => {
+        if (!isRecord(item)) return []
+
+        const platform = readString(item.platform)
+        const url = readString(item.url)
+
+        return platform && url ? [{ platform, url }] : []
+      })
+    : null
+
+  const seoDefaults = isRecord(value.seoDefaults)
+    ? {
+        metaTitle: readString(value.seoDefaults.metaTitle),
+        metaDescription: readString(value.seoDefaults.metaDescription),
+        ogImageUrl: readString(value.seoDefaults.ogImageUrl),
+      }
+    : null
+
+  return {
+    siteName,
+    siteDescription: readString(value.siteDescription) ?? mockSettings.siteDescription,
+    heroImageUrl: readString(value.heroImageUrl),
+    heroTitle: readString(value.heroTitle) ?? mockSettings.heroTitle,
+    heroSubtitle: readString(value.heroSubtitle) ?? mockSettings.heroSubtitle,
+    contactEmail: readString(value.contactEmail) ?? mockSettings.contactEmail,
+    contactPhone: readString(value.contactPhone) ?? mockSettings.contactPhone,
+    address: readString(value.address) ?? mockSettings.address,
+    socialLinks: normalizedSocialLinks && normalizedSocialLinks.length > 0 ? normalizedSocialLinks : null,
+    seoDefaults,
+  }
+}
+
+const MAP_MARKER_TYPES = new Set<string>(Object.values(MAP_MARKER_TYPE))
+
+function isMapMarkerType(value: unknown): value is MapMarkerType {
+  return typeof value === 'string' && MAP_MARKER_TYPES.has(value)
+}
+
+function normalizeMapMarkerType(value: unknown): MapMarkerType {
+  return isMapMarkerType(value) ? value : MAP_MARKER_TYPE.LUGAR
+}
+
+type SanityMapRow = {
+  _id: string
+  title: string
+  slug: { current: string }
+  category: string
+  categoryColor: string
+  categoryType: MapMarkerType
+  coordinates: { lat: number; lng: number }
+}
+
+export function normalizeSanityMapRows(value: unknown): SanityMapRow[] {
+  if (!Array.isArray(value)) return []
+
+  return value.flatMap((item) => {
+    if (!isRecord(item)) return []
+
+    const _id = readString(item._id)
+    const title = readString(item.title)
+    const slug = readSlug(item.slug)
+    const category = readString(item.category)
+    const coordinates = readCoordinates(item.coordinates)
+
+    if (!_id || !title || !slug || !category || !coordinates) {
+      return []
+    }
+
+    return [{
+      _id,
+      title,
+      slug,
+      category,
+      categoryColor: readString(item.categoryColor) ?? CATEGORY_COLORS.default,
+      categoryType: normalizeMapMarkerType(item.categoryType),
+      coordinates,
+    }]
+  })
+}
+
+export function normalizeArray<T>(value: unknown, normalizeItem: (item: unknown) => T | null): T[] {
+  if (!Array.isArray(value)) return []
+
+  return value.flatMap((item) => {
+    const normalized = normalizeItem(item)
+    return normalized ? [normalized] : []
+  })
+}
+
+interface SanityListOptions<T> {
+  source: string
+  query: string
+  params?: Record<string, unknown>
+  normalizeItem: (item: unknown) => T | null
+  fallback: () => T[]
+  fetcher?: SanityDataFetcher
+  isSanityEnabled?: boolean
+  useFallbackOnEmpty?: boolean
+  logNoSanityConfig?: boolean
+}
+
+export async function fetchSanityList<T>({
+  source,
+  query,
+  params,
+  normalizeItem,
+  fallback,
+  fetcher = sanityFetch,
+  isSanityEnabled = USE_SANITY,
+  useFallbackOnEmpty = true,
+  logNoSanityConfig = true,
+}: SanityListOptions<T>): Promise<T[]> {
+  if (!isSanityEnabled) {
+    if (logNoSanityConfig) {
+      logMockFallback(source, 'no-sanity-config')
+    }
+
+    return fallback()
+  }
+
+  try {
+    const { data } = await fetcher({ query, params })
+    const results = normalizeArray(data, normalizeItem)
+
+    if (results.length > 0 || !useFallbackOnEmpty) {
+      return results
+    }
+
+    logMockFallback(source, 'empty-results')
+    return fallback()
+  } catch (err) {
+    logMockFallback(source, 'fetch-error', err)
+    return fallback()
+  }
+}
+
+interface SanityDetailOptions<T> {
+  source: string
+  query: string
+  params?: Record<string, unknown>
+  normalize: (value: unknown) => T | null
+  fallback: () => T | null
+  fetcher?: SanityDataFetcher
+  isSanityEnabled?: boolean
+  logNoSanityConfig?: boolean
+  logEmpty?: boolean
+}
+
+export async function fetchSanityDetail<T>({
+  source,
+  query,
+  params,
+  normalize,
+  fallback,
+  fetcher = sanityFetch,
+  isSanityEnabled = USE_SANITY,
+  logNoSanityConfig = true,
+  logEmpty = false,
+}: SanityDetailOptions<T>): Promise<T | null> {
+  if (!isSanityEnabled) {
+    if (logNoSanityConfig) {
+      logMockFallback(source, 'no-sanity-config')
+    }
+
+    return fallback()
+  }
+
+  try {
+    const { data } = await fetcher({ query, params })
+    const result = normalize(data)
+
+    if (result) {
+      return result
+    }
+
+    if (logEmpty) {
+      logMockFallback(source, 'empty-results')
+    }
+
+    return fallback()
+  } catch (err) {
+    logMockFallback(source, 'fetch-error', err)
+    return fallback()
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -245,195 +765,142 @@ function getMockMapMarkers(): MapMarker[] {
 // ---------------------------------------------------------------------------
 
 export async function getAllLugares(): Promise<LugarListItem[]> {
-  if (!USE_SANITY) {
-    logMockFallback('getAllLugares', 'no-sanity-config')
-    return getMockLugaresList()
-  }
-
-  try {
-    // TODO: add runtime validation (Zod) when sanityFetch supports explicit generics
-    const { data } = await sanityFetch({ query: allLugaresQuery })
-    const results = (data ?? []) as LugarListItem[]
-    if (results.length > 0) return results
-    logMockFallback('getAllLugares', 'empty-results')
-    return getMockLugaresList()
-  } catch (err) {
-    logMockFallback('getAllLugares', 'fetch-error', err)
-    return getMockLugaresList()
-  }
+  return fetchSanityList({
+    source: 'getAllLugares',
+    query: allLugaresQuery,
+    normalizeItem: normalizeLugarListItem,
+    fallback: getMockLugaresList,
+  })
 }
 
 export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> {
-  if (!USE_SANITY) {
-    logMockFallback('getLugarBySlug', 'no-sanity-config')
-    const found = mockLugares.find((l) => l.slug.current === slug)
-    return found ? mockToLugarDetail(found) : null
-  }
-
-  try {
-    const { data } = await sanityFetch({ query: lugarBySlugQuery, params: { slug } })
-    if (data) return data as LugarDetail
-    logMockFallback('getLugarBySlug', 'empty-results')
-    const found = mockLugares.find((l) => l.slug.current === slug)
-    return found ? mockToLugarDetail(found) : null
-  } catch (err) {
-    logMockFallback('getLugarBySlug', 'fetch-error', err)
-    const found = mockLugares.find((l) => l.slug.current === slug)
-    return found ? mockToLugarDetail(found) : null
-  }
+  return fetchSanityDetail({
+    source: 'getLugarBySlug',
+    query: lugarBySlugQuery,
+    params: { slug },
+    normalize: normalizeLugarDetail,
+    logEmpty: true,
+    fallback: () => {
+      const found = mockLugares.find((l) => l.slug.current === slug)
+      return found ? mockToLugarDetail(found) : null
+    },
+  })
 }
 
 export async function getServicioBySlug(slug: string): Promise<ServicioDetail | null> {
-  if (!USE_SANITY) return null
-
-  try {
-    const { data } = await sanityFetch({ query: servicioBySlugQuery, params: { slug } })
-    if (data) return data as ServicioDetail
-    return null
-  } catch {
-    return null
-  }
+  return fetchSanityDetail({
+    source: 'getServicioBySlug',
+    query: servicioBySlugQuery,
+    params: { slug },
+    normalize: normalizeLugarDetail,
+    logNoSanityConfig: false,
+    fallback: () => null,
+  })
 }
 
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
-  if (!USE_SANITY) {
-    // No Sanity config — return empty list to avoid showing fake gastronomy entries.
-    return []
-  }
-
-  try {
-    const { data } = await sanityFetch({ query: allGastronomiaQuery })
-    // Intentionally no mock fallback: gastronomia has no mock data.
-    // An empty result means no dishes are published yet — that's valid.
-    return (data ?? []) as GastronomiaListItem[]
-  } catch (err) {
-    logMockFallback('getAllGastronomia', 'fetch-error', err)
-    return []
-  }
+  return fetchSanityList({
+    source: 'getAllGastronomia',
+    query: allGastronomiaQuery,
+    normalizeItem: normalizeGastronomiaListItem,
+    fallback: () => [],
+    useFallbackOnEmpty: false,
+    logNoSanityConfig: false,
+  })
 }
 
 export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDetail | null> {
-  if (!USE_SANITY) {
-    // No Sanity config — return null to avoid serving fake gastronomy detail pages.
-    return null
-  }
-
-  try {
-    const { data } = await sanityFetch({ query: gastronomiaBySlugQuery, params: { slug } })
-    if (data) return data as GastronomiaDetail
-    return null
-  } catch (err) {
-    logMockFallback('getGastronomiaBySlug', 'fetch-error', err)
-    return null
-  }
+  return fetchSanityDetail({
+    source: 'getGastronomiaBySlug',
+    query: gastronomiaBySlugQuery,
+    params: { slug },
+    normalize: normalizeGastronomiaDetail,
+    logNoSanityConfig: false,
+    fallback: () => null,
+  })
 }
 
 // F-19: home page — only featured lugares, max 4, only card fields.
 export async function getFeaturedLugaresForHome(): Promise<LugarListItem[]> {
-  if (!USE_SANITY) {
-    logMockFallback('getFeaturedLugaresForHome', 'no-sanity-config')
-    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
-  }
+  const getFeaturedMockLugares = () =>
+    getMockLugaresList()
+      .filter((l) => l.isFeatured)
+      .slice(0, HOME_PREVIEW_LIMITS.FEATURED_LUGARES)
 
-  try {
-    const { data } = await sanityFetch({ query: featuredLugaresHomeQuery })
-    const results = (data ?? []) as LugarListItem[]
-    if (results.length > 0) return results
-    logMockFallback('getFeaturedLugaresForHome', 'empty-results')
-    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
-  } catch (err) {
-    logMockFallback('getFeaturedLugaresForHome', 'fetch-error', err)
-    return getMockLugaresList().filter((l) => l.isFeatured).slice(0, 4)
-  }
+  return fetchSanityList({
+    source: 'getFeaturedLugaresForHome',
+    query: featuredLugaresHomeQuery,
+    normalizeItem: normalizeLugarListItem,
+    fallback: getFeaturedMockLugares,
+  })
 }
 
 // F-19: home page — only the 3 most recent gastronomia items, only card fields.
 export async function getLatestGastronomiaForHome(): Promise<GastronomiaListItem[]> {
-  if (!USE_SANITY) return []
+  return fetchSanityList({
+    source: 'getLatestGastronomiaForHome',
+    query: latestGastronomiaHomeQuery,
+    normalizeItem: normalizeGastronomiaListItem,
+    fallback: () => [],
+    useFallbackOnEmpty: false,
+    logNoSanityConfig: false,
+  })
+}
 
-  try {
-    const { data } = await sanityFetch({ query: latestGastronomiaHomeQuery })
-    return (data ?? []) as GastronomiaListItem[]
-  } catch (err) {
-    logMockFallback('getLatestGastronomiaForHome', 'fetch-error', err)
-    return []
-  }
+function getStartOfTodayIso(): string {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return today.toISOString()
 }
 
 // F-20: home page — only the 3 next upcoming events, limited at GROQ level.
 export async function getUpcomingEventosPreview(): Promise<EventoListItem[]> {
-  if (!USE_SANITY) return []
-
-  try {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const now = today.toISOString()
-    const { data } = await sanityFetch({ query: upcomingEventosPreviewQuery, params: { now } })
-    return (data ?? []) as EventoListItem[]
-  } catch (err) {
-    logMockFallback('getUpcomingEventosPreview', 'fetch-error', err)
-    return []
-  }
+  return fetchSanityList({
+    source: 'getUpcomingEventosPreview',
+    query: upcomingEventosPreviewQuery,
+    params: { now: getStartOfTodayIso() },
+    normalizeItem: normalizeEventoListItem,
+    fallback: () => [],
+    useFallbackOnEmpty: false,
+    logNoSanityConfig: false,
+  })
 }
 
 export async function getUpcomingEventos(): Promise<EventoListItem[]> {
-  if (!USE_SANITY) {
-    // No Sanity config — return empty list instead of mock events to avoid
-    // showing fake events to real users on the deployed site.
-    return []
-  }
-
-  try {
-    // Use start-of-today so events remain visible all day until midnight.
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const now = today.toISOString()
-    const { data } = await sanityFetch({ query: upcomingEventosQuery, params: { now, limit: 50 } })
-    return (data ?? []) as EventoListItem[]
-  } catch (err) {
-    logMockFallback('getUpcomingEventos', 'fetch-error', err)
-    return []
-  }
+  return fetchSanityList({
+    source: 'getUpcomingEventos',
+    query: upcomingEventosQuery,
+    params: { now: getStartOfTodayIso() },
+    normalizeItem: normalizeEventoListItem,
+    fallback: () => [],
+    useFallbackOnEmpty: false,
+    logNoSanityConfig: false,
+  })
 }
 
 export async function getEventoBySlug(slug: string): Promise<EventoDetail | null> {
-  if (!USE_SANITY) {
-    // No Sanity config — return null to avoid serving fake event detail pages.
-    return null
-  }
-
-  try {
-    const { data } = await sanityFetch({ query: eventoBySlugQuery, params: { slug } })
-    if (data) return data as EventoDetail
-    return null
-  } catch (err) {
-    logMockFallback('getEventoBySlug', 'fetch-error', err)
-    return null
-  }
-}
-
-type SanityMapRow = {
-  _id: string
-  title: string | null
-  slug: { current: string } | null
-  category: string | null
-  categoryColor: string | null
-  categoryType: string | null
-  coordinates: { lat: number; lng: number } | null
+  return fetchSanityDetail({
+    source: 'getEventoBySlug',
+    query: eventoBySlugQuery,
+    params: { slug },
+    normalize: normalizeEventoDetail,
+    logNoSanityConfig: false,
+    fallback: () => null,
+  })
 }
 
 function sanityRowsToMarkers(rows: SanityMapRow[], sourceType: MapMarker['sourceType']): MapMarker[] {
   return rows
-    .filter((r) => r.coordinates && (r.coordinates.lat !== 0 || r.coordinates.lng !== 0))
+    .filter((r) => r.coordinates.lat !== 0 || r.coordinates.lng !== 0)
     .map((r) => ({
       id: r._id,
-      title: r.title ?? '',
-      slug: r.slug?.current ?? '',
+      title: r.title,
+      slug: r.slug.current,
       sourceType,
-      coordinates: { lat: r.coordinates!.lat, lng: r.coordinates!.lng },
-      category: r.category ?? '',
-      categoryColor: r.categoryColor ?? CATEGORY_COLORS.default,
-      type: (r.categoryType as MapMarker['type']) ?? 'lugar',
+      coordinates: r.coordinates,
+      category: r.category,
+      categoryColor: r.categoryColor,
+      type: r.categoryType,
     }))
 }
 
@@ -449,8 +916,8 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
       sanityFetch({ query: allServiciosMapQuery }),
     ])
 
-    const lugarRows = (lugaresRes.data ?? []) as SanityMapRow[]
-    const servicioRows = (serviciosRes.data ?? []) as SanityMapRow[]
+    const lugarRows = normalizeSanityMapRows(lugaresRes.data)
+    const servicioRows = normalizeSanityMapRows(serviciosRes.data)
     const allRows = [...lugarRows, ...servicioRows]
 
     if (allRows.length === 0) {
@@ -474,20 +941,13 @@ export type { SiteSettings, SocialLink, SeoDefaults }
 // React.cache deduplicates calls within the same request — if layout and page
 // both call getSettings(), Sanity is only queried once per render pass.
 export const getSettings = cache(async (): Promise<SiteSettings> => {
-  if (!USE_SANITY) {
-    logMockFallback('getSettings', 'no-sanity-config')
-    return mockSettings
-  }
+  const settings = await fetchSanityDetail({
+    source: 'getSettings',
+    query: settingsQuery,
+    normalize: normalizeSiteSettings,
+    logEmpty: true,
+    fallback: () => mockSettings,
+  })
 
-  try {
-    const { data } = await sanityFetch({ query: settingsQuery })
-    if (!data || !data.siteName) {
-      logMockFallback('getSettings', 'empty-results')
-      return mockSettings
-    }
-    return data as SiteSettings
-  } catch (err) {
-    logMockFallback('getSettings', 'fetch-error', err)
-    return mockSettings
-  }
+  return settings ?? mockSettings
 })
