@@ -25,6 +25,29 @@ export const HERO_FALLBACKS = {
   cultura: `${SANITY_CDN_BASE}/7a5100ea170bd307785b455ecfb340bf96036b54-6000x4000.jpg${heroParams}`,
 } as const
 
+export const HOME_PREVIEW_LIMITS = {
+  FEATURED_LUGARES: 4,
+  LATEST_GASTRONOMIA: 3,
+  UPCOMING_EVENTOS: 3,
+} as const
+
+export const SANITY_FETCH_LIMITS = {
+  UPCOMING_EVENTOS: 50,
+} as const
+
+// ─── Form and rate limits ─────────────────────────────────────────────────────
+export const CONTACT_FIELD_LIMITS = {
+  NAME: 100,
+  EMAIL: 254,
+  SUBJECT: 200,
+  MESSAGE: 5000,
+} as const
+
+export const RATE_LIMITS = {
+  CONTACT: { limit: 5, windowSeconds: 900 },
+  REVALIDATE: { limit: 30, windowSeconds: 60 },
+} as const
+
 // ─── Map ──────────────────────────────────────────────────────────────────────
 export const TEPEXI_CENTER = { lat: 18.5793, lng: -97.9218 } as const
 
