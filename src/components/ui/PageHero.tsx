@@ -6,6 +6,13 @@ import { ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Container } from '@/components/ui/Container'
 
+const PAGE_HERO_SIZE = {
+  DEFAULT: 'default',
+  COMPACT: 'compact',
+} as const
+
+type PageHeroSize = (typeof PAGE_HERO_SIZE)[keyof typeof PAGE_HERO_SIZE]
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface PageHeroProps {
@@ -14,7 +21,7 @@ export interface PageHeroProps {
   /** Overlay opacity — default 0.6 (range 0-1) */
   overlayOpacity?: number
   /** Section padding variant */
-  size?: 'default' | 'compact'
+  size?: PageHeroSize
   /** Content to render inside */
   children: ReactNode
   /** Additional className for the section */
@@ -53,7 +60,7 @@ export interface PageHeroBackLinkProps {
 export function PageHero({
   imageUrl,
   overlayOpacity = 0.6,
-  size = 'default',
+  size = PAGE_HERO_SIZE.DEFAULT,
   children,
   className,
 }: PageHeroProps) {
@@ -61,7 +68,7 @@ export function PageHero({
     <section
       className={cn(
         'relative overflow-hidden',
-        size === 'default' ? 'py-12 md:py-20' : 'py-10 md:py-14',
+        size === PAGE_HERO_SIZE.DEFAULT ? 'py-12 md:py-20' : 'py-10 md:py-14',
         className,
       )}
     >
@@ -129,8 +136,8 @@ export function PageHeroHeader({ icon: Icon, title, description }: PageHeroHeade
   return (
     <div className="flex items-start gap-5">
       {Icon && (
-          <div className="flex-shrink-0 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center bg-white/15">
-            <Icon className="w-7 h-7 text-white" aria-hidden="true" />
+        <div className="flex-shrink-0 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center bg-white/15">
+          <Icon className="w-7 h-7 text-white" aria-hidden="true" />
         </div>
       )}
       <div>

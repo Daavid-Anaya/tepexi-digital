@@ -135,7 +135,7 @@ describe('data normalization helpers', () => {
       heroTitle: 'Nuevo hero',
       heroSubtitle: mockSettings.heroSubtitle,
       contactEmail: mockSettings.contactEmail,
-      contactPhone: mockSettings.contactPhone,
+      contactPhone: null,
       address: mockSettings.address,
       socialLinks: [{ platform: 'Facebook', url: 'https://facebook.com/tepexi' }],
       seoDefaults: {

@@ -58,8 +58,6 @@ async function uploadImage(key, filePath) {
     label: `hero-${key}`,
   })
 
-  const url = `https://cdn.sanity.io/images/${env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${env.NEXT_PUBLIC_SANITY_DATASET}/${asset._id.replace('image-', '').replace(/-jpg$/, '.jpg').replace(/-jpeg$/, '.jpeg').replace(/-png$/, '.png').replace(/-webp$/, '.webp')}`
-
   return { key, assetId: asset._id, url: asset.url }
 }
 

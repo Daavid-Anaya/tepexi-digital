@@ -1,9 +1,25 @@
 import { cn } from '@/lib/utils'
 import { Slot } from '@radix-ui/react-slot'
 
+const BUTTON_VARIANT = {
+  PRIMARY: 'primary',
+  SECONDARY: 'secondary',
+  GHOST: 'ghost',
+  OUTLINE: 'outline',
+} as const
+
+const BUTTON_SIZE = {
+  SM: 'sm',
+  MD: 'md',
+  LG: 'lg',
+} as const
+
+type ButtonVariant = (typeof BUTTON_VARIANT)[keyof typeof BUTTON_VARIANT]
+type ButtonSize = (typeof BUTTON_SIZE)[keyof typeof BUTTON_SIZE]
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: ButtonVariant
+  size?: ButtonSize
   className?: string
   children: React.ReactNode
   asChild?: boolean
@@ -27,8 +43,8 @@ const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
 }
 
 export function Button({
-  variant = 'primary',
-  size = 'md',
+  variant = BUTTON_VARIANT.PRIMARY,
+  size = BUTTON_SIZE.MD,
   className,
   children,
   disabled,
