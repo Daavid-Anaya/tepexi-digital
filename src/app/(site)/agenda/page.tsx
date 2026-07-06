@@ -7,13 +7,15 @@ export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { EventCard } from '@/components/events/EventCard'
 import type { EventCardProps } from '@/types'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Agenda de Eventos',
-  description: 'Próximos eventos y actividades en Tepexi de Rodríguez, Puebla.',
-}
+  description: 'Consulta la agenda turística y cultural de Tepexi de Rodríguez, Puebla, con fechas, sedes y actividades para planear tu visita.',
+  path: '/agenda',
+})
 
 export default async function AgendaPage() {
   const data = await getUpcomingEventos()
@@ -37,7 +39,7 @@ export default async function AgendaPage() {
     <>
       {/* Page hero — calendar inspired */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} currentPath="/agenda" />
         <PageHeroHeader
           icon={CalendarDays}
           title="Agenda de Eventos"

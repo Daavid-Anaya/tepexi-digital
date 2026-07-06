@@ -9,13 +9,15 @@ import { getMapMarkerRoute } from '@/lib/map-marker-route'
 export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 import { TEPEXI_CENTER, HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Mapa Interactivo',
-  description: 'Mapa interactivo de los atractivos de Tepexi de Rodríguez, Puebla.',
-}
+  description: 'Usa el mapa turístico de Tepexi de Rodríguez, Puebla, para ubicar atractivos, servicios, gastronomía y puntos clave del municipio.',
+  path: '/mapa',
+})
 
 interface LegendCategory {
   label: string
@@ -111,7 +113,7 @@ export default async function MapaPage() {
     <>
       {/* Page hero */}
       <PageHero imageUrl={HERO_FALLBACKS.mapa}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} currentPath="/mapa" />
         <PageHeroHeader
           icon={Map}
           title="Mapa Interactivo"

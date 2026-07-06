@@ -56,5 +56,10 @@ export const gastronomiaBySlugQuery = defineQuery(`*[_type == "gastronomia" && s
   servings,
   keyIngredients[] { name, description, icon, "imageUrl": image.asset->url + "?w=400&h=300&q=70&auto=format&fit=crop&crop=center" },
   preparationSteps[] { title, description, duration },
-  seo
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "ogImageUrl": seo.ogImage.asset->url,
+    "ogImageAlt": seo.ogImage.alt
+  }
 }`)

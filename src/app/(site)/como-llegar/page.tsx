@@ -3,13 +3,15 @@ import { Navigation, Car, Bus, Clock, Milestone, Lightbulb, ArrowRight } from 'l
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
 import type { MapMarker } from '@/types'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 import { TEPEXI_CENTER, HERO_FALLBACKS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Cómo Llegar',
-  description: 'Indicaciones para llegar a Tepexi de Rodríguez desde Puebla, CDMX y Oaxaca.',
-}
+  description: 'Consulta rutas, distancias y direcciones para llegar a Tepexi de Rodríguez, Puebla, desde Puebla, CDMX y Oaxaca.',
+  path: '/como-llegar',
+})
 
 const centerMarker: MapMarker = {
   id: 'tepexi-centro',
@@ -70,7 +72,7 @@ export default function ComoLlegarPage() {
     <>
       {/* Page hero */}
       <PageHero imageUrl={HERO_FALLBACKS.comoLlegar}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} currentPath="/como-llegar" />
         <PageHeroHeader
           icon={Navigation}
           title="Cómo Llegar"

@@ -32,7 +32,12 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
   },
   locationText,
   isFeatured,
-  seo
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "ogImageUrl": seo.ogImage.asset->url,
+    "ogImageAlt": seo.ogImage.alt
+  }
 }`)
 
 // F-20: dedicated home preview — always fetches exactly 3 upcoming events.

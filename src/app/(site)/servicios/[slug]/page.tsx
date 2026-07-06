@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
-import { getServicioBySlug } from '@/lib/data'
+import { getServicioBySlug, getSettings } from '@/lib/data'
 
 // F-21: ISR — detail pages rarely change; revalidate once per day.
 export const revalidate = 86400
@@ -24,11 +24,20 @@ export const generateStaticParams = () => fetchStaticSlugs('servicio')
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const servicio = await getServicioBySlug(slug)
+  const [servicio, settings] = await Promise.all([getServicioBySlug(slug), getSettings()])
+
   return buildSlugMetadata(slug, 'servicios', servicio ? {
     ...servicio,
-    ogImageUrl: servicio.images?.[0]?.url ?? null,
-  } : null, 'Servicio')
+    primaryImageUrl: servicio.images?.[0]?.url ?? null,
+    primaryImageAlt: servicio.images?.[0]?.alt ?? servicio.title,
+  } : null, 'Servicio', {
+    globalOgImage: settings.seoDefaults
+      ? {
+          url: settings.seoDefaults.ogImageUrl,
+          alt: settings.seoDefaults.ogImageAlt ?? settings.siteName,
+        }
+      : null,
+  })
 }
 
 export default async function ServicioDetailPage({ params }: Props) {
@@ -44,6 +53,7 @@ export default async function ServicioDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.servicios
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
+  const canonicalPath = `/servicios/${slug}`
   const mapsUrl = servicio.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servicio.address)}`
     : null
@@ -123,6 +133,7 @@ export default async function ServicioDetailPage({ params }: Props) {
             { label: 'Servicios', href: '/servicios' },
             { label: servicio.title },
           ]}
+          currentPath={canonicalPath}
         />
         <PageHeroBackLink href="/servicios" label="Volver a Servicios" />
 
