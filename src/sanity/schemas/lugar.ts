@@ -69,12 +69,29 @@ export const lugar = defineType({
           type: 'image',
           options: { hotspot: true },
           fields: [
-            {
+            defineField({
               name: 'alt',
               title: 'Texto alternativo',
               type: 'string',
-            },
+            }),
+            defineField({
+              name: 'isDecorative',
+              title: 'Imagen decorativa',
+              type: 'boolean',
+              initialValue: false,
+            }),
           ],
+          validation: (rule) =>
+            rule.custom((value) => {
+              const imageValue = value as { asset?: unknown; isDecorative?: boolean; alt?: string } | undefined
+
+              if (!imageValue?.asset) return true
+              if (imageValue.isDecorative) return true
+
+              return typeof imageValue.alt === 'string' && imageValue.alt.trim().length > 0
+                ? true
+                : 'Add alt text for informative images or mark the image as decorative.'
+            }),
         },
       ],
     }),
@@ -135,12 +152,28 @@ export const lugar = defineType({
           name: 'metaTitle',
           title: 'Meta título',
           type: 'string',
+          validation: (rule) => rule.max(60).warning('Keep SEO titles at or below 60 characters.'),
         }),
         defineField({
           name: 'metaDescription',
           title: 'Meta descripción',
           type: 'text',
           rows: 3,
+          validation: (rule) => rule.max(160).warning('Keep meta descriptions at or below 160 characters.'),
+        }),
+        defineField({
+          name: 'ogImage',
+          title: 'Open Graph image',
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Image alt text',
+              type: 'string',
+              validation: (rule) => rule.required().error('Open Graph images need alt text.'),
+            }),
+          ],
         }),
       ],
     }),
