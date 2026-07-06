@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { buildBreadcrumbJsonLd } from '@/lib/structured-data'
 import { cn } from '@/lib/utils'
 import { Container } from '@/components/ui/Container'
 
@@ -31,6 +33,7 @@ export interface PageHeroProps {
 export interface PageHeroBreadcrumbProps {
   /** Items for the breadcrumb. Last item has no href (current page). */
   items: { label: string; href?: string }[]
+  currentPath?: string
 }
 
 export interface PageHeroHeaderProps {
@@ -99,34 +102,39 @@ export function PageHero({
 
 // ─── PageHeroBreadcrumb ───────────────────────────────────────────────────────
 
-export function PageHeroBreadcrumb({ items }: PageHeroBreadcrumbProps) {
-  return (
-    <nav
-      aria-label="Breadcrumb"
-      className="flex items-center gap-2 text-sm text-white/60 mb-6"
-    >
-      {items.map((item, index) => {
-        const isLast = index === items.length - 1
+export function PageHeroBreadcrumb({ items, currentPath }: PageHeroBreadcrumbProps) {
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(items, currentPath)
 
-        return (
-          <span key={index} className="flex items-center gap-2">
-            {index > 0 && <span aria-hidden="true">/</span>}
-            {!isLast && item.href ? (
-              <Link
-                href={item.href}
-                className="hover:text-white transition-colors"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span className={isLast ? 'text-white/90' : undefined}>
-                {item.label}
-              </span>
-            )}
-          </span>
-        )
-      })}
-    </nav>
+  return (
+    <>
+      <JsonLd data={breadcrumbJsonLd} />
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-2 text-sm text-white/60 mb-6"
+      >
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1
+
+          return (
+            <span key={index} className="flex items-center gap-2">
+              {index > 0 && <span aria-hidden="true">/</span>}
+              {!isLast && item.href ? (
+                <Link
+                  href={item.href}
+                  className="hover:text-white transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span className={isLast ? 'text-white/90' : undefined}>
+                  {item.label}
+                </span>
+              )}
+            </span>
+          )
+        })}
+      </nav>
+    </>
   )
 }
 

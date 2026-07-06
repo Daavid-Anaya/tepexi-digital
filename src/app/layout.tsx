@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { SITE_URL } from '@/lib/constants'
 import { getSettings } from '@/lib/data'
+import { buildOrganizationJsonLd, buildWebsiteJsonLd } from '@/lib/structured-data'
 import { SanityLive } from '@/sanity/lib/live'
 import './globals.css'
 
@@ -22,9 +25,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const seo = settings.seoDefaults
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: {
       template: `%s | ${settings.siteName}`,
-      default: seo?.metaTitle ?? `${settings.siteName} — Turismo, Cultura y Gastronomía`,
+      default:
+        seo?.metaTitle ?? `${settings.siteName} — Turismo, atractivos, gastronomía y mapa de Tepexi de Rodríguez, Puebla`,
     },
     description:
       seo?.metaDescription ?? settings.siteDescription,
@@ -35,14 +40,14 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: 'es_MX',
       type: 'website',
       ...(seo?.ogImageUrl && {
-        images: [{ url: seo.ogImageUrl, width: 1200, height: 630 }],
+        images: [{ url: seo.ogImageUrl, width: 1200, height: 630, alt: seo.ogImageAlt ?? settings.siteName }],
       }),
     },
     twitter: {
-      card: 'summary_large_image',
+      card: seo?.ogImageUrl ? 'summary_large_image' : 'summary',
       title: seo?.metaTitle ?? settings.siteName,
       description: seo?.metaDescription ?? settings.siteDescription,
-      ...(seo?.ogImageUrl && { images: [seo.ogImageUrl] }),
+      ...(seo?.ogImageUrl && { images: [{ url: seo.ogImageUrl, alt: seo.ogImageAlt ?? settings.siteName }] }),
     },
   }
 }
@@ -53,6 +58,11 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const { isEnabled: isDraft } = await draftMode()
+  const settings = await getSettings()
+  const rootStructuredData = [
+    buildOrganizationJsonLd(settings),
+    buildWebsiteJsonLd(settings),
+  ]
 
   return (
     <html
@@ -68,6 +78,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://a.tile.openstreetmap.org" />
         <link rel="preconnect" href="https://b.tile.openstreetmap.org" />
         <link rel="preconnect" href="https://c.tile.openstreetmap.org" />
+        <JsonLd data={rootStructuredData} />
       </head>
       <body className="bg-sand antialiased">
         {children}
