@@ -99,6 +99,34 @@ describe('metadata helpers', () => {
     ])
   })
 
+  it('supports legacy top-level Open Graph image fields for existing detail pages', () => {
+    const metadata = buildSlugMetadata(
+      'feria-de-tepexi',
+      'agenda',
+      {
+        title: 'Feria de Tepexi',
+        ogImageUrl: 'https://cdn.example.com/top-level-og.jpg',
+        ogImageAlt: 'Top-level OG alt',
+        seo: null,
+        primaryImageUrl: 'https://cdn.example.com/entity-image.jpg',
+        primaryImageAlt: 'Entity image alt',
+      },
+      'Evento',
+    )
+
+    expect(metadata.openGraph?.images).toEqual([
+      {
+        url: 'https://cdn.example.com/top-level-og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Top-level OG alt',
+      },
+    ])
+    expect((metadata.twitter as { images?: Array<{ url: string; alt: string }> } | undefined)?.images).toEqual([
+      { url: 'https://cdn.example.com/top-level-og.jpg', alt: 'Top-level OG alt' },
+    ])
+  })
+
   it('creates contextual fallback descriptions and twitter metadata', () => {
     const metadata = buildSlugMetadata(
       'huellas-de-dinosaurio',
