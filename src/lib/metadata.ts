@@ -2,6 +2,10 @@ import type { Metadata } from 'next'
 import { SITE_URL } from '@/lib/constants'
 
 interface SlugEntityForMeta {
+  ogImageAlt?: string | null
+  ogImageUrl?: string | null
+  primaryImageAlt?: string | null
+  primaryImageUrl?: string | null
   title?: string | null
   seo?: {
     metaTitle?: string | null
@@ -9,8 +13,6 @@ interface SlugEntityForMeta {
     ogImageUrl?: string | null
     ogImageAlt?: string | null
   } | null
-  primaryImageUrl?: string | null
-  primaryImageAlt?: string | null
 }
 
 interface StaticMetadataOptions {
@@ -45,13 +47,14 @@ function resolveImage(
   entity: SlugEntityForMeta,
   options?: SlugMetadataOptions,
 ): { alt: string; url: string } | null {
-  const url = entity.seo?.ogImageUrl ?? entity.primaryImageUrl ?? options?.globalOgImage?.url ?? null
+  const url = entity.seo?.ogImageUrl ?? entity.ogImageUrl ?? entity.primaryImageUrl ?? options?.globalOgImage?.url ?? null
   if (!url) return null
 
   return {
     url,
     alt:
       entity.seo?.ogImageAlt ??
+      entity.ogImageAlt ??
       entity.primaryImageAlt ??
       options?.globalOgImage?.alt ??
       entity.title ??

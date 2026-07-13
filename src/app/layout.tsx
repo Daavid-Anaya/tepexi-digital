@@ -22,7 +22,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings()
-  const seo = settings.seoDefaults
+  const seo = settings.seoDefaults as typeof settings.seoDefaults & { ogImageAlt?: string | null }
 
   return {
     metadataBase: new URL(SITE_URL),
