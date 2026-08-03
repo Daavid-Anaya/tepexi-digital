@@ -41,6 +41,8 @@ export interface MockCoordinates {
 export interface MockSeo {
   metaTitle: string | null
   metaDescription: string | null
+  ogImageUrl?: string | null
+  ogImageAlt?: string | null
 }
 
 export interface MockCategory {
@@ -122,6 +124,7 @@ export interface SeoDefaults {
   metaTitle: string | null
   metaDescription: string | null
   ogImageUrl: string | null
+  ogImageAlt?: string | null
 }
 
 export interface MockSettings {
@@ -697,5 +700,6 @@ export const mockSettings: MockSettings = {
     metaDescription:
       'Descubre Tepexi de Rodríguez, Puebla: huellas de dinosaurios, manantiales, arquitectura colonial y la gastronomía auténtica de la Mixteca Poblana.',
     ogImageUrl: 'https://picsum.photos/seed/tepexi-og/1200/630',
+    ogImageAlt: 'Panoramic tourism view of Tepexi de Rodríguez, Puebla',
   },
 }

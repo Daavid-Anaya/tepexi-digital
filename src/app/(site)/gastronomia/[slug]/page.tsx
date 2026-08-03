@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
-import { getGastronomiaBySlug } from '@/lib/data'
+import { getGastronomiaBySlug, getSettings } from '@/lib/data'
 
 // F-21: ISR — detail pages rarely change; revalidate once per day.
 export const revalidate = 86400
@@ -39,11 +39,20 @@ export const generateStaticParams = () => fetchStaticSlugs('gastronomia')
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const item = await getGastronomiaBySlug(slug)
+  const [item, settings] = await Promise.all([getGastronomiaBySlug(slug), getSettings()])
+
   return buildSlugMetadata(slug, 'gastronomia', item ? {
     ...item,
-    ogImageUrl: item.images?.[0]?.url ?? null,
-  } : null, 'Gastronomía')
+    primaryImageUrl: item.images?.[0]?.url ?? null,
+    primaryImageAlt: item.images?.[0]?.alt ?? item.title,
+  } : null, 'Gastronomía', {
+    globalOgImage: settings.seoDefaults
+      ? {
+          url: settings.seoDefaults.ogImageUrl,
+          alt: settings.seoDefaults.ogImageAlt ?? settings.siteName,
+        }
+      : null,
+  })
 }
 
 // ---------------------------------------------------------------------------
@@ -62,6 +71,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.gastronomia
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
+  const canonicalPath = `/gastronomia/${slug}`
   const dishTypeLabels = item.dishType?.length
     ? item.dishType.map((t) => DISH_TYPE_LABELS[t] ?? t)
     : null
@@ -89,6 +99,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
             { label: 'Gastronomía', href: '/gastronomia' },
             { label: item.title },
           ]}
+          currentPath={canonicalPath}
         />
         <PageHeroBackLink href="/gastronomia" label="Volver a Gastronomía" />
 

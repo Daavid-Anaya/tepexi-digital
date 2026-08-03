@@ -105,7 +105,7 @@ export interface LugarDetail {
   schedule: string | null
   cost: string | null
   recommendations: PortableTextBlock[] | null
-  seo: { metaTitle: string | null; metaDescription: string | null } | null
+  seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
 
 // --- Servicio detail (same shape as Lugar) ---
@@ -146,7 +146,7 @@ export interface GastronomiaDetail {
   servings: string | null
   keyIngredients: Array<{ name: string | null; description: string | null; icon: string | null; imageUrl: string | null }> | null
   preparationSteps: Array<{ title: string; description: string; duration: string | null }> | null
-  seo: { metaTitle: string | null; metaDescription: string | null } | null
+  seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
 
 // --- Evento list item ---
@@ -182,7 +182,7 @@ export interface EventoDetail {
   } | null
   locationText: string | null
   isFeatured: boolean
-  seo: { metaTitle: string | null; metaDescription: string | null } | null
+  seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
 
 // ---------------------------------------------------------------------------
@@ -306,12 +306,14 @@ function readPortableText(value: unknown): PortableTextBlock[] | null {
   return isPortableTextBlockArray(value) ? value : null
 }
 
-function readSeo(value: unknown): { metaTitle: string | null; metaDescription: string | null } | null {
+function readSeo(value: unknown): { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null {
   if (!isRecord(value)) return null
 
   return {
     metaTitle: readString(value.metaTitle),
     metaDescription: readString(value.metaDescription),
+    ogImageUrl: readString(value.ogImageUrl),
+    ogImageAlt: readString(value.ogImageAlt),
   }
 }
 
@@ -605,6 +607,7 @@ export function normalizeSiteSettings(value: unknown): SiteSettings | null {
         metaTitle: readString(value.seoDefaults.metaTitle),
         metaDescription: readString(value.seoDefaults.metaDescription),
         ogImageUrl: readString(value.seoDefaults.ogImageUrl),
+        ogImageAlt: readString(value.seoDefaults.ogImageAlt),
       }
     : null
 

@@ -33,7 +33,12 @@ export const lugarBySlugQuery = defineQuery(`*[_type == "lugar" && slug.current 
   schedule,
   cost,
   recommendations,
-  seo
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "ogImageUrl": seo.ogImage.asset->url,
+    "ogImageAlt": seo.ogImage.alt
+  }
 }`)
 
 export const allLugaresMapQuery = defineQuery(`*[_type == "lugar" && defined(coordinates)] {

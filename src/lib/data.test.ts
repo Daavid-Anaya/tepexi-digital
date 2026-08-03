@@ -164,6 +164,7 @@ describe('data normalization helpers', () => {
       seoDefaults: {
         metaTitle: 'Meta nueva',
         metaDescription: null,
+        ogImageAlt: null,
         ogImageUrl: null,
       },
     })

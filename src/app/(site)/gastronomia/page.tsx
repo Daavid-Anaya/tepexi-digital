@@ -9,13 +9,15 @@ import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import type { PlaceCardProps } from '@/types'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 import { SANITY_CDN_BASE, HERO_FALLBACKS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Gastronomía',
-  description: 'Conoce la gastronomía típica de Tepexi de Rodríguez, Puebla.',
-}
+  description: 'Descubre la gastronomía típica de Tepexi de Rodríguez, Puebla: mole de caderas, mezcal, cocina regional y sabores de la Mixteca Poblana.',
+  path: '/gastronomia',
+})
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -111,7 +113,7 @@ export default async function GastronomiaPage() {
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
       <PageHero imageUrl={HERO_FALLBACKS.gastronomia}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} currentPath="/gastronomia" />
         <PageHeroHeader
           icon={Utensils}
           title="Gastronomía"

@@ -1,5 +1,5 @@
 import { defineType, defineField } from 'sanity'
-import {CogIcon} from '@sanity/icons'
+import { CogIcon } from '@sanity/icons'
 
 export const settings = defineType({
   name: 'settings',
@@ -22,6 +22,13 @@ export const settings = defineType({
       title: 'Imagen hero',
       type: 'image',
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Texto alternativo',
+          type: 'string',
+        }),
+      ],
     }),
     defineField({
       name: 'heroTitle',
@@ -84,18 +91,28 @@ export const settings = defineType({
           name: 'metaTitle',
           title: 'Meta título',
           type: 'string',
+          validation: (rule) => rule.max(60).warning('Keep SEO titles at or below 60 characters.'),
         }),
         defineField({
           name: 'metaDescription',
           title: 'Meta descripción',
           type: 'text',
           rows: 3,
+          validation: (rule) => rule.max(160).warning('Keep meta descriptions at or below 160 characters.'),
         }),
         defineField({
           name: 'ogImage',
           title: 'Imagen Open Graph',
           type: 'image',
           options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Image alt text',
+              type: 'string',
+              validation: (rule) => rule.required().error('Open Graph images need alt text.'),
+            }),
+          ],
         }),
       ],
     }),

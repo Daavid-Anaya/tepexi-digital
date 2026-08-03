@@ -18,7 +18,12 @@ export const servicioBySlugQuery = defineQuery(`*[_type == "servicio" && slug.cu
   schedule,
   cost,
   recommendations,
-  seo
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "ogImageUrl": seo.ogImage.asset->url,
+    "ogImageAlt": seo.ogImage.alt
+  }
 }`)
 
 export const allServiciosMapQuery = defineQuery(`*[_type == "servicio" && defined(coordinates)] {

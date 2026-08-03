@@ -1,5 +1,5 @@
 import { defineType, defineField } from 'sanity'
-import {CalendarIcon} from '@sanity/icons'
+import { CalendarIcon } from '@sanity/icons'
 
 export const evento = defineType({
   name: 'evento',
@@ -59,11 +59,12 @@ export const evento = defineType({
       type: 'image',
       options: { hotspot: true },
       fields: [
-        {
+        defineField({
           name: 'alt',
           title: 'Texto alternativo',
           type: 'string',
-        },
+          validation: (rule) => rule.required().error('Event images need alt text.'),
+        }),
       ],
     }),
     defineField({
@@ -104,12 +105,28 @@ export const evento = defineType({
           name: 'metaTitle',
           title: 'Meta título',
           type: 'string',
+          validation: (rule) => rule.max(60).warning('Keep SEO titles at or below 60 characters.'),
         }),
         defineField({
           name: 'metaDescription',
           title: 'Meta descripción',
           type: 'text',
           rows: 3,
+          validation: (rule) => rule.max(160).warning('Keep meta descriptions at or below 160 characters.'),
+        }),
+        defineField({
+          name: 'ogImage',
+          title: 'Open Graph image',
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Image alt text',
+              type: 'string',
+              validation: (rule) => rule.required().error('Open Graph images need alt text.'),
+            }),
+          ],
         }),
       ],
     }),

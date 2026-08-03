@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
-import { getLugarBySlug } from '@/lib/data'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { getLugarBySlug, getSettings } from '@/lib/data'
 
 // F-21: ISR — detail pages rarely change; revalidate once per day.
 export const revalidate = 86400
@@ -11,11 +12,12 @@ import { FichaTecnicaCard } from '@/components/ui/FichaTecnicaCard'
 import type { FichaItem } from '@/components/ui/FichaTecnicaCard'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
-import { PageHero, PageHeroBackLink } from '@/components/ui/PageHero'
+import { PageHero, PageHeroBackLink, PageHeroBreadcrumb } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 import { fetchStaticSlugs } from '@/lib/sanity-params'
 import { buildSlugMetadata } from '@/lib/metadata'
 import { makeDescriptionComponents } from '@/lib/portable-text-components'
+import { buildTouristAttractionJsonLd } from '@/lib/structured-data'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -25,11 +27,20 @@ export const generateStaticParams = () => fetchStaticSlugs('lugar')
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const lugar = await getLugarBySlug(slug)
+  const [lugar, settings] = await Promise.all([getLugarBySlug(slug), getSettings()])
+
   return buildSlugMetadata(slug, 'lugares', lugar ? {
     ...lugar,
-    ogImageUrl: lugar.images?.[0]?.url ?? null,
-  } : null, 'Lugar turístico')
+    primaryImageUrl: lugar.images?.[0]?.url ?? null,
+    primaryImageAlt: lugar.images?.[0]?.alt ?? lugar.title,
+  } : null, 'Lugar turístico', {
+    globalOgImage: settings.seoDefaults
+      ? {
+          url: settings.seoDefaults.ogImageUrl,
+          alt: settings.seoDefaults.ogImageAlt ?? settings.siteName,
+        }
+      : null,
+  })
 }
 
 const descriptionComponents = makeDescriptionComponents('primary')
@@ -47,9 +58,14 @@ export default async function LugarDetailPage({ params }: Props) {
 
   const HERO_FALLBACK = HERO_FALLBACKS.lugares
   const heroImageUrl = images[0]?.url ?? HERO_FALLBACK
+  const canonicalPath = `/lugares/${slug}`
   const mapsUrl = lugar.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lugar.address)}`
     : null
+  const touristAttractionJsonLd = buildTouristAttractionJsonLd(lugar, {
+    canonicalPath,
+    primaryImage: images[0] ?? null,
+  })
 
   const fichaItems: FichaItem[] = [
     {
@@ -118,8 +134,17 @@ export default async function LugarDetailPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={touristAttractionJsonLd} />
       {/* Hero banner */}
       <PageHero imageUrl={heroImageUrl} size="compact">
+        <PageHeroBreadcrumb
+          items={[
+            { label: 'Inicio', href: '/' },
+            { label: 'Lugares Turísticos', href: '/lugares' },
+            { label: lugar.title },
+          ]}
+          currentPath={canonicalPath}
+        />
         <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
 
         {/* Category badge */}

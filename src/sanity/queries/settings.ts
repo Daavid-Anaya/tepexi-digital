@@ -13,6 +13,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0] {
   "seoDefaults": {
     "metaTitle": seoDefaults.metaTitle,
     "metaDescription": seoDefaults.metaDescription,
-    "ogImageUrl": seoDefaults.ogImage.asset->url
+    "ogImageUrl": seoDefaults.ogImage.asset->url,
+    "ogImageAlt": seoDefaults.ogImage.alt
   }
 }`)

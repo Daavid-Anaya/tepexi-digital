@@ -6,14 +6,16 @@ import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from
 export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { SANITY_CDN_BASE, HERO_FALLBACKS, CATEGORY_COLORS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Cultura',
-  description: 'Conoce la riqueza cultural de Tepexi de Rodríguez, Puebla.',
-}
+  description: 'Conoce la historia, tradiciones e identidad cultural de Tepexi de Rodríguez, Puebla, antes de tu visita turística por la Mixteca Poblana.',
+  path: '/cultura',
+})
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 // NOTE: This page is intentionally static (no Sanity schema for "cultura" yet).
@@ -94,7 +96,7 @@ export default async function CulturaPage() {
     <>
       {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
       <PageHero imageUrl={HERO_FALLBACKS.cultura}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} currentPath="/cultura" />
         <PageHeroHeader
           icon={Palette}
           title="Cultura"

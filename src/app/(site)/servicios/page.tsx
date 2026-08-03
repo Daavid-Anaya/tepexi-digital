@@ -6,14 +6,16 @@ import { getAllMapMarkers } from '@/lib/data'
 export const revalidate = 3600
 
 import { Container } from '@/components/ui/Container'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 import { getMapMarkerRoute } from '@/lib/map-marker-route'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Servicios',
-  description: 'Hospedaje, bancos y servicios útiles para tu visita a Tepexi de Rodríguez.',
-}
+  description: 'Encuentra hospedaje, bancos y servicios útiles para turistas en Tepexi de Rodríguez, Puebla, con accesos rápidos al mapa y ubicaciones.',
+  path: '/servicios',
+})
 
 export default async function ServiciosPage() {
   const markers = await getAllMapMarkers()
@@ -24,7 +26,7 @@ export default async function ServiciosPage() {
   return (
     <>
       <PageHero imageUrl={HERO_FALLBACKS.servicios}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Servicios' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Servicios' }]} currentPath="/servicios" />
         <PageHeroHeader
           icon={ConciergeBell}
           title="Servicios"

@@ -8,13 +8,15 @@ import { Container } from '@/components/ui/Container'
 import { CategoryNav, type CategoryNavItem } from '@/components/places/CategoryNav'
 import { CategorySection } from '@/components/places/CategorySection'
 import type { PlaceCardProps } from '@/types'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Lugares Turísticos',
-  description: 'Descubre los lugares turísticos de Tepexi de Rodríguez, Puebla.',
-}
+  description: 'Explora lugares turísticos y atractivos en Tepexi de Rodríguez, Puebla: fósiles, manantiales, miradores, historia local y recomendaciones para tu visita.',
+  path: '/lugares',
+})
 
 /**
  * Fixed display order for categories.
@@ -110,7 +112,7 @@ export default async function LugaresPage() {
     <>
       {/* Page hero */}
       <PageHero imageUrl={HERO_FALLBACKS.lugares} className="mb-10 md:mb-16">
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Lugares Turísticos' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Lugares Turísticos' }]} currentPath="/lugares" />
         <PageHeroHeader
           icon={MapPin}
           title="Lugares Turísticos"

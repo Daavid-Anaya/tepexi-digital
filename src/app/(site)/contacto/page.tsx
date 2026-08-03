@@ -4,13 +4,15 @@ import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import ContactForm from '@/components/contact/ContactForm'
 import { getSettings } from '@/lib/data'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Contacto',
-  description: 'Ponte en contacto con el equipo de Tepexi Digital.',
-}
+  description: 'Contacta al equipo de turismo de Tepexi Digital para dudas sobre atractivos, gastronomía, eventos y orientación para visitar Tepexi de Rodríguez, Puebla.',
+  path: '/contacto',
+})
 
 export default async function ContactoPage() {
   const settings = await getSettings()
@@ -47,7 +49,7 @@ export default async function ContactoPage() {
     <>
       {/* Page hero */}
       <PageHero imageUrl={HERO_FALLBACKS.contacto}>
-        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} />
+        <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} currentPath="/contacto" />
         <PageHeroHeader
           icon={MessageCircle}
           title="Contacto"

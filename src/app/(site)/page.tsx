@@ -7,13 +7,15 @@ import { Button } from '@/components/ui/Button'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import { EventCard } from '@/components/events/EventCard'
 import { getFeaturedLugaresForHome, getLatestGastronomiaForHome, getUpcomingEventosPreview, getSettings } from '@/lib/data'
+import { buildStaticPageMetadata } from '@/lib/metadata'
 import type { PlaceCardProps, EventCardProps } from '@/types'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Tepexi de Rodríguez — Turismo, Cultura y Gastronomía',
   description:
-    'Descubre la riqueza turística, cultural y gastronómica de Tepexi de Rodríguez, Puebla. Huellas de dinosaurios, arquitectura colonial, manantiales naturales y la gastronomía de la Mixteca Poblana.',
-}
+    'Descubre qué hacer en Tepexi de Rodríguez, Puebla: atractivos turísticos, gastronomía local, eventos, rutas, direcciones y mapa turístico de la Mixteca Poblana.',
+  path: '/',
+})
 
 export default async function HomePage() {
   // F-19/F-20: use dedicated home queries that fetch only what the page needs.

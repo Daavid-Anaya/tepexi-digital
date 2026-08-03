@@ -3,7 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import { notFound } from 'next/navigation'
-import { getEventoBySlug } from '@/lib/data'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { getEventoBySlug, getSettings } from '@/lib/data'
 
 // F-21: ISR — event detail pages revalidate every hour (events can be updated).
 export const revalidate = 3600
@@ -16,6 +17,7 @@ import { HERO_FALLBACKS } from '@/lib/constants'
 import { fetchStaticSlugs } from '@/lib/sanity-params'
 import { buildSlugMetadata } from '@/lib/metadata'
 import { makeDescriptionComponents } from '@/lib/portable-text-components'
+import { buildEventJsonLd } from '@/lib/structured-data'
 
 function formatDateFull(dateString: string) {
   return new Date(dateString).toLocaleDateString('es-MX', {
@@ -43,11 +45,20 @@ export const generateStaticParams = () => fetchStaticSlugs('evento')
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const evento = await getEventoBySlug(slug)
+  const [evento, settings] = await Promise.all([getEventoBySlug(slug), getSettings()])
+
   return buildSlugMetadata(slug, 'agenda', evento ? {
     ...evento,
-    ogImageUrl: evento.imageUrl ?? null,
-  } : null, 'Evento')
+    primaryImageUrl: evento.imageUrl ?? null,
+    primaryImageAlt: evento.imageAlt ?? evento.title,
+  } : null, 'Evento', {
+    globalOgImage: settings.seoDefaults
+      ? {
+          url: settings.seoDefaults.ogImageUrl,
+          alt: settings.seoDefaults.ogImageAlt ?? settings.siteName,
+        }
+      : null,
+  })
 }
 
 const descriptionComponents = makeDescriptionComponents('secondary')
@@ -59,8 +70,10 @@ export default async function EventoDetailPage({ params }: Props) {
   if (!evento) notFound()
 
   const formatted = formatDateShort(evento.date)
+  const canonicalPath = `/agenda/${slug}`
   const locationLabel = evento.location?.title ?? evento.locationText
   const locationCoords = evento.location?.coordinates ?? null
+  const eventJsonLd = buildEventJsonLd(evento, { canonicalPath })
 
   const markers = locationCoords
     ? [
@@ -79,6 +92,7 @@ export default async function EventoDetailPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={eventJsonLd} />
       {/* Hero banner — green/calendar accent */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda} size="compact">
         <PageHeroBreadcrumb
@@ -87,6 +101,7 @@ export default async function EventoDetailPage({ params }: Props) {
             { label: 'Agenda', href: '/agenda' },
             { label: evento.title },
           ]}
+          currentPath={canonicalPath}
         />
         <PageHeroBackLink href="/agenda" label="Volver a Agenda" />
 
