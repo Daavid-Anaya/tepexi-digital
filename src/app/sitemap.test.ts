@@ -34,7 +34,6 @@ describe('sitemap', () => {
         agenda: [],
         lugares: [],
         gastronomia: [],
-        servicios: [],
       },
       sourceMap: null,
       tags: [],
@@ -82,7 +81,6 @@ describe('sitemap', () => {
         ],
         lugares: [{ slug: 'huellas-de-dinosaurio', _updatedAt: '2026-04-10T12:00:00.000Z' }],
         gastronomia: [{ slug: 'mole-poblano', _updatedAt: '2026-04-11T12:00:00.000Z' }],
-        servicios: [{ slug: 'hoteles', _updatedAt: '2026-04-12T12:00:00.000Z' }],
       },
       sourceMap: null,
       tags: [],
@@ -111,12 +109,6 @@ describe('sitemap', () => {
           lastModified: new Date('2026-04-11T12:00:00.000Z'),
           changeFrequency: 'weekly',
           priority: 0.8,
-        }),
-        expect.objectContaining({
-          url: `${SITE_URL}/servicios/hoteles`,
-          lastModified: new Date('2026-04-12T12:00:00.000Z'),
-          changeFrequency: 'monthly',
-          priority: 0.75,
         }),
       ]),
     )
@@ -148,7 +140,6 @@ describe('sitemap', () => {
         agenda: [{ slug: 'festival-del-maguey', _updatedAt: 'not-a-date' }],
         lugares: [],
         gastronomia: [],
-        servicios: [],
       },
       sourceMap: null,
       tags: [],
@@ -196,7 +187,7 @@ describe('sitemap', () => {
         expect.objectContaining({ url: `${SITE_URL}/agenda` }),
       ]),
     )
-    expect(entries).toHaveLength(9)
+    expect(entries).toHaveLength(8)
     expect(mockedLogError).toHaveBeenCalledWith(
       '[sitemap] failed to resolve dynamic sitemap entries, serving static fallback only',
       expect.objectContaining({
@@ -205,7 +196,7 @@ describe('sitemap', () => {
         error: fetchError,
         metadata: expect.objectContaining({
           fallbackMode: 'static-only',
-          staticRouteCount: 9,
+          staticRouteCount: 8,
         }),
       }),
     )
@@ -226,7 +217,7 @@ describe('sitemap', () => {
         expect.objectContaining({ url: `${SITE_URL}/agenda` }),
       ]),
     )
-    expect(entries).toHaveLength(9)
+    expect(entries).toHaveLength(8)
     expect(mockedLogWarn).toHaveBeenCalledWith(
       '[sitemap] received null or unusable CMS sitemap data, serving static fallback only',
       expect.objectContaining({
@@ -234,7 +225,7 @@ describe('sitemap', () => {
         source: 'sitemap',
         metadata: expect.objectContaining({
           fallbackMode: 'static-only',
-          staticRouteCount: 9,
+          staticRouteCount: 8,
           reason: 'missing-data',
           receivedType: 'null',
         }),
@@ -264,7 +255,7 @@ describe('sitemap', () => {
           expect.objectContaining({ url: `${SITE_URL}/agenda` }),
         ]),
       )
-      expect(entries).toHaveLength(9)
+      expect(entries).toHaveLength(8)
       expect(mockedLogWarn).toHaveBeenCalledWith(
         '[sitemap] received null or unusable CMS sitemap data, serving static fallback only',
         expect.objectContaining({
@@ -272,7 +263,7 @@ describe('sitemap', () => {
           source: 'sitemap',
           metadata: expect.objectContaining({
             fallbackMode: 'static-only',
-            staticRouteCount: 9,
+            staticRouteCount: 8,
             reason: 'invalid-payload',
             receivedType,
           }),
@@ -289,7 +280,6 @@ describe('sitemap', () => {
         agenda: 'not-an-array',
         lugares: [],
         gastronomia: [],
-        servicios: [],
       },
       sourceMap: null,
       tags: [],
@@ -303,7 +293,7 @@ describe('sitemap', () => {
         expect.objectContaining({ url: `${SITE_URL}/agenda` }),
       ]),
     )
-    expect(entries).toHaveLength(9)
+    expect(entries).toHaveLength(8)
     expect(mockedLogWarn).toHaveBeenCalledWith(
       '[sitemap] received null or unusable CMS sitemap data, serving static fallback only',
       expect.objectContaining({
@@ -311,7 +301,7 @@ describe('sitemap', () => {
         source: 'sitemap',
         metadata: expect.objectContaining({
           fallbackMode: 'static-only',
-          staticRouteCount: 9,
+          staticRouteCount: 8,
           reason: 'invalid-collection',
           invalidContentType: 'agenda',
           receivedType: 'string',

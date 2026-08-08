@@ -187,8 +187,8 @@ export default async function MapaPage() {
                 <div className="flex items-start gap-2">
                   <Info className="w-4 h-4 text-primary/70 flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <p className="text-xs text-stone leading-relaxed">
-                    Haz clic en cualquier marcador del mapa para ver el nombre y acceder a
-                    la información completa del lugar.
+                    Haz clic en cualquier marcador del mapa para ver información útil y abrir
+                    su ubicación en Google Maps.
                   </p>
                 </div>
               </div>
@@ -223,16 +223,9 @@ export default async function MapaPage() {
                   Directorio de lugares y servicios
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone">
-                  Esta lista funciona como alternativa accesible al mapa interactivo y te permite ir directo al detalle o abrir la ubicación en Google Maps.
+                  Esta lista funciona como alternativa accesible al mapa interactivo. Los servicios priorizan la ubicación; los lugares con página propia mantienen su enlace de detalle.
                 </p>
               </div>
-              <Link
-                href="/servicios"
-                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                <ConciergeBell className="h-4 w-4" aria-hidden="true" />
-                Ver todos los servicios
-              </Link>
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-5 xl:grid-cols-2">
@@ -253,21 +246,35 @@ export default async function MapaPage() {
                         </div>
 
                         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                          <Link
-                            href={getMapMarkerRoute(marker).detailHref}
-                            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                          >
-                            Ver detalle
-                          </Link>
-                          <a
-                            href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                          >
-                            Abrir en Google Maps
-                            <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                          </a>
+                          {marker.sourceType === 'servicio' ? (
+                            <a
+                              href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                            >
+                              Cómo llegar
+                              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                            </a>
+                          ) : (
+                            <>
+                              <Link
+                                href={getMapMarkerRoute(marker).detailHref}
+                                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                              >
+                                Ver detalle
+                              </Link>
+                              <a
+                                href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                              >
+                                Abrir en Google Maps
+                                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                              </a>
+                            </>
+                          )}
                         </div>
                       </li>
                     ))}

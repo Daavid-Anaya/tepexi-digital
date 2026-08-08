@@ -46,6 +46,9 @@ export interface MapMarker {
   category: string
   categoryColor: string
   type: MapMarkerType
+  address?: string | null
+  schedule?: string | null
+  cost?: string | null
 }
 
 export interface EventCardProps {
