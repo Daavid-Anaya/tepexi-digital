@@ -197,6 +197,9 @@ describe('data normalization helpers', () => {
         categoryColor: CATEGORY_COLORS.default,
         categoryType: 'lugar',
         coordinates: { lat: 0, lng: 0 },
+        address: null,
+        schedule: null,
+        cost: null,
       },
     ])
   })
@@ -304,6 +307,9 @@ describe('data normalization helpers', () => {
         category: lugar.category,
         categoryColor: lugar.categoryColor,
         type: lugar.categoryType,
+        address: lugar.address,
+        schedule: lugar.schedule,
+        cost: lugar.cost,
       })),
     )
     expect(console.warn).toHaveBeenCalledWith(
