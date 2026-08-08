@@ -10,7 +10,6 @@ export const revalidate = 3600
 const allSlugsQuery = defineQuery(`{
   "lugares": *[_type == "lugar"]{ "slug": slug.current, _updatedAt },
   "gastronomia": *[_type == "gastronomia"]{ "slug": slug.current, _updatedAt },
-  "servicios": *[_type == "servicio"]{ "slug": slug.current, _updatedAt },
   "agenda": *[_type == "evento"]{ "slug": slug.current, _updatedAt }
 }`)
 
@@ -23,14 +22,12 @@ interface SitemapQueryResult {
   agenda?: SitemapSlugEntry[]
   gastronomia?: SitemapSlugEntry[]
   lugares?: SitemapSlugEntry[]
-  servicios?: SitemapSlugEntry[]
 }
 
 const SITEMAP_CONTENT_TYPE = {
   AGENDA: 'agenda',
   GASTRONOMIA: 'gastronomia',
   LUGARES: 'lugares',
-  SERVICIOS: 'servicios',
 } as const
 
 type SitemapContentType = (typeof SITEMAP_CONTENT_TYPE)[keyof typeof SITEMAP_CONTENT_TYPE]
@@ -162,7 +159,6 @@ const STATIC_ROUTES: Array<{
   { path: '/agenda', changeFrequency: 'daily', priority: 0.95 },
   { path: '/gastronomia', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/mapa', changeFrequency: 'weekly', priority: 0.85 },
-  { path: '/servicios', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/como-llegar', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/cultura', changeFrequency: 'monthly', priority: 0.75 },
   { path: '/contacto', changeFrequency: 'monthly', priority: 0.7 },
@@ -257,7 +253,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const dynamicRoutes = [
       ...buildDynamicEntries(safeData.lugares ?? [], '/lugares', 'monthly', 0.85, 'lugares'),
       ...buildDynamicEntries(safeData.gastronomia ?? [], '/gastronomia', 'weekly', 0.8, 'gastronomia'),
-      ...buildDynamicEntries(safeData.servicios ?? [], '/servicios', 'monthly', 0.75, 'servicios'),
       ...buildDynamicEntries(safeData.agenda ?? [], '/agenda', 'daily', 0.85, 'agenda'),
     ]
 

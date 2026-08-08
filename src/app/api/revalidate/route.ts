@@ -10,7 +10,7 @@ const TYPE_TO_PATHS: Record<string, string[]> = {
   lugar: ['/lugares', '/mapa', '/'],
   gastronomia: ['/gastronomia', '/'],
   evento: ['/agenda', '/'],
-  servicio: ['/servicios', '/mapa'],
+  servicio: ['/mapa'],
   settings: ['/'],
   categoria: ['/lugares', '/gastronomia', '/mapa', '/'],
 }
@@ -103,7 +103,6 @@ export async function POST(req: NextRequest) {
         lugar: `/lugares/${slug.current}`,
         gastronomia: `/gastronomia/${slug.current}`,
         evento: `/agenda/${slug.current}`,
-        servicio: `/servicios/${slug.current}`,
       }
       
       const detailPath = detailPaths[_type]

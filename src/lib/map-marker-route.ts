@@ -4,12 +4,11 @@ const MARKER_SECTION_PATHS = {
   lugar: '/lugares',
   gastronomia: '/gastronomia',
   cultura: '/cultura',
-  servicios: '/servicios',
+  servicios: '/mapa',
 } as const
 
 const MARKER_DETAIL_PATHS: Partial<Record<MapMarkerSource, string>> = {
   lugar: '/lugares',
-  servicio: '/servicios',
   gastronomia: '/gastronomia',
 }
 

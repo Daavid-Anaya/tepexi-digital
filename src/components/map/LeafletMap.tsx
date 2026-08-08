@@ -106,6 +106,8 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
             MARKER_SHAPES[marker.type] ?? MARKER_SHAPES.lugar,
           )
           const { detailHref } = getMapMarkerRoute(marker)
+          const isServiceMarker = marker.sourceType === 'servicio'
+
           return (
             <Marker
               key={marker.id}
@@ -128,20 +130,44 @@ export default function LeafletMap({ markers, center, zoom }: LeafletMapProps) {
                   >
                     {marker.category}
                   </p>
+                  {isServiceMarker && (marker.address || marker.schedule || marker.cost) && (
+                    <dl className="mb-3 space-y-1" style={{ fontSize: '0.75rem', color: '#57534e' }}>
+                      {marker.address && (
+                        <div>
+                          <dt className="font-semibold">Dirección</dt>
+                          <dd>{marker.address}</dd>
+                        </div>
+                      )}
+                      {marker.schedule && (
+                        <div>
+                          <dt className="font-semibold">Horario</dt>
+                          <dd>{marker.schedule}</dd>
+                        </div>
+                      )}
+                      {marker.cost && (
+                        <div>
+                          <dt className="font-semibold">Costo</dt>
+                          <dd>{marker.cost}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <Link
-                      href={detailHref}
-                      style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
-                    >
-                      Ver detalle →
-                    </Link>
+                    {!isServiceMarker && (
+                      <Link
+                        href={detailHref}
+                        style={{ fontSize: '0.75rem', color: '#8B4513', textDecoration: 'underline' }}
+                      >
+                        Ver detalle →
+                      </Link>
+                    )}
                     <a
                       href={`https://www.google.com/maps?q=${marker.coordinates.lat},${marker.coordinates.lng}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ fontSize: '0.75rem', color: '#2563eb', textDecoration: 'underline' }}
                     >
-                      Abrir en Google Maps ↗
+                      {isServiceMarker ? 'Cómo llegar en Google Maps ↗' : 'Abrir en Google Maps ↗'}
                     </a>
                   </div>
                 </div>

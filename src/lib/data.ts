@@ -24,7 +24,7 @@ import {
 } from './mock-data'
 import { sanityFetch } from '@/sanity/lib/live'
 import { allLugaresQuery, lugarBySlugQuery, allLugaresMapQuery, featuredLugaresHomeQuery } from '@/sanity/queries/lugares'
-import { servicioBySlugQuery, allServiciosMapQuery } from '@/sanity/queries/servicios'
+import { allServiciosMapQuery } from '@/sanity/queries/servicios'
 import { allGastronomiaQuery, gastronomiaBySlugQuery, latestGastronomiaHomeQuery } from '@/sanity/queries/gastronomia'
 import { upcomingEventosQuery, upcomingEventosPreviewQuery, eventoBySlugQuery } from '@/sanity/queries/eventos'
 import { settingsQuery } from '@/sanity/queries/settings'
@@ -107,9 +107,6 @@ export interface LugarDetail {
   recommendations: PortableTextBlock[] | null
   seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
-
-// --- Servicio detail (same shape as Lugar) ---
-export type ServicioDetail = LugarDetail
 
 // --- Gastronomia list item ---
 export interface GastronomiaListItem {
@@ -254,6 +251,9 @@ function getMockMapMarkers(): MapMarker[] {
     category: l.category,
     categoryColor: l.categoryColor,
     type: l.categoryType,
+    address: l.address,
+    schedule: l.schedule,
+    cost: l.cost,
   }))
 }
 
@@ -643,6 +643,9 @@ type SanityMapRow = {
   categoryColor: string
   categoryType: MapMarkerType
   coordinates: { lat: number; lng: number }
+  address: string | null
+  schedule: string | null
+  cost: string | null
 }
 
 export function normalizeSanityMapRows(value: unknown): SanityMapRow[] {
@@ -669,6 +672,9 @@ export function normalizeSanityMapRows(value: unknown): SanityMapRow[] {
       categoryColor: readString(item.categoryColor) ?? CATEGORY_COLORS.default,
       categoryType: normalizeMapMarkerType(item.categoryType),
       coordinates,
+      address: readString(item.address),
+      schedule: readString(item.schedule),
+      cost: readString(item.cost),
     }]
   })
 }
@@ -806,17 +812,6 @@ export async function getLugarBySlug(slug: string): Promise<LugarDetail | null> 
   })
 }
 
-export async function getServicioBySlug(slug: string): Promise<ServicioDetail | null> {
-  return fetchSanityDetail({
-    source: 'getServicioBySlug',
-    query: servicioBySlugQuery,
-    params: { slug },
-    normalize: normalizeLugarDetail,
-    logNoSanityConfig: false,
-    fallback: () => null,
-  })
-}
-
 export async function getAllGastronomia(): Promise<GastronomiaListItem[]> {
   return fetchSanityList({
     source: 'getAllGastronomia',
@@ -920,6 +915,9 @@ function sanityRowsToMarkers(rows: SanityMapRow[], sourceType: MapMarker['source
       category: r.category,
       categoryColor: r.categoryColor,
       type: r.categoryType,
+      address: r.address,
+      schedule: r.schedule,
+      cost: r.cost,
     }))
 }
 
