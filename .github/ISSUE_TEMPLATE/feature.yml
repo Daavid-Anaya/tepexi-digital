@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose a feature or improvement with a clear scope.
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the problem, who it affects, and the desired behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Describe what should change and what is outside this request.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: Separate existing evidence or completed checks from planned checks and their expected results. If no checks have been performed, say so.
+      placeholder: |
+        Existing evidence or completed checks:
+
+        Planned checks and expected results:
+    validations:
+      required: false
