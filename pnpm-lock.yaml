@@ -29,6 +29,7 @@ overrides:
   postcss@<=8.5.17: '>=8.5.18'
   postcss@<=8.5.22: '>=8.5.23'
   sharp@<0.35.4: 0.35.4
+  smol-toml@<=1.7.0: 1.7.1
   tar@<=7.5.20: '>=7.5.21'
   undici: 8.10.0
   undici@<6.28.0: '>=6.28.0'
@@ -5687,10 +5688,6 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  smol-toml@1.5.2:
-    resolution: {integrity: sha512-QlaZEqcAH3/RtNyet1IPIYPsEWAaYyXXv1Krsi+1L/QHppjX4Ifm8MQsBISz9vE8cHicIq3clogsheili5vhaQ==}
-    engines: {node: '>= 18'}
-
   smol-toml@1.7.1:
     resolution: {integrity: sha512-PPlsspAZ4jbMBu5DMFhfUGDQLu/vrL4SyBROVS37x8ynnVmFIs1VPBz1Co8Xks3TvpIaZXmU85y4DrQ+UyVFoQ==}
     engines: {node: '>= 18'}
@@ -9685,7 +9682,7 @@ snapshots:
     dependencies:
       '@vercel/error-utils': 2.2.0
       js-yaml: 5.2.3
-      smol-toml: 1.5.2
+      smol-toml: 1.7.1
 
   '@vercel/speed-insights@2.0.0(next@16.3.3(@babel/core@7.29.7)(@types/node@20.19.37)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)':
     optionalDependencies:
@@ -12652,8 +12649,6 @@ snapshots:
       yaml: 2.9.0
 
   slash@3.0.0: {}
-
-  smol-toml@1.5.2: {}
 
   smol-toml@1.7.1: {}
 
