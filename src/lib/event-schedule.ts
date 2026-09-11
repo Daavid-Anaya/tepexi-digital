@@ -2,6 +2,7 @@ export const DEFAULT_EVENT_TIMEZONE = 'America/Mexico_City'
 export const EVENT_STATUS = { UPCOMING: 'upcoming', ONGOING: 'ongoing', ENDED: 'ended', CLOSED: 'closed' } as const
 export type EventStatus = (typeof EVENT_STATUS)[keyof typeof EVENT_STATUS]
 const SCHEDULE_TYPE = { SINGLE: 'single', WEEKLY: 'weekly' } as const
+const EXCEPTION_ACTION = { CANCEL: 'cancel', REPLACE: 'replace' } as const
 
 interface WeeklySlot {
   _key: string
@@ -11,10 +12,23 @@ interface WeeklySlot {
   endsNextDay: boolean
 }
 
+interface ScheduleException {
+  date: string
+  slotKey: string
+  action: (typeof EXCEPTION_ACTION)[keyof typeof EXCEPTION_ACTION]
+  replacementDate?: string
+  startTime?: string
+  endTime?: string
+  endsNextDay: boolean
+  unknownEnd: boolean
+  closed: boolean
+}
+
 interface WeeklySchedule {
   seriesStart: string
   seriesEnd?: string
   slots: WeeklySlot[]
+  exceptions: ScheduleException[]
 }
 
 interface EventSchedule {
@@ -126,7 +140,46 @@ function parseSchedule(value: unknown): EventSchedule {
     validateHours(startTime, endTime, endsNextDay)
     return { _key, weekday: slot.weekday, startTime, endTime, endsNextDay }
   })
-  return { scheduleType, timezone, closed, weekly: { seriesStart, seriesEnd, slots } }
+  const rawExceptions = source.exceptions ?? []
+  if (!Array.isArray(rawExceptions) || rawExceptions.length > 500) {
+    throw new Error('At most 500 exceptions are supported per series.')
+  }
+  const exceptionKeys = new Set<string>()
+  const exceptions = rawExceptions.map((value): ScheduleException => {
+    const item = record(value)
+    const date = calendarDate(item.date)
+    const slotKey = text(item.slotKey)
+    const slot = slots.find((slot) => slot._key === slotKey)
+    const key = `${date}/${slotKey}`
+    if (!slot || new Date(date).getUTCDay() !== slot.weekday || date < seriesStart || (seriesEnd && date > seriesEnd)) {
+      throw new Error('Exception must identify a scheduled date and an existing slot key within series bounds.')
+    }
+    if (exceptionKeys.has(key)) throw new Error('Only one exception is allowed per date and slot.')
+    exceptionKeys.add(key)
+    const action = item.action
+    if (action !== EXCEPTION_ACTION.CANCEL && action !== EXCEPTION_ACTION.REPLACE) throw new Error('Select cancellation or replacement.')
+    const unknownEnd = flag(item.unknownEnd)
+    const closed = flag(item.closed)
+    const endsNextDay = flag(item.endsNextDay)
+    if (action === EXCEPTION_ACTION.CANCEL) {
+      if (unknownEnd || closed || endsNextDay || item.replacementDate != null || item.startTime != null || item.endTime != null) {
+        throw new Error('Cancellation cannot contain replacement fields.')
+      }
+      return { date, slotKey, action, unknownEnd, closed, endsNextDay }
+    }
+    const replacementDate = calendarDate(item.replacementDate)
+    const startTime = time(item.startTime)
+    const endTime = item.endTime == null ? undefined : time(item.endTime)
+    if (unknownEnd) {
+      if (endTime || endsNextDay) throw new Error('Unknown-end sessions cannot have an end time or next-day flag.')
+    } else {
+      if (!endTime) throw new Error('Replacement sessions need an end time or explicit unknown end.')
+      if (closed) throw new Error('Manual occurrence closure is only for unknown-end sessions.')
+      validateHours(startTime, endTime, endsNextDay)
+    }
+    return { date, slotKey, action, replacementDate, startTime, endTime, endsNextDay, unknownEnd, closed }
+  })
+  return { scheduleType, timezone, closed, weekly: { seriesStart, seriesEnd, slots, exceptions } }
 }
 
 /** Shared validation for schedule producers and consumers: malformed values fail closed. */
@@ -212,13 +265,23 @@ export function resolveEventSchedule(value: unknown, now: Date): ResolvedEventSc
     if (!selected || candidate.start < selected.start) selected = candidate
     return true
   }
+  const excluded = new Set(weekly.exceptions.map((item) => `${item.date}/${item.slotKey}`))
+  // Explicit replacements are finite, including old unknown-end sessions and
+  // dates moved outside the series bounds. Original dates remain excluded.
+  for (const exception of weekly.exceptions) {
+    if (exception.action === EXCEPTION_ACTION.REPLACE && !exception.closed) {
+      consider(exception.replacementDate!, exception.startTime!, exception.endTime, exception.endsNextDay)
+    }
+  }
   const from = [addDays(today, -1), weekly.seriesStart].sort().at(-1)!
   for (const slot of weekly.slots) {
     const weekday = new Date(`${from}T00:00:00Z`).getUTCDay()
     let date = addDays(from, (slot.weekday - weekday + 7) % 7)
-    // Extra iterations cover yesterday's ended slot and a DST gap.
-    for (let attempt = 0; attempt < 4; attempt++, date = addDays(date, 7)) {
+    // Each exception can remove only one candidate. Extra iterations cover
+    // yesterday's ended slot and a DST gap, without a time-horizon cutoff.
+    for (let attempt = 0; attempt < weekly.exceptions.length + 4; attempt++, date = addDays(date, 7)) {
       if (weekly.seriesEnd && date > weekly.seriesEnd) break
+      if (excluded.has(`${date}/${slot._key}`)) continue
       const available = consider(date, slot.startTime, slot.endTime, slot.endsNextDay)
       if (date > today && available) break
     }
