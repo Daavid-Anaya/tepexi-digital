@@ -34,6 +34,8 @@ export const evento = defineType({
             { title: 'Normal', value: 'normal' },
             { title: 'Título (H2)', value: 'h2' },
             { title: 'Subtítulo (H3)', value: 'h3' },
+            { title: 'Encabezado menor (H4)', value: 'h4' },
+            { title: 'Aviso importante', value: 'notice' },
             { title: 'Cita', value: 'blockquote' },
           ],
           marks: {
@@ -86,15 +88,16 @@ export const evento = defineType({
     }),
     defineField({
       name: 'location',
-      title: 'Lugar (referencia)',
+      title: 'Lugar registrado (opcional)',
       type: 'reference',
       to: [{ type: 'lugar' }],
+      description: 'Selecciona un lugar del directorio para mostrar su nombre, dirección y ubicación en el mapa.',
     }),
     defineField({
       name: 'locationText',
-      title: 'Ubicación (texto libre)',
+      title: 'Ubicación no registrada (opcional)',
       type: 'string',
-      description: 'Texto de ubicación alternativo si no hay un lugar registrado en el sistema',
+      description: 'Utilízala solo cuando el lugar no exista en el directorio. Déjala vacía si seleccionaste un lugar registrado.',
     }),
     defineField({
       name: 'isFeatured',
