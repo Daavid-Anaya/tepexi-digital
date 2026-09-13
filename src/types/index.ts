@@ -56,6 +56,9 @@ export interface EventCardProps {
   slug: string
   date: string
   endDate?: string
+  timezone?: string
+  scheduleStatus?: import('@/lib/event-schedule').EventStatus
+  isRecurring?: boolean
   location?: string
   imageUrl?: string
   imageAlt?: string

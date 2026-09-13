@@ -3,17 +3,19 @@ import { ArrowRight, MapPin, Calendar } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { cn } from '@/lib/utils'
 import type { EventCardProps } from '@/types'
+import { DEFAULT_EVENT_TIMEZONE, formatEventDate } from '@/lib/event-schedule'
 
-function formatDate(dateString: string) {
+function formatDate(dateString: string, timeZone: string) {
   const date = new Date(dateString)
   return {
-    day: date.toLocaleDateString('es-MX', { day: '2-digit' }),
-    month: date.toLocaleDateString('es-MX', { month: 'short' }).toUpperCase(),
+    day: date.toLocaleDateString('es-MX', { timeZone, day: '2-digit' }),
+    month: date.toLocaleDateString('es-MX', { timeZone, month: 'short' }).toUpperCase(),
     full: date.toLocaleDateString('es-MX', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone,
     }),
   }
 }
@@ -25,8 +27,11 @@ export function EventCard({
   endDate,
   location,
   isFeatured,
+  timezone = DEFAULT_EVENT_TIMEZONE,
+  scheduleStatus,
+  isRecurring,
 }: EventCardProps) {
-  const formatted = formatDate(date)
+  const formatted = formatDate(date, timezone)
 
   return (
     <Link href={`/agenda/${slug}`} className="group block">
@@ -57,6 +62,9 @@ export function EventCard({
             )}
           </div>
 
+          <p className="text-stone text-xs mb-1">
+            {scheduleStatus === 'ongoing' ? 'En curso' : isRecurring ? 'Próxima sesión' : 'Inicio'}: {formatEventDate(date, timezone)}
+          </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {location && (
               <span className="flex items-center gap-1 text-stone text-xs max-w-full overflow-hidden">
@@ -68,9 +76,10 @@ export function EventCard({
             {endDate && (
               <span className="flex items-center gap-1 text-stone/50 text-xs">
                 <Calendar size={11} className="flex-shrink-0" aria-hidden="true" />
-                Hasta {new Date(endDate).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
+                Hasta {formatEventDate(endDate, timezone)}
               </span>
             )}
+            {!endDate && <span className="text-stone text-xs">Fin por confirmar</span>}
           </div>
         </div>
 

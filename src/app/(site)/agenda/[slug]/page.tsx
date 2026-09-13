@@ -6,8 +6,6 @@ import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getEventoBySlug, getSettings } from '@/lib/data'
 
-// F-21: ISR — event detail pages revalidate every hour (events can be updated).
-export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { Badge } from '@/components/ui/Badge'
 import { MapPin, Calendar, CalendarDays, Clock, Map } from 'lucide-react'
@@ -18,22 +16,19 @@ import { fetchStaticSlugs } from '@/lib/sanity-params'
 import { buildSlugMetadata } from '@/lib/metadata'
 import { makeDescriptionComponents } from '@/lib/portable-text-components'
 import { buildEventJsonLd } from '@/lib/structured-data'
+import { DEFAULT_EVENT_TIMEZONE, formatEventDate } from '@/lib/event-schedule'
 
-function formatDateFull(dateString: string) {
-  return new Date(dateString).toLocaleDateString('es-MX', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+function formatDateFull(dateString: string | null, timezone: string) {
+  return dateString ? formatEventDate(dateString, timezone) : 'Sin próximas sesiones'
 }
 
-function formatDateShort(dateString: string) {
+function formatDateShort(dateString: string | null, timeZone: string) {
+  if (!dateString) return { day: '—', month: '', year: '' }
   const date = new Date(dateString)
   return {
-    day: date.toLocaleDateString('es-MX', { day: '2-digit' }),
-    month: date.toLocaleDateString('es-MX', { month: 'short' }).toUpperCase(),
-    year: date.getFullYear().toString(),
+    day: date.toLocaleDateString('es-MX', { timeZone, day: '2-digit' }),
+    month: date.toLocaleDateString('es-MX', { timeZone, month: 'short' }).toUpperCase(),
+    year: date.toLocaleDateString('es-MX', { timeZone, year: 'numeric' }),
   }
 }
 
@@ -69,7 +64,12 @@ export default async function EventoDetailPage({ params }: Props) {
 
   if (!evento) notFound()
 
-  const formatted = formatDateShort(evento.date)
+  const timezone = evento.timezone ?? DEFAULT_EVENT_TIMEZONE
+  const formatted = formatDateShort(evento.date, timezone)
+  const statusLabel = evento.scheduleStatus === 'closed' ? 'Finalizado manualmente'
+    : evento.scheduleStatus === 'ended' ? 'Finalizado'
+      : evento.scheduleStatus === 'ongoing' ? 'En curso'
+        : evento.isRecurring ? 'Próxima sesión' : 'Próximo evento'
   const canonicalPath = `/agenda/${slug}`
   const locationLabel = evento.location?.title ?? evento.locationText
   const locationCoords = evento.location?.coordinates ?? null
@@ -92,7 +92,7 @@ export default async function EventoDetailPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={eventJsonLd} />
+      {eventJsonLd && <JsonLd data={eventJsonLd} />}
       {/* Hero banner — green/calendar accent */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda} size="compact">
         <PageHeroBreadcrumb
@@ -115,6 +115,7 @@ export default async function EventoDetailPage({ params }: Props) {
           <div>
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-3 mb-3">
+              <Badge variant="accent" className="text-xs">{statusLabel}</Badge>
               {evento.isFeatured && (
                 <Badge variant="accent" className="text-xs">
                   Destacado
@@ -130,13 +131,13 @@ export default async function EventoDetailPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-4 mt-3">
               <p className="flex items-center gap-2 text-white/70 text-sm">
                 <Calendar className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-                <span className="capitalize">{formatDateFull(evento.date)}</span>
+                <span className="capitalize">{formatDateFull(evento.date, timezone)}</span>
               </p>
               {evento.endDate && (
                 <p className="flex items-center gap-2 text-white/60 text-sm">
                   <Clock className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                   <span>
-                    Hasta {formatDateFull(evento.endDate)}
+                    Hasta {formatDateFull(evento.endDate, timezone)}
                   </span>
                 </p>
               )}
@@ -200,13 +201,14 @@ export default async function EventoDetailPage({ params }: Props) {
                     <div>
                       <dt className="text-[11px] text-stone uppercase tracking-widest font-semibold mb-0.5">Fecha</dt>
                       <dd className="text-sm text-stone leading-snug capitalize">
-                        {formatDateFull(evento.date)}
+                        {formatDateFull(evento.date, timezone)}
                       </dd>
                       {evento.endDate && (
                         <dd className="text-xs text-stone/60 mt-0.5 capitalize">
-                          Hasta {formatDateFull(evento.endDate)}
+                          Hasta {formatDateFull(evento.endDate, timezone)}
                         </dd>
                       )}
+                      {evento.date && !evento.endDate && <dd className="text-xs text-stone mt-0.5">Fin por confirmar</dd>}
                     </div>
                   </div>
 
