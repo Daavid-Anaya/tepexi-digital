@@ -9,17 +9,18 @@ const weekdays = [
 
 export const eventScheduleFields = [
   defineField({
-    name: 'scheduleType', title: 'Tipo de horario', type: 'string', initialValue: 'single',
+    name: 'scheduleType', title: 'Frecuencia del evento', type: 'string', initialValue: 'single',
     options: { list: [{ title: 'Evento único', value: 'single' }, { title: 'Actividad semanal', value: 'weekly' }] },
-    description: 'Los eventos existentes sin tipo se consideran únicos.',
+    description: 'Selecciona Evento único para una fecha específica o Actividad semanal para horarios que se repiten cada semana.',
   }),
   defineField({
     name: 'timezone', title: 'Zona horaria', type: 'string', initialValue: DEFAULT_EVENT_TIMEZONE,
+    hidden: true,
     description: 'Identificador IANA. Si se omite, se utiliza America/Mexico_City.',
   }),
   defineField({
-    name: 'closed', title: 'Evento o serie finalizados manualmente', type: 'boolean', initialValue: false,
-    description: 'Retira todo el evento de la agenda. Para eventos únicos sin fecha de fin, marcar al finalizar.',
+    name: 'closed', title: 'Finalización manual', type: 'boolean', initialValue: false,
+    description: 'Actívala cuando un evento sin fecha de fin haya terminado. En una actividad semanal, finaliza toda la serie y oculta sus próximas sesiones.',
   }),
   defineField({
     name: 'weekly', title: 'Horario semanal', type: 'object',
