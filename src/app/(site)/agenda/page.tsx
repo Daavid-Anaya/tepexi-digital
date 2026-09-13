@@ -2,14 +2,15 @@ import type { Metadata } from 'next'
 import { CalendarDays } from 'lucide-react'
 import { getUpcomingEventos } from '@/lib/data'
 
-// F-21: ISR — agenda revalidates every hour so new events appear quickly.
-export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { EventCard } from '@/components/events/EventCard'
+import { EventScheduleRefresh } from '@/components/events/EventScheduleRefresh'
 import type { EventCardProps } from '@/types'
 import { buildStaticPageMetadata } from '@/lib/metadata'
 import { PageHero, PageHeroBreadcrumb, PageHeroHeader, PageHeroStats } from '@/components/ui/PageHero'
 import { HERO_FALLBACKS } from '@/lib/constants'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Agenda de Eventos',
@@ -25,6 +26,9 @@ export default async function AgendaPage() {
     slug: evento.slug.current,
     date: evento.date,
     endDate: evento.endDate ?? undefined,
+    timezone: evento.timezone,
+    scheduleStatus: evento.scheduleStatus,
+    isRecurring: evento.isRecurring,
     location: evento.locationName ?? evento.locationText ?? undefined,
     imageUrl: evento.imageUrl ?? undefined,
     imageAlt: evento.imageAlt ?? undefined,
@@ -37,6 +41,7 @@ export default async function AgendaPage() {
 
   return (
     <>
+      <EventScheduleRefresh />
       {/* Page hero — calendar inspired */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} currentPath="/agenda" />
