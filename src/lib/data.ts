@@ -1,5 +1,7 @@
 import 'server-only'
+import { connection } from 'next/server'
 import { CATEGORY_COLORS, HOME_PREVIEW_LIMITS } from './constants'
+import { resolveEventSchedule, EVENT_STATUS, type EventStatus } from './event-schedule'
 
 /**
  * Data abstraction layer.
@@ -155,6 +157,9 @@ export interface EventoListItem {
   imageAlt: string | null
   date: string
   endDate: string | null
+  timezone?: string
+  scheduleStatus?: EventStatus
+  isRecurring?: boolean
   locationName: string | null
   locationText: string | null
   isFeatured: boolean
@@ -168,8 +173,11 @@ export interface EventoDetail {
   description: PortableTextBlock[] | null
   imageUrl: string | null
   imageAlt: string | null
-  date: string
+  date: string | null
   endDate: string | null
+  timezone?: string
+  scheduleStatus?: EventStatus
+  isRecurring?: boolean
   location: {
     _id: string
     title: string
@@ -511,15 +519,18 @@ function normalizeGastronomiaDetail(value: unknown): GastronomiaDetail | null {
   }
 }
 
-function normalizeEventoListItem(value: unknown): EventoListItem | null {
+function normalizeEventoListItem(value: unknown, now: Date): EventoListItem | null {
   if (!isRecord(value)) return null
 
   const _id = readString(value._id)
   const title = readString(value.title)
   const slug = readSlug(value.slug)
-  const date = readString(value.date)
+  const schedule = resolveEventSchedule(value, now)
 
-  if (!_id || !title || !slug || !date) {
+  if (
+    !_id || !title || !slug || !schedule?.date
+    || (schedule.scheduleStatus !== EVENT_STATUS.UPCOMING && schedule.scheduleStatus !== EVENT_STATUS.ONGOING)
+  ) {
     return null
   }
 
@@ -529,8 +540,8 @@ function normalizeEventoListItem(value: unknown): EventoListItem | null {
     slug,
     imageUrl: readString(value.imageUrl),
     imageAlt: readString(value.imageAlt),
-    date,
-    endDate: readString(value.endDate),
+    ...schedule,
+    date: schedule.date,
     locationName: readString(value.locationName),
     locationText: readString(value.locationText),
     isFeatured: readBoolean(value.isFeatured),
@@ -557,15 +568,15 @@ function normalizeEventoLocation(value: unknown): EventoDetail['location'] {
   }
 }
 
-function normalizeEventoDetail(value: unknown): EventoDetail | null {
+function normalizeEventoDetail(value: unknown, now: Date): EventoDetail | null {
   if (!isRecord(value)) return null
 
   const _id = readString(value._id)
   const title = readString(value.title)
   const slug = readSlug(value.slug)
-  const date = readString(value.date)
+  const schedule = resolveEventSchedule(value, now)
 
-  if (!_id || !title || !slug || !date) {
+  if (!_id || !title || !slug || !schedule) {
     return null
   }
 
@@ -576,8 +587,7 @@ function normalizeEventoDetail(value: unknown): EventoDetail | null {
     description: readPortableText(value.description),
     imageUrl: readString(value.imageUrl),
     imageAlt: readString(value.imageAlt),
-    date,
-    endDate: readString(value.endDate),
+    ...schedule,
     location: normalizeEventoLocation(value.location),
     locationText: readString(value.locationText),
     isFeatured: readBoolean(value.isFeatured),
@@ -861,43 +871,47 @@ export async function getLatestGastronomiaForHome(): Promise<GastronomiaListItem
   })
 }
 
-function getStartOfTodayIso(): string {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return today.toISOString()
-}
-
-// F-20: home page — only the 3 next upcoming events, limited at GROQ level.
+// Evaluate the clock per request, not when Sanity's cached documents were fetched.
 export async function getUpcomingEventosPreview(): Promise<EventoListItem[]> {
-  return fetchSanityList({
+  await connection()
+  const now = new Date()
+  const events = await fetchSanityList({
     source: 'getUpcomingEventosPreview',
     query: upcomingEventosPreviewQuery,
-    params: { now: getStartOfTodayIso() },
-    normalizeItem: normalizeEventoListItem,
+    normalizeItem: (value) => normalizeEventoListItem(value, now),
     fallback: () => [],
     useFallbackOnEmpty: false,
     logNoSanityConfig: false,
   })
+  return sortScheduledEvents(events).slice(0, HOME_PREVIEW_LIMITS.UPCOMING_EVENTOS)
+}
+
+function sortScheduledEvents(events: EventoListItem[]): EventoListItem[] {
+  return events.sort((a, b) => a.date.localeCompare(b.date) || a._id.localeCompare(b._id))
 }
 
 export async function getUpcomingEventos(): Promise<EventoListItem[]> {
-  return fetchSanityList({
+  await connection()
+  const now = new Date()
+  const events = await fetchSanityList({
     source: 'getUpcomingEventos',
     query: upcomingEventosQuery,
-    params: { now: getStartOfTodayIso() },
-    normalizeItem: normalizeEventoListItem,
+    normalizeItem: (value) => normalizeEventoListItem(value, now),
     fallback: () => [],
     useFallbackOnEmpty: false,
     logNoSanityConfig: false,
   })
+  return sortScheduledEvents(events)
 }
 
 export async function getEventoBySlug(slug: string): Promise<EventoDetail | null> {
+  await connection()
+  const now = new Date()
   return fetchSanityDetail({
     source: 'getEventoBySlug',
     query: eventoBySlugQuery,
     params: { slug },
-    normalize: normalizeEventoDetail,
+    normalize: (value) => normalizeEventoDetail(value, now),
     logNoSanityConfig: false,
     fallback: () => null,
   })

@@ -1,11 +1,14 @@
 import { defineType, defineField } from 'sanity'
 import { CalendarIcon } from '@sanity/icons'
+import { formatEventDate, validateEventSchedule } from '../../lib/event-schedule'
+import { eventScheduleFields } from './event-schedule-fields'
 
 export const evento = defineType({
   name: 'evento',
   title: 'Evento',
   type: 'document',
   icon: CalendarIcon,
+  validation: (rule) => rule.custom(validateEventSchedule),
   fields: [
     defineField({
       name: 'title',
@@ -67,16 +70,19 @@ export const evento = defineType({
         }),
       ],
     }),
+    ...eventScheduleFields,
     defineField({
       name: 'date',
       title: 'Fecha',
       type: 'datetime',
-      validation: (rule) => rule.required(),
+      hidden: ({ document }) => document?.scheduleType === 'weekly',
     }),
     defineField({
       name: 'endDate',
       title: 'Fecha de fin',
       type: 'datetime',
+      hidden: ({ document }) => document?.scheduleType === 'weekly',
+      description: 'Opcional. Si se desconoce, el evento permanece en curso hasta marcarlo como finalizado manualmente.',
     }),
     defineField({
       name: 'location',
@@ -136,12 +142,23 @@ export const evento = defineType({
       title: 'title',
       media: 'image',
       date: 'date',
+      scheduleType: 'scheduleType',
+      seriesStart: 'weekly.seriesStart',
+      timezone: 'timezone',
     },
-    prepare({ title, media, date }) {
+    prepare({ title, media, date, scheduleType, seriesStart, timezone }) {
+      let subtitle = scheduleType === 'weekly' ? `Semanal desde ${seriesStart ?? 'fecha pendiente'}` : ''
+      if (scheduleType !== 'weekly' && date) {
+        try {
+          subtitle = formatEventDate(date, timezone ?? undefined)
+        } catch {
+          subtitle = 'Revisar fecha y zona horaria'
+        }
+      }
       return {
         title,
         media,
-        subtitle: date ? new Date(date).toLocaleDateString('es-MX') : '',
+        subtitle,
       }
     },
   },
