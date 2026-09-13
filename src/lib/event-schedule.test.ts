@@ -55,7 +55,7 @@ describe('weekly occurrence selection', () => {
     expect(resolve(bounded, new Date('2026-09-07T18:00:00Z'))).toMatchObject({ date: null, scheduleStatus: 'ended' })
   })
 
-  it('closes the whole series', () => {
+  it('closes the whole series including replacements', () => {
     expect(resolve({ ...series, closed: true })).toMatchObject({ date: null, endDate: null, scheduleStatus: 'closed' })
   })
 
@@ -80,6 +80,44 @@ describe('weekly occurrence selection', () => {
 
   it('deterministically selects the earliest start when sessions overlap', () => {
     expect(resolve({ ...series, weekly: { ...weekly, slots: [monday, { ...monday, _key: 'other', startTime: '09:00' }] } })?.date).toBe('2026-09-07T15:00:00.000Z')
+  })
+})
+
+describe('occurrence exceptions', () => {
+  const cancellation = { date: '2026-09-07', slotKey: 'mon', action: 'cancel' }
+  const replacement = { ...cancellation, action: 'replace', replacementDate: '2026-09-08', startTime: '09:00', endTime: '11:00' }
+  const withExceptions = (exceptions: unknown[], extra = {}) => ({ ...series, weekly: { ...weekly, ...extra, exceptions } })
+
+  it('cancels only the selected occurrence', () => {
+    expect(resolve(withExceptions([cancellation]))?.date).toBe('2026-09-09T22:00:00.000Z')
+    expect(resolve(withExceptions([cancellation]), new Date('2026-09-10T00:00:00Z'))?.date).toBe('2026-09-14T16:00:00.000Z')
+  })
+
+  it('replaces the original occurrence rather than adding a duplicate', () => {
+    expect(resolve(withExceptions([replacement]))?.date).toBe('2026-09-08T15:00:00.000Z')
+    expect(resolve(withExceptions([replacement]), new Date('2026-09-08T16:00:00Z'))?.scheduleStatus).toBe('ongoing')
+  })
+
+  it('finds replacements moved from a distant original date into the present', () => {
+    const moved = { ...replacement, date: '2026-12-07', replacementDate: '2026-09-07', startTime: '08:00', endTime: '13:00' }
+    expect(resolve(withExceptions([moved]))?.date).toBe('2026-09-07T14:00:00.000Z')
+  })
+
+  it('honors a replacement outside series bounds and deliberate overnight hours', () => {
+    const moved = { ...replacement, replacementDate: '2026-10-01', startTime: '23:00', endTime: '01:00', endsNextDay: true }
+    expect(resolve(withExceptions([moved], { seriesEnd: '2026-09-07' }), new Date('2026-09-08T10:00:00Z'))).toMatchObject({ date: '2026-10-02T05:00:00.000Z', endDate: '2026-10-02T07:00:00.000Z' })
+  })
+
+  it('keeps an explicit old unknown-end session open until per-occurrence closure', () => {
+    const open = { ...replacement, date: '2026-01-05', replacementDate: '2026-01-05', unknownEnd: true, endTime: undefined }
+    expect(resolve(withExceptions([open]))).toMatchObject({ date: '2026-01-05T15:00:00.000Z', endDate: null, scheduleStatus: 'ongoing' })
+    expect(resolve(withExceptions([{ ...open, closed: true }]))?.date).toBe('2026-09-07T16:00:00.000Z')
+  })
+
+  it('skips arbitrarily long cancellation runs in work bounded by exception count', () => {
+    const start = Date.parse('2026-09-07T00:00:00Z')
+    const exceptions = Array.from({ length: 100 }, (_, i) => ({ ...cancellation, date: new Date(start + i * 7 * 86_400_000).toISOString().slice(0, 10) }))
+    expect(resolve(withExceptions(exceptions, { slots: [monday] }))?.date).toBe(new Date(start + 100 * 7 * 86_400_000 + 16 * 3_600_000).toISOString())
   })
 })
 
@@ -130,6 +168,27 @@ describe('shared schedule validation', () => {
   ])('rejects malformed or inverted schedule %#', (input) => {
     expect(validateEventSchedule(input)).not.toBe(true)
     expect(resolve(input)).toBeNull()
+  })
+
+  const exception = { date: '2026-09-07', slotKey: 'mon', action: 'replace', replacementDate: '2026-09-08', startTime: '10:00', endTime: '12:00' }
+  it.each([
+    { ...exception, date: '2026-09-08' },
+    { ...exception, date: '2025-12-29' },
+    { ...exception, slotKey: 'missing' },
+    { ...exception, action: 'other' },
+    { ...exception, action: 'cancel' },
+    { ...exception, replacementDate: '2026-02-30' },
+    { ...exception, endTime: undefined },
+    { ...exception, endTime: '09:00' },
+    { ...exception, unknownEnd: true },
+    { ...exception, closed: true },
+  ])('rejects invalid exception %#', (invalid) => {
+    expect(validateEventSchedule({ ...series, weekly: { ...weekly, exceptions: [invalid] } })).not.toBe(true)
+  })
+
+  it('rejects duplicate exceptions and oversized exception input', () => {
+    expect(validateEventSchedule({ ...series, weekly: { ...weekly, exceptions: [exception, exception] } })).not.toBe(true)
+    expect(validateEventSchedule({ ...series, weekly: { ...weekly, exceptions: Array(501).fill(exception) } })).not.toBe(true)
   })
 
   it('rejects oversized weekly slot input', () => {

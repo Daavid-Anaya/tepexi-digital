@@ -215,7 +215,7 @@ describe('structured data helpers', () => {
       },
     )
 
-    expect(eventJsonLd.url).toBe('https://tepexidigital.com.mx/agenda/feria-de-tepexi')
+    expect(eventJsonLd?.url).toBe('https://tepexidigital.com.mx/agenda/feria-de-tepexi')
     expect(attractionJsonLd.url).toBe('https://tepexidigital.com.mx/lugares/huellas-de-dinosaurio')
     expect(attractionJsonLd.isAccessibleForFree).toBe(true)
   })

@@ -1,5 +1,4 @@
 import { defineQuery } from 'next-sanity'
-import { HOME_PREVIEW_LIMITS, SANITY_FETCH_LIMITS } from '@/lib/constants'
 
 // F-06: imageUrl uses Sanity CDN params — card thumbnails 600×400 px, quality 75.
 export const featuredEventosQuery = defineQuery(`*[_type == "evento" && isFeatured == true] | order(date asc) {
@@ -10,6 +9,7 @@ export const featuredEventosQuery = defineQuery(`*[_type == "evento" && isFeatur
   "imageAlt": image.alt,
   date,
   endDate,
+  scheduleType, timezone, closed, weekly,
   "locationName": location->title,
   locationText
 }`)
@@ -23,6 +23,7 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
   "imageAlt": image.alt,
   date,
   endDate,
+  scheduleType, timezone, closed, weekly,
   "location": location->{
     _id,
     title,
@@ -40,9 +41,8 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
   }
 }`)
 
-// F-20: dedicated home preview — always fetches exactly 3 upcoming events.
-// Avoids the limit:50 fetch in getUpcomingEventos() + slice(0,3) in home page.
-export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...${HOME_PREVIEW_LIMITS.UPCOMING_EVENTOS}] {
+// Resolve recurrence before sorting/limiting: original dates cannot rank a series.
+export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && closed != true] {
   _id,
   title,
   slug,
@@ -50,12 +50,13 @@ export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && d
   "imageAlt": image.alt,
   date,
   endDate,
+  scheduleType, timezone, closed, weekly,
   "locationName": location->title,
   locationText,
   isFeatured
 }`)
 
-export const upcomingEventosQuery = defineQuery(`*[_type == "evento" && date >= $now] | order(date asc)[0...${SANITY_FETCH_LIMITS.UPCOMING_EVENTOS}] {
+export const upcomingEventosQuery = defineQuery(`*[_type == "evento" && closed != true] {
   _id,
   title,
   slug,
@@ -63,6 +64,7 @@ export const upcomingEventosQuery = defineQuery(`*[_type == "evento" && date >= 
   "imageAlt": image.alt,
   date,
   endDate,
+  scheduleType, timezone, closed, weekly,
   "locationName": location->title,
   locationText,
   isFeatured
