@@ -41,6 +41,31 @@ export function makeDescriptionComponents(accent: AccentColor): PortableTextComp
           {children}
         </h3>
       ),
+      h4: ({ children }) => (
+        <h4
+          style={{ fontSize: '1.05rem', fontWeight: 600, marginTop: '1.25rem', marginBottom: '0.5rem', lineHeight: '1.5' }}
+          className="font-heading text-text-primary"
+        >
+          {children}
+        </h4>
+      ),
+      notice: ({ children }) => (
+        <aside
+          role="note"
+          style={{
+            borderLeft: `4px solid rgba(${c.rgb},0.65)`,
+            backgroundColor: `rgba(${c.rgb},0.08)`,
+            padding: '0.875rem 1rem',
+            marginTop: '1rem',
+            marginBottom: '1rem',
+            borderRadius: '0 0.5rem 0.5rem 0',
+            lineHeight: '1.65',
+          }}
+          className="text-text-primary"
+        >
+          {children}
+        </aside>
+      ),
       blockquote: ({ children }) => (
         <blockquote
           style={{

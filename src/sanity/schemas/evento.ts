@@ -1,11 +1,14 @@
 import { defineType, defineField } from 'sanity'
 import { CalendarIcon } from '@sanity/icons'
+import { formatEventDate, validateEventSchedule } from '../../lib/event-schedule'
+import { eventScheduleFields } from './event-schedule-fields'
 
 export const evento = defineType({
   name: 'evento',
   title: 'Evento',
   type: 'document',
   icon: CalendarIcon,
+  validation: (rule) => rule.custom(validateEventSchedule),
   fields: [
     defineField({
       name: 'title',
@@ -31,6 +34,8 @@ export const evento = defineType({
             { title: 'Normal', value: 'normal' },
             { title: 'Título (H2)', value: 'h2' },
             { title: 'Subtítulo (H3)', value: 'h3' },
+            { title: 'Encabezado menor (H4)', value: 'h4' },
+            { title: 'Aviso importante', value: 'notice' },
             { title: 'Cita', value: 'blockquote' },
           ],
           marks: {
@@ -67,28 +72,32 @@ export const evento = defineType({
         }),
       ],
     }),
+    ...eventScheduleFields,
     defineField({
       name: 'date',
       title: 'Fecha',
       type: 'datetime',
-      validation: (rule) => rule.required(),
+      hidden: ({ document }) => document?.scheduleType === 'weekly',
     }),
     defineField({
       name: 'endDate',
       title: 'Fecha de fin',
       type: 'datetime',
+      hidden: ({ document }) => document?.scheduleType === 'weekly',
+      description: 'Opcional. Si se desconoce, el evento permanece en curso hasta marcarlo como finalizado manualmente.',
     }),
     defineField({
       name: 'location',
-      title: 'Lugar (referencia)',
+      title: 'Lugar registrado (opcional)',
       type: 'reference',
       to: [{ type: 'lugar' }],
+      description: 'Selecciona un lugar del directorio para mostrar su nombre, dirección y ubicación en el mapa.',
     }),
     defineField({
       name: 'locationText',
-      title: 'Ubicación (texto libre)',
+      title: 'Ubicación no registrada (opcional)',
       type: 'string',
-      description: 'Texto de ubicación alternativo si no hay un lugar registrado en el sistema',
+      description: 'Utilízala solo cuando el lugar no exista en el directorio. Déjala vacía si seleccionaste un lugar registrado.',
     }),
     defineField({
       name: 'isFeatured',
@@ -136,12 +145,23 @@ export const evento = defineType({
       title: 'title',
       media: 'image',
       date: 'date',
+      scheduleType: 'scheduleType',
+      seriesStart: 'weekly.seriesStart',
+      timezone: 'timezone',
     },
-    prepare({ title, media, date }) {
+    prepare({ title, media, date, scheduleType, seriesStart, timezone }) {
+      let subtitle = scheduleType === 'weekly' ? `Semanal desde ${seriesStart ?? 'fecha pendiente'}` : ''
+      if (scheduleType !== 'weekly' && date) {
+        try {
+          subtitle = formatEventDate(date, timezone ?? undefined)
+        } catch {
+          subtitle = 'Revisar fecha y zona horaria'
+        }
+      }
       return {
         title,
         media,
-        subtitle: date ? new Date(date).toLocaleDateString('es-MX') : '',
+        subtitle,
       }
     },
   },
