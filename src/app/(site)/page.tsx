@@ -6,9 +6,12 @@ import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { PlaceGrid } from '@/components/places/PlaceGrid'
 import { EventCard } from '@/components/events/EventCard'
+import { EventScheduleRefresh } from '@/components/events/EventScheduleRefresh'
 import { getFeaturedLugaresForHome, getLatestGastronomiaForHome, getUpcomingEventosPreview, getSettings } from '@/lib/data'
 import { buildStaticPageMetadata } from '@/lib/metadata'
 import type { PlaceCardProps, EventCardProps } from '@/types'
+
+export const revalidate = 3600
 
 export const metadata: Metadata = buildStaticPageMetadata({
   title: 'Tepexi de Rodríguez — Turismo, Cultura y Gastronomía',
@@ -52,6 +55,9 @@ export default async function HomePage() {
     slug: e.slug.current,
     date: e.date,
     endDate: e.endDate ?? undefined,
+    timezone: e.timezone,
+    scheduleStatus: e.scheduleStatus,
+    isRecurring: e.isRecurring,
     location: e.locationName ?? e.locationText ?? undefined,
     imageUrl: e.imageUrl ?? undefined,
     imageAlt: e.imageAlt ?? undefined,
@@ -60,6 +66,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <EventScheduleRefresh />
       {/* ============================================================
           HERO — full-width cinematic
           ============================================================ */}
