@@ -41,11 +41,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# AI tooling (Claude Code / Agent Teams Lite)
+# AI tooling
 AGENTS.md
 CLAUDE.md
 .atl/
 openspec/
+.codegraph/
 
 # Sanity
 .sanity/
