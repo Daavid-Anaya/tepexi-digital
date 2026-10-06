@@ -1,0 +1,62 @@
+name: Bug or security audit report
+description: Report a reproducible bug or a non-sensitive security audit finding.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form creates a public issue. Do not include credentials, tokens, personal data, or exploit details.
+        For sensitive vulnerabilities, stop and use a verified private security reporting channel instead of this form.
+        Dependency audit reports may include public advisory identifiers, affected package versions, and sanitized output.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the problem, who it affects, and any public advisory identifiers. Include only non-sensitive information.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Describe affected features or dependencies, what should change, and what is outside this report.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide safe reproduction steps or the audit command and sanitized findings. Do not include exploit instructions.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe the expected behavior or audit result, including the applicable severity threshold.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Describe the observed behavior or audit findings, including exit code and severity counts when available.
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions and environment
+      description: Provide affected package and application versions, runtime, package manager, and relevant environment details without private paths or identifiers.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: Separate existing evidence or completed checks from planned checks and their expected results. If no checks have been performed, say so.
+      placeholder: |
+        Existing evidence or completed checks:
+
+        Planned checks and expected results:
+    validations:
+      required: false
