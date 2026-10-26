@@ -47,6 +47,7 @@ CLAUDE.md
 .atl/
 openspec/
 .codegraph/
+odd/
 
 # Sanity
 .sanity/
