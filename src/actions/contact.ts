@@ -3,7 +3,8 @@
 import 'server-only'
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
-import { rateLimit } from '@/lib/rate-limit'
+import { getClientIp, UNKNOWN_CLIENT_IP } from '@/lib/client-ip'
+import { RATE_LIMIT_STATUS, rateLimit } from '@/lib/rate-limit'
 import { RATE_LIMITS, SITE_URL } from '@/lib/constants'
 import { logError } from '@/lib/observability'
 import {
@@ -27,13 +28,23 @@ export async function sendContactMessage(
   _prevState: ContactFormState,
   formData: FormData,
 ) {
-  const headersList = await headers()
-  const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-  const { allowed } = rateLimit(`contact:${ip}`, RATE_LIMITS.CONTACT)
-  if (!allowed) {
+  const ip = getClientIp(await headers()) ?? UNKNOWN_CLIENT_IP
+  const limitResult = await rateLimit(`contact:${ip}`, RATE_LIMITS.CONTACT)
+
+  // Fail closed: without a working limiter the form could be used to send
+  // unlimited mail, so it stays unavailable until the store recovers.
+  if (limitResult.status === RATE_LIMIT_STATUS.UNAVAILABLE) {
     return {
       success: false,
-      error: 'Demasiados mensajes enviados. Intente de nuevo más tarde.',
+      error: 'El formulario no está disponible en este momento. Intente más tarde.',
+    }
+  }
+
+  if (limitResult.status === RATE_LIMIT_STATUS.BLOCKED) {
+    const minutes = Math.max(1, Math.ceil(limitResult.retryAfterSeconds / 60))
+    return {
+      success: false,
+      error: `Demasiados mensajes enviados. Intente de nuevo en ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}.`,
     }
   }
   const validationResult = validateContactFormData(formData)

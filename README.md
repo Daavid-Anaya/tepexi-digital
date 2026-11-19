@@ -77,12 +77,23 @@ Copiá `.env.example` a `.env.local` para desarrollo. Variables usadas por runti
 | `CONTACT_RECIPIENT_EMAIL` | Sí | Destino del formulario de contacto |
 | `NEXT_PUBLIC_SITE_URL` | Sí | URL pública base del sitio |
 | `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` | Opcional | Google Analytics si se desea doble medición |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Sí en producción | Almacenamiento compartido del rate limiting (Upstash Redis). También se aceptan `KV_REST_API_URL` / `KV_REST_API_TOKEN`, que crea la integración de Vercel Marketplace |
+
+### Rate limiting
+
+- **Límites:** contacto, 5 intentos por IP cada 900 s; `POST /api/revalidate`, 30 solicitudes por IP cada 60 s (`src/lib/constants.ts`).
+- **Algoritmo:** ventana fija que inicia con la primera solicitud de cada clave. No es una ventana deslizante: un cliente puede agotar su cuota al final de una ventana y volver a hacerlo al inicio de la siguiente.
+- **Almacenamiento:** Upstash Redis (plan gratuito), con un script Lua atómico, así que los contadores se comparten entre instancias y sobreviven reinicios. Sin esas variables, en desarrollo se usa un contador en memoria. En producción, la falta de configuración se trata como una falla del almacenamiento.
+- **IP del cliente:** se usa `x-real-ip` y, si falta, el primer valor de `x-forwarded-for`. Vercel sobrescribe ambos con la IP pública del cliente. Las solicitudes sin una IP válida comparten la clave `unknown`.
+- **Si el almacenamiento falla o tarda más de 2 s:** el formulario de contacto se bloquea y muestra «El formulario no está disponible en este momento», para que nadie use la falla para enviar correos sin límite. `/api/revalidate` continúa, porque la firma del webhook lo sigue protegiendo y bloquearlo dejaría el contenido desactualizado. Las dos fallas se registran como `[rate-limit] shared store request failed` o `[rate-limit] shared store is not configured`.
+- **Al bloquear:** contacto indica los minutos de espera y `/api/revalidate` responde HTTP 429 con `Retry-After` en segundos.
 
 ### Validación mínima antes de deploy
 
 1. Confirmar que `SANITY_REVALIDATE_SECRET` exista en Vercel.
 2. Confirmar que `RESEND_API_KEY` y `CONTACT_RECIPIENT_EMAIL` estén configuradas.
-3. Verificar que `NEXT_PUBLIC_SITE_URL` coincida con el dominio productivo.
+3. Confirmar que las variables de Upstash existan en Vercel para los entornos Production y Preview. Los previews también corren con `NODE_ENV=production`, así que sin ellas el formulario de contacto queda deshabilitado.
+4. Verificar que `NEXT_PUBLIC_SITE_URL` coincida con el dominio productivo.
 
 ---
 
@@ -257,7 +268,6 @@ Validar al menos:
 
 ## ⚠️ Riesgos conocidos / trabajo futuro
 
-- **Rate limiting durable:** el rate limit actual sigue siendo en memoria y no sobrevive a múltiples instancias serverless. Para mitigación real se necesita una capa externa (por ejemplo KV/Redis). Esto queda diferido.
 - **Mapa y proveedor de tiles:** ahora existe fallback visible si fallan los mosaicos, pero depende de OpenStreetMap. Si el mapa pasa a ser flujo crítico, conviene agregar monitoreo externo o proveedor redundante.
 
 ---
