@@ -42,25 +42,25 @@ const timelineItems = [
 
 const endemicIngredients = [
   {
-    image: `${SANITY_CDN_BASE}/bdaa80d6b43144ef0307bd097bfafb163ec9ab69-2011x1707.jpg`,
+    image: `${SANITY_CDN_BASE}/6db339c125445879cb76d93f8f9bd298b667ea3b-1920x1630.webp`,
     title: 'El Guaje',
     description:
       'Semilla y vaina de notas astringentes. El rey indiscutible que da alma a los guisos locales.',
   },
   {
-    image: `${SANITY_CDN_BASE}/818070b7fff1df63925cd6be043dd34fffa13a52-2048x1536.jpg`,
+    image: `${SANITY_CDN_BASE}/359d8f7cc2da87a200061194097273cd54408265-1920x1440.webp`,
     title: 'Cactáceas y Frutos',
     description:
       'El tesoro del desierto, La Pitaya o Pitahaya, un fruto vibrante y dulce que domina la temporada de calor.',
   },
   {
-    image: `${SANITY_CDN_BASE}/77da54ec4a15baf024ae5c4a3d000f6f8df9f607-2039x1570.jpg`,
+    image: `${SANITY_CDN_BASE}/c06551f6a86f1943d6dd11a22c78db0323529972-1920x1478.webp`,
     title: 'Proteína de Recolección',
     description:
       'Chicatanas, Chapulines, Texcas y Cueclas, insectos valorados por su alto valor proteico y sabor único.',
   },
   {
-    image: `${SANITY_CDN_BASE}/607518be5b614acd63683ae621e613ce903ac386-512x512.jpg`,
+    image: `${SANITY_CDN_BASE}/a2ef5eb06238b35096e2fd91867dfb9984b738e1-512x512.webp`,
     title: 'Los Agaves',
     description:
       'Especies como el papalomé y espadín, bases esenciales para el aguamiel y los destilados artesanales.',
@@ -153,7 +153,7 @@ export default async function GastronomiaPage() {
               </p>
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-md">
                  <Image
-                    src={`${SANITY_CDN_BASE}/815e75f4d66353c6761a000b598d125d4bc17a54-2752x1536.jpg`}
+                    src={`${SANITY_CDN_BASE}/79ecddc81138b7b166b83f7999de224264d46bf3-1920x1440.webp`}
                    alt="Ingredientes representativos de la gastronomía de Tepexi"
                   fill
                   className="object-cover"

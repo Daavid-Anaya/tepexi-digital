@@ -15,14 +15,14 @@ export const SANITY_CDN_BASE = `https://cdn.sanity.io/images/${SANITY_PROJECT_ID
 const heroParams = '?w=1920&q=80&auto=format&fit=max'
 
 export const HERO_FALLBACKS = {
-  lugares: `${SANITY_CDN_BASE}/737c94162af932675cbb7eaddf8d63e379404009-1920x1440.jpg${heroParams}`,
-  gastronomia: `${SANITY_CDN_BASE}/04919ba0ea9ad85fd4f46aea35d7c3a513f4becb-4104x2736.jpg${heroParams}`,
-  servicios: `${SANITY_CDN_BASE}/fd162108faf44809f73b46edd219740140a8c42c-5472x3648.jpg${heroParams}`,
-  agenda: `${SANITY_CDN_BASE}/1207eeb4636baf3a09b4a926173eb07861f3693e-1920x1280.jpg${heroParams}`,
-  mapa: `${SANITY_CDN_BASE}/5770b9cad7f1ad28b453a3ccc9390e4e8962fa25-4928x3264.jpg${heroParams}`,
-  comoLlegar: `${SANITY_CDN_BASE}/97ba498893be9fef6e66f00e11b7fe6c19a023d0-4452x2968.jpg${heroParams}`,
-  contacto: `${SANITY_CDN_BASE}/c792c5f25303c69523311963917babcf56c4c131-3008x2000.jpg${heroParams}`,
-  cultura: `${SANITY_CDN_BASE}/7a5100ea170bd307785b455ecfb340bf96036b54-6000x4000.jpg${heroParams}`,
+  lugares: `${SANITY_CDN_BASE}/459d7c29407878b33d5137a6bbd245cb8645f967-1920x1440.webp${heroParams}`,
+  gastronomia: `${SANITY_CDN_BASE}/812be96591fbc57940fbce986ee7faa6da00ef56-1920x1280.webp${heroParams}`,
+  servicios: `${SANITY_CDN_BASE}/d64d9048b382622d1a2a7df6f29587ac70daa63e-1920x1280.webp${heroParams}`,
+  agenda: `${SANITY_CDN_BASE}/8b89bc73f2f426b32ca276c8b2dcea74af1cca4b-1920x1280.webp${heroParams}`,
+  mapa: `${SANITY_CDN_BASE}/171da5d6eb0a5d80ed13cbdd5d44720cc5e2852a-1920x1272.webp${heroParams}`,
+  comoLlegar: `${SANITY_CDN_BASE}/79946c2cf58948eb96dafd50525f0b35a7a854ae-1920x1280.webp${heroParams}`,
+  contacto: `${SANITY_CDN_BASE}/2bb226376850fd330f7187843aeaa1dd66b13e00-1920x1277.webp${heroParams}`,
+  cultura: `${SANITY_CDN_BASE}/5bfb9c77b342b07e76197db8835de91b905cdcf7-1920x1280.webp${heroParams}`,
 } as const
 
 export const HOME_PREVIEW_LIMITS = {
