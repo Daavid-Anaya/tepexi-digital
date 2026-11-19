@@ -3,7 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
 import { RATE_LIMITS } from '@/lib/constants'
 import { logError, logWarn } from '@/lib/observability'
-import { rateLimit } from '@/lib/rate-limit'
+import { getClientIp, UNKNOWN_CLIENT_IP } from '@/lib/client-ip'
+import { RATE_LIMIT_STATUS, rateLimit } from '@/lib/rate-limit'
 
 // Sanity document types mapped to their paths
 const TYPE_TO_PATHS: Record<string, string[]> = {
@@ -17,9 +18,12 @@ const TYPE_TO_PATHS: Record<string, string[]> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-    const { allowed } = rateLimit(`revalidate:${ip}`, RATE_LIMITS.REVALIDATE)
-    if (!allowed) {
+    const ip = getClientIp(req.headers) ?? UNKNOWN_CLIENT_IP
+    const limitResult = await rateLimit(`revalidate:${ip}`, RATE_LIMITS.REVALIDATE)
+
+    // Fail open on `unavailable`: the webhook signature below still guards the
+    // route, and blocking would leave published content stale.
+    if (limitResult.status === RATE_LIMIT_STATUS.BLOCKED) {
       logWarn('[revalidate] rate limit exceeded', {
         source: 'revalidateRoute',
         route: '/api/revalidate',
@@ -28,7 +32,10 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(
         { message: 'Too many requests' },
-        { status: 429 },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(limitResult.retryAfterSeconds) },
+        },
       )
     }
 
