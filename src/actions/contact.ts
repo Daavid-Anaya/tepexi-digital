@@ -12,8 +12,6 @@ import {
   validateContactFormData,
 } from '@/actions/contact-form'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 function sanitizeEmailHeaderValue(value: string): string {
   return value.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim()
 }
@@ -60,10 +58,11 @@ export async function sendContactMessage(
   const { name, email, subject, message } = validationResult.data
   const safeName = sanitizeEmailHeaderValue(name) || 'Visitante'
   const safeSubject = subject ? sanitizeEmailHeaderValue(subject) || null : null
-  const hasResendApiKey = Boolean(process.env.RESEND_API_KEY)
+  const resendApiKey = process.env.RESEND_API_KEY
+  const hasResendApiKey = Boolean(resendApiKey)
   const contactRecipientEmail = process.env.CONTACT_RECIPIENT_EMAIL
 
-  if (!hasResendApiKey || !contactRecipientEmail) {
+  if (!resendApiKey || !contactRecipientEmail) {
     logError('[contact] contact form configuration is incomplete', {
       source: 'sendContactMessage',
       route: '/contacto',
@@ -81,6 +80,11 @@ export async function sendContactMessage(
       fieldErrors: {},
     }
   }
+
+  // Created per request, after the configuration check: the SDK constructor
+  // throws without an API key, which would crash the action instead of
+  // returning the generic error above.
+  const resend = new Resend(resendApiKey)
 
   try {
     await resend.emails.send({
