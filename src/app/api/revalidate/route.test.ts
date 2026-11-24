@@ -67,6 +67,19 @@ describe('POST /api/revalidate', () => {
     expect(revalidatePathMock).not.toHaveBeenCalled()
   })
 
+  it('rate limits IPv6 clients by their /64 prefix', async () => {
+    parseBodyMock.mockResolvedValueOnce({ isValidSignature: true, body: { _type: 'evento', slug: { current: 'feria' } } })
+    const { POST } = await import('@/app/api/revalidate/route')
+    const request = new Request('https://tepexidigital.com.mx/api/revalidate', {
+      method: 'POST',
+      headers: { 'x-real-ip': '2001:db8:1:2:abcd::9' },
+    }) as Parameters<typeof POST>[0]
+
+    await POST(request)
+
+    expect(rateLimitMock).toHaveBeenCalledWith('revalidate:2001:db8:1:2::/64', { limit: 30, windowSeconds: 60 })
+  })
+
   it('revalidates normally when allowed', async () => {
     parseBodyMock.mockResolvedValueOnce({ isValidSignature: true, body: { _type: 'evento', slug: { current: 'feria' } } })
     const { POST } = await import('@/app/api/revalidate/route')

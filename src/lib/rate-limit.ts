@@ -146,7 +146,18 @@ function createDefaultStore(): RateLimitStore | null {
   const credentials = getStoreCredentials()
 
   if (credentials) {
-    return createRedisStore(new Redis({ ...credentials, retry: { retries: 1 } }))
+    return createRedisStore(
+      new Redis({
+        ...credentials,
+        // One retry tolerates transient network errors. The client retries only
+        // when `fetch` throws, so a connection lost after Redis ran the script
+        // can count one request twice; that only overcounts and is accepted.
+        retry: { retries: 1 },
+        // Evaluated per request, so each one gets its own deadline and is
+        // aborted (not retried) when it expires instead of running on.
+        signal: () => createTimeoutSignal(STORE_TIMEOUT_MS),
+      }),
+    )
   }
 
   if (process.env.NODE_ENV === 'production') return null
@@ -161,10 +172,24 @@ function getDefaultStore(): RateLimitStore | null {
   return defaultStore
 }
 
+function timeoutError(timeoutMs: number): Error {
+  return new Error(`Rate limit store timed out after ${timeoutMs}ms`)
+}
+
+// Like `AbortSignal.timeout`, but built on `setTimeout` so tests can drive it
+// with fake timers. The timer is unref'd so it never keeps the process alive.
+function createTimeoutSignal(timeoutMs: number): AbortSignal {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(timeoutError(timeoutMs)), timeoutMs)
+  timer.unref?.()
+  return controller.signal
+}
+
+// Upper bound for any store, including work the abort signal does not cover.
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new Error(`Rate limit store timed out after ${timeoutMs}ms`)), timeoutMs)
+    timer = setTimeout(() => reject(timeoutError(timeoutMs)), timeoutMs)
   })
 
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer))

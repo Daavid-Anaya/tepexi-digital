@@ -109,6 +109,15 @@ describe('sendContactMessage', () => {
     expect(sendEmailMock).toHaveBeenCalledTimes(1)
   })
 
+  it('rate limits IPv6 clients by their /64 prefix', async () => {
+    headersMock.mockResolvedValue(new Headers({ 'x-real-ip': '2001:db8:1:2:abcd::9' }))
+    const { sendContactMessage } = await import('@/actions/contact')
+
+    await sendContactMessage({ success: true, error: null }, new FormData())
+
+    expect(rateLimitMock).toHaveBeenCalledWith('contact:2001:db8:1:2::/64', { limit: 5, windowSeconds: 900 })
+  })
+
   it('groups requests without a trusted IP under a shared key', async () => {
     headersMock.mockResolvedValue(new Headers({ 'x-forwarded-for': 'not-an-ip' }))
     const { sendContactMessage } = await import('@/actions/contact')
