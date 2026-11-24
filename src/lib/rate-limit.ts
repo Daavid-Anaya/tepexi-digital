@@ -55,6 +55,9 @@ interface RateLimitStore {
 }
 
 const STORE_TIMEOUT_MS = 2_000
+// The abort signal enforces STORE_TIMEOUT_MS. The backstop is slightly longer
+// so the abort settles first and the race only covers work it cannot cancel.
+const STORE_BACKSTOP_TIMEOUT_MS = STORE_TIMEOUT_MS + 250
 
 // Atomic: increments the counter, starts the window on the first hit and
 // repairs a key left without expiry, then returns [count, remaining ttl ms].
@@ -215,7 +218,7 @@ export async function rateLimit(
 
   let hit: WindowHit
   try {
-    hit = await withTimeout(store.hit(key, windowSeconds * 1000), STORE_TIMEOUT_MS)
+    hit = await withTimeout(store.hit(key, windowSeconds * 1000), STORE_BACKSTOP_TIMEOUT_MS)
   } catch (error) {
     logError('[rate-limit] shared store request failed', {
       source: 'rateLimit',

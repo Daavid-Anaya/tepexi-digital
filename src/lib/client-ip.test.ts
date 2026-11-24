@@ -57,6 +57,12 @@ describe('getClientIpBucket', () => {
     expect(bucketFor('::ffff:cb00:7105')).toBe('203.0.113.5')
   })
 
+  it('groups IPv6 addresses with an embedded IPv4 tail that is not IPv4-mapped by their /64', () => {
+    expect(bucketFor('64:ff9b::203.0.113.5')).toBe('64:ff9b:0:0::/64')
+    expect(bucketFor('2001:db8:1:2:3:4:198.51.100.7')).toBe('2001:db8:1:2::/64')
+    expect(bucketFor('2001:db8:1:2:3:4:198.51.100.7')).toBe(bucketFor('2001:db8:1:2::1'))
+  })
+
   it('ignores an IPv6 zone identifier', () => {
     expect(bucketFor('fe80::1%eth0')).toBe('fe80:0:0:0::/64')
   })

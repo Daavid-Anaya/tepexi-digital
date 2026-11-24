@@ -54,18 +54,48 @@ describe('rateLimit with the real Upstash client', () => {
     const [, init] = fetchMock.mock.calls[0]
     expect(init.signal?.aborted).toBe(false)
 
+    let settled = false
+    void pending.then(() => {
+      settled = true
+    })
     await vi.advanceTimersByTimeAsync(1)
 
+    // Settled by the abort alone: the backstop deadline has not passed yet and
+    // the logged error is the abort reason, not the backstop's own error.
+    expect(settled).toBe(true)
     expect(await pending).toEqual({ status: 'unavailable', remaining: 0, retryAfterSeconds: 0 })
     expect(init.signal?.aborted).toBe(true)
     expect(logErrorMock).toHaveBeenCalledWith(
       '[rate-limit] shared store request failed',
-      expect.objectContaining({ source: 'rateLimit', error: expect.anything() }),
+      expect.objectContaining({ source: 'rateLimit' }),
     )
+    // Identity, not deep equality: both timeout errors share the same message.
+    expect(logErrorMock.mock.calls[0][1].error).toBe(init.signal?.reason)
 
     // The cancelled request is not retried after the timeout.
     await vi.advanceTimersByTimeAsync(5_000)
     expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to the backstop deadline when the request ignores the abort', async () => {
+    fetchMock.mockImplementation(() => new Promise<Response>(() => undefined))
+    const { rateLimit } = await loadRateLimit()
+
+    const pending = rateLimit('contact:203.0.113.5', CONTACT)
+    let settled = false
+    void pending.then(() => {
+      settled = true
+    })
+
+    await vi.advanceTimersByTimeAsync(2_249)
+    expect(settled).toBe(false)
+
+    await vi.advanceTimersByTimeAsync(1)
+    expect(await pending).toEqual({ status: 'unavailable', remaining: 0, retryAfterSeconds: 0 })
+    expect(logErrorMock).toHaveBeenCalledWith(
+      '[rate-limit] shared store request failed',
+      expect.objectContaining({ error: expect.objectContaining({ message: expect.stringContaining('timed out') }) }),
+    )
   })
 
   it('gives every request its own timeout signal', async () => {
