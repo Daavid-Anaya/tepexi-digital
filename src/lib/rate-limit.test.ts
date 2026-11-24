@@ -214,13 +214,13 @@ describe('rateLimit with the shared Upstash store', () => {
     )
   })
 
-  it('reports unavailable when the store does not answer in time', async () => {
+  it('reports unavailable when the store does not answer before the backstop deadline', async () => {
     vi.useFakeTimers()
     evalMock.mockImplementationOnce(() => new Promise(() => undefined))
     const { rateLimit } = await loadRateLimit()
 
     const pending = rateLimit('contact:203.0.113.5', CONTACT)
-    await vi.advanceTimersByTimeAsync(2_000)
+    await vi.advanceTimersByTimeAsync(2_250)
 
     expect((await pending).status).toBe('unavailable')
   })
