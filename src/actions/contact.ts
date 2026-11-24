@@ -3,7 +3,7 @@
 import 'server-only'
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
-import { getClientIp, UNKNOWN_CLIENT_IP } from '@/lib/client-ip'
+import { getClientIpBucket } from '@/lib/client-ip'
 import { RATE_LIMIT_STATUS, rateLimit } from '@/lib/rate-limit'
 import { RATE_LIMITS, SITE_URL } from '@/lib/constants'
 import { logError } from '@/lib/observability'
@@ -26,8 +26,8 @@ export async function sendContactMessage(
   _prevState: ContactFormState,
   formData: FormData,
 ) {
-  const ip = getClientIp(await headers()) ?? UNKNOWN_CLIENT_IP
-  const limitResult = await rateLimit(`contact:${ip}`, RATE_LIMITS.CONTACT)
+  const clientBucket = getClientIpBucket(await headers())
+  const limitResult = await rateLimit(`contact:${clientBucket}`, RATE_LIMITS.CONTACT)
 
   // Fail closed: without a working limiter the form could be used to send
   // unlimited mail, so it stays unavailable until the store recovers.

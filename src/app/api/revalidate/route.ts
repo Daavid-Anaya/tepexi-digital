@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
 import { RATE_LIMITS } from '@/lib/constants'
 import { logError, logWarn } from '@/lib/observability'
-import { getClientIp, UNKNOWN_CLIENT_IP } from '@/lib/client-ip'
+import { getClientIpBucket } from '@/lib/client-ip'
 import { RATE_LIMIT_STATUS, rateLimit } from '@/lib/rate-limit'
 
 // Sanity document types mapped to their paths
@@ -18,8 +18,8 @@ const TYPE_TO_PATHS: Record<string, string[]> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = getClientIp(req.headers) ?? UNKNOWN_CLIENT_IP
-    const limitResult = await rateLimit(`revalidate:${ip}`, RATE_LIMITS.REVALIDATE)
+    const clientBucket = getClientIpBucket(req.headers)
+    const limitResult = await rateLimit(`revalidate:${clientBucket}`, RATE_LIMITS.REVALIDATE)
 
     // Fail open on `unavailable`: the webhook signature below still guards the
     // route, and blocking would leave published content stale.
