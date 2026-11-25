@@ -39,11 +39,11 @@ TypeScript 5
 
 ### Runtime fijado
 
-- **Node.js:** `22.20.0` (`.node-version` y `.nvmrc`)
-- **engines.node:** `22.x`
+- **Node.js:** `26.13.1` (`.node-version` y `.nvmrc`)
+- **engines.node:** `26.x`
 - **pnpm:** `10.32.1` (`packageManager`)
 
-Usa exactamente esas versiones en local, CI y Vercel para evitar diferencias de build o dependencias nativas.
+Usa exactamente esas versiones en local y CI para evitar diferencias de build o dependencias nativas. Vercel toma la versión mayor de `engines.node` y administra las versiones menores y los parches, así que la versión exacta del build y de las Functions puede diferir de la fijada en local.
 
 ---
 
