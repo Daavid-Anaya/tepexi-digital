@@ -13,7 +13,7 @@ import {
 } from '@sanity/icons'
 import { schemaTypes } from '@/sanity/schemas'
 
-// Singleton document IDs
+// IDs de los documentos singleton
 const SETTINGS_ID = 'siteSettings'
 
 export default defineConfig({
@@ -49,7 +49,7 @@ export default defineConfig({
 
             S.divider(),
 
-            // Content types
+            // Tipos de contenido
             S.listItem()
               .title('Lugares')
               .icon(PinIcon)

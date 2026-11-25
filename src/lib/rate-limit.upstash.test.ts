@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Exercises the real @upstash/redis client against a stubbed `fetch`, so the
-// timeout cancellation and the retry policy are checked end to end.
+// Ejercita el cliente real de @upstash/redis contra un `fetch` simulado, para que la
+// cancelación por timeout y la política de reintentos se verifiquen de punta a punta.
 const logErrorMock = vi.fn()
 vi.mock('@/lib/observability', () => ({ logError: logErrorMock }))
 
 const CONTACT = { limit: 5, windowSeconds: 900 }
 
-// Upstash answers single commands with `{ result }` and pipelines (used by
-// the client's default auto-pipelining) with `[{ result }]`.
+// Upstash responde a comandos individuales con `{ result }` y a pipelines (que usa
+// el auto-pipelining predeterminado del cliente) con `[{ result }]`.
 function upstashReply(url: string, result: unknown): Response {
   const body = url.includes('pipeline') ? [{ result }] : { result }
   return new Response(JSON.stringify(body), { status: 200 })
@@ -60,8 +60,8 @@ describe('rateLimit with the real Upstash client', () => {
     })
     await vi.advanceTimersByTimeAsync(1)
 
-    // Settled by the abort alone: the backstop deadline has not passed yet and
-    // the logged error is the abort reason, not the backstop's own error.
+    // Resuelto solo por el aborto: el plazo de respaldo aún no vence y
+    // el error registrado es el motivo del aborto, no el error propio del respaldo.
     expect(settled).toBe(true)
     expect(await pending).toEqual({ status: 'unavailable', remaining: 0, retryAfterSeconds: 0 })
     expect(init.signal?.aborted).toBe(true)
@@ -69,10 +69,10 @@ describe('rateLimit with the real Upstash client', () => {
       '[rate-limit] shared store request failed',
       expect.objectContaining({ source: 'rateLimit' }),
     )
-    // Identity, not deep equality: both timeout errors share the same message.
+    // Identidad, no igualdad profunda: ambos errores de timeout comparten el mismo mensaje.
     expect(logErrorMock.mock.calls[0][1].error).toBe(init.signal?.reason)
 
-    // The cancelled request is not retried after the timeout.
+    // La solicitud cancelada no se reintenta después del timeout.
     await vi.advanceTimersByTimeAsync(5_000)
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })

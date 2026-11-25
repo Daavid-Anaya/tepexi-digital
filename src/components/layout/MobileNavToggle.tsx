@@ -35,7 +35,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [close])
 
-  // Prevent scroll when menu is open
+  // Evita el scroll mientras el menú está abierto
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -47,7 +47,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     }
   }, [isOpen])
 
-  // Focus management: first link on open, toggle on close (REQ-A4)
+  // Manejo del foco: primer enlace al abrir, botón al cerrar (REQ-A4)
   useEffect(() => {
     if (isOpen) {
       firstLinkRef.current?.focus()
@@ -58,7 +58,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     wasOpenRef.current = isOpen
   }, [isOpen])
 
-  // Inert background content while nav is open (REQ-A5)
+  // Contenido de fondo inerte mientras la navegación está abierta (REQ-A5)
   useEffect(() => {
     const mainEl = document.querySelector('main')
     const footerEl = document.querySelector('footer')
@@ -75,7 +75,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     }
   }, [isOpen])
 
-  // Tab focus trap inside mobile nav panel (REQ-A3, REQ-A5)
+  // Trampa de foco con Tab dentro del panel de navegación móvil (REQ-A3, REQ-A5)
   useEffect(() => {
     if (!isOpen) return
     const panel = document.getElementById('mobile-nav')
@@ -97,7 +97,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
     return () => panel.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
-  // Overlay rendered via Portal so it escapes the header's stacking context
+  // Overlay renderizado con un Portal para escapar del contexto de apilamiento del header
   const overlay = canUseDocument && isOpen
     ? createPortal(
         <div
@@ -106,7 +106,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
             'pointer-events-auto'
           )}
         >
-          {/* Backdrop */}
+          {/* Fondo oscurecido */}
           <div
             className={cn(
               'absolute inset-0 bg-primary-900/60 backdrop-blur-sm transition-opacity duration-300',
@@ -116,7 +116,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
             aria-hidden="true"
           />
 
-          {/* Slide-in panel */}
+          {/* Panel deslizable */}
           <div
             id="mobile-nav"
             role="dialog"
@@ -129,10 +129,10 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
               'opacity-100 translate-y-0'
             )}
           >
-            {/* Decorative top border */}
+            {/* Borde superior decorativo */}
             <div className="h-[3px] bg-gradient-to-r from-primary via-accent to-secondary flex-shrink-0" />
 
-            {/* Nav links with stagger */}
+            {/* Enlaces de navegación con animación escalonada */}
             <nav aria-label="Menú móvil" className="flex-1 overflow-y-auto">
               <ul className="flex flex-col py-4 px-2 gap-1" role="list">
                 {navLinks.map((link, i) => {
@@ -163,7 +163,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
               </ul>
             </nav>
 
-            {/* Footer accent */}
+            {/* Acento inferior */}
             <div className="flex-shrink-0 px-6 py-6 border-t border-stone/10">
               <p className="text-xs text-stone/50 text-center">
                 Tepexi de Rodríguez, Puebla — México
@@ -177,7 +177,7 @@ export function MobileNavToggle({ navLinks }: MobileNavToggleProps) {
 
   return (
     <>
-      {/* Hamburger button — only visible below md */}
+      {/* Botón hamburguesa — solo visible por debajo de md */}
       <button
         ref={toggleRef}
         type="button"

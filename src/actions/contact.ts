@@ -29,8 +29,8 @@ export async function sendContactMessage(
   const clientBucket = getClientIpBucket(await headers())
   const limitResult = await rateLimit(`contact:${clientBucket}`, RATE_LIMITS.CONTACT)
 
-  // Fail closed: without a working limiter the form could be used to send
-  // unlimited mail, so it stays unavailable until the store recovers.
+  // Falla cerrado: sin un limitador funcional, el formulario podría usarse para enviar
+  // correo sin límite, así que queda deshabilitado hasta que el almacén se recupere.
   if (limitResult.status === RATE_LIMIT_STATUS.UNAVAILABLE) {
     return {
       success: false,
@@ -81,9 +81,9 @@ export async function sendContactMessage(
     }
   }
 
-  // Created per request, after the configuration check: the SDK constructor
-  // throws without an API key, which would crash the action instead of
-  // returning the generic error above.
+  // Se crea por solicitud, después de validar la configuración: el constructor del SDK
+  // lanza un error sin API key, lo que haría fallar la acción en lugar de
+  // devolver el error genérico de arriba.
   const resend = new Resend(resendApiKey)
 
   try {

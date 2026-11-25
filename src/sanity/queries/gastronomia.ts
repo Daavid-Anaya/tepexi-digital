@@ -1,7 +1,7 @@
 import { defineQuery } from 'next-sanity'
 import { HOME_PREVIEW_LIMITS } from '@/lib/constants'
 
-// F-06: imageUrl uses Sanity CDN params — card thumbnails 600×400 px, quality 75.
+// F-06: imageUrl usa parámetros del CDN de Sanity — miniaturas de tarjeta de 600×400 px, calidad 75.
 export const allGastronomiaQuery = defineQuery(`*[_type == "gastronomia"] | order(_createdAt desc) {
   _id,
   title,
@@ -14,8 +14,8 @@ export const allGastronomiaQuery = defineQuery(`*[_type == "gastronomia"] | orde
   dishType
 }`)
 
-// F-19: dedicated home query — fetches only the 3 most recent dishes for the home preview.
-// Avoids fetching the full gastronomia collection and slicing in JS.
+// F-19: consulta dedicada para el inicio — obtiene solo los 3 platillos más recientes para la vista previa.
+// Evita obtener toda la colección de gastronomía y recortarla en JS.
 export const latestGastronomiaHomeQuery = defineQuery(`*[_type == "gastronomia"] | order(_createdAt desc)[0...${HOME_PREVIEW_LIMITS.LATEST_GASTRONOMIA}] {
   _id,
   title,

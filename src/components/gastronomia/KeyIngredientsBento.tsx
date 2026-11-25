@@ -18,7 +18,7 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
   return (
     <section className="py-10 md:py-16 bg-primary-50">
       <Container>
-        {/* Section header */}
+        {/* Encabezado de la sección */}
         <div className="flex items-center gap-3 mb-6 md:mb-10">
           <span className="w-1 h-8 rounded-full inline-block bg-accent" />
           <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
@@ -26,9 +26,9 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
           </h2>
         </div>
 
-        {/* Grid: mobile=1col, md=2col, lg=4col */}
+        {/* Cuadrícula: móvil=1 col, md=2 col, lg=4 col */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 0 — spans 2 cols, large with icon + title + description */}
+          {/* Tarjeta 0 — ocupa 2 columnas, grande con ícono + título + descripción */}
           {ingredients[0] && (
             <div
               className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
@@ -50,7 +50,7 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
             </div>
           )}
 
-          {/* Card 1 — 1 col square, icon centered + title + subtitle */}
+          {/* Tarjeta 1 — cuadrada de 1 columna, ícono centrado + título + subtítulo */}
           {ingredients[1] && (
             <div
               className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
@@ -72,7 +72,7 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
             </div>
           )}
 
-          {/* Card 2 — 1 col square, small icon + title + subtitle */}
+          {/* Tarjeta 2 — cuadrada de 1 columna, ícono pequeño + título + subtítulo */}
           {ingredients[2] && (
             <div
               className="group rounded-xl p-4 sm:p-6 border flex flex-col items-center justify-center gap-3 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
@@ -94,14 +94,14 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
             </div>
           )}
 
-          {/* Card 3 — spans 2 cols, full image */}
+          {/* Tarjeta 3 — ocupa 2 columnas, imagen completa */}
           {ingredients[3] && (
             <div
               className="group lg:col-span-2 rounded-xl overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300"
               style={{ minHeight: '200px' }}
             >
               {ingredients[3].imageUrl ? (
-                /* F-08: use fill + sizes instead of fixed width/height to avoid wrong-size downloads */
+                /* F-08: usa fill + sizes en lugar de width/height fijos para evitar descargas de tamaño incorrecto */
                 <div className="relative w-full" style={{ minHeight: '200px' }}>
                   <Image
                     src={ingredients[3].imageUrl}
@@ -122,7 +122,7 @@ export function KeyIngredientsBento({ ingredients }: KeyIngredientsBentoProps) {
             </div>
           )}
 
-          {/* Card 4 — spans 2 cols, icon + title + description, text left */}
+          {/* Tarjeta 4 — ocupa 2 columnas, ícono + título + descripción, texto a la izquierda */}
           {ingredients[4] && (
             <div
               className="group lg:col-span-2 rounded-xl p-4 sm:p-6 border flex flex-col gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"

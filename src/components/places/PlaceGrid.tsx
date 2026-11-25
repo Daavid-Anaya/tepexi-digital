@@ -9,7 +9,7 @@ interface PlaceGridProps {
 }
 
 export function PlaceGrid({ places, basePath = '/lugares', featured = false }: PlaceGridProps) {
-  // Featured layout: 2x2 symmetric grid
+  // Diseño destacado: cuadrícula simétrica de 2x2
   if (featured) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

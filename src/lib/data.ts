@@ -4,12 +4,12 @@ import { CATEGORY_COLORS, HOME_PREVIEW_LIMITS } from './constants'
 import { resolveEventSchedule, EVENT_STATUS, type EventStatus } from './event-schedule'
 
 /**
- * Data abstraction layer.
+ * Capa de abstracción de datos.
  *
- * Strategy: Sanity-first with graceful fallback.
- * - When NEXT_PUBLIC_SANITY_PROJECT_ID is set → try Sanity first.
- * - If Sanity returns empty results OR throws a network error → fall back to mock data.
- * - When NEXT_PUBLIC_SANITY_PROJECT_ID is NOT set → use mock data directly.
+ * Estrategia: Sanity primero, con respaldo controlado.
+ * - Si NEXT_PUBLIC_SANITY_PROJECT_ID está definido → se intenta primero con Sanity.
+ * - Si Sanity devuelve resultados vacíos O lanza un error de red → se usan los datos mock.
+ * - Si NEXT_PUBLIC_SANITY_PROJECT_ID NO está definido → se usan directamente los datos mock.
  */
 
 import { cache } from 'react'
@@ -38,7 +38,7 @@ type SanityFetcherResult = { data: unknown }
 type SanityDataFetcher = (params: SanityFetcherParams) => Promise<SanityFetcherResult>
 
 // ---------------------------------------------------------------------------
-// Mock fallback logging — visibility into when/why mock data is served
+// Registro del respaldo mock — visibilidad de cuándo y por qué se sirven datos mock
 // ---------------------------------------------------------------------------
 
 type FallbackReason = 'no-sanity-config' | 'empty-results' | 'fetch-error'
@@ -76,10 +76,10 @@ function logMockFallback(source: string, reason: FallbackReason, error?: unknown
 }
 
 // ---------------------------------------------------------------------------
-// Return-type aliases (so Sanity and mock paths return the same shapes)
+// Alias de tipos de retorno (para que Sanity y mock devuelvan las mismas formas)
 // ---------------------------------------------------------------------------
 
-// --- Lugares list item ---
+// --- Elemento de la lista de lugares ---
 export interface LugarListItem {
   _id: string
   title: string
@@ -93,7 +93,7 @@ export interface LugarListItem {
   isFeatured: boolean
 }
 
-// --- Lugar detail ---
+// --- Detalle de lugar ---
 export interface LugarDetail {
   _id: string
   title: string
@@ -110,7 +110,7 @@ export interface LugarDetail {
   seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
 
-// --- Gastronomia list item ---
+// --- Elemento de la lista de gastronomía ---
 export interface GastronomiaListItem {
   _id: string
   title: string
@@ -123,7 +123,7 @@ export interface GastronomiaListItem {
   dishType: string[] | null
 }
 
-// --- Gastronomia detail ---
+// --- Detalle de gastronomía ---
 export interface GastronomiaDetail {
   _id: string
   title: string
@@ -148,7 +148,7 @@ export interface GastronomiaDetail {
   seo: { metaTitle: string | null; metaDescription: string | null; ogImageUrl?: string | null; ogImageAlt?: string | null } | null
 }
 
-// --- Evento list item ---
+// --- Elemento de la lista de eventos ---
 export interface EventoListItem {
   _id: string
   title: string
@@ -165,7 +165,7 @@ export interface EventoListItem {
   isFeatured: boolean
 }
 
-// --- Evento detail ---
+// --- Detalle de evento ---
 export interface EventoDetail {
   _id: string
   title: string
@@ -191,7 +191,7 @@ export interface EventoDetail {
 }
 
 // ---------------------------------------------------------------------------
-// Mock-to-interface mappers
+// Mapeadores de mock a interfaz
 // ---------------------------------------------------------------------------
 
 function mockToLugarList(l: MockLugar): LugarListItem {
@@ -242,7 +242,7 @@ function mockToLugarDetail(l: MockLugar): LugarDetail {
 }
 
 // ---------------------------------------------------------------------------
-// Mock fallback helpers
+// Funciones auxiliares del respaldo mock
 // ---------------------------------------------------------------------------
 
 function getMockLugaresList(): LugarListItem[] {
@@ -796,7 +796,7 @@ export async function fetchSanityDetail<T>({
 }
 
 // ---------------------------------------------------------------------------
-// Public API — Sanity-first with graceful fallback to mock
+// API pública — Sanity primero, con respaldo controlado a mock
 // ---------------------------------------------------------------------------
 
 export async function getAllLugares(): Promise<LugarListItem[]> {
@@ -844,7 +844,7 @@ export async function getGastronomiaBySlug(slug: string): Promise<GastronomiaDet
   })
 }
 
-// F-19: home page — only featured lugares, max 4, only card fields.
+// F-19: página de inicio — solo lugares destacados, máximo 4, solo campos de tarjeta.
 export async function getFeaturedLugaresForHome(): Promise<LugarListItem[]> {
   const getFeaturedMockLugares = () =>
     getMockLugaresList()
@@ -859,7 +859,7 @@ export async function getFeaturedLugaresForHome(): Promise<LugarListItem[]> {
   })
 }
 
-// F-19: home page — only the 3 most recent gastronomia items, only card fields.
+// F-19: página de inicio — solo los 3 platillos más recientes, solo campos de tarjeta.
 export async function getLatestGastronomiaForHome(): Promise<GastronomiaListItem[]> {
   return fetchSanityList({
     source: 'getLatestGastronomiaForHome',
@@ -871,7 +871,7 @@ export async function getLatestGastronomiaForHome(): Promise<GastronomiaListItem
   })
 }
 
-// Evaluate the clock per request, not when Sanity's cached documents were fetched.
+// Evalúa el reloj en cada solicitud, no cuando se obtuvieron los documentos en caché de Sanity.
 export async function getUpcomingEventosPreview(): Promise<EventoListItem[]> {
   await connection()
   const now = new Date()
@@ -969,8 +969,8 @@ export async function getAllMapMarkers(): Promise<MapMarker[]> {
 type SiteSettings = MockSettings
 export type { SiteSettings, SocialLink, SeoDefaults }
 
-// React.cache deduplicates calls within the same request — if layout and page
-// both call getSettings(), Sanity is only queried once per render pass.
+// React.cache deduplica las llamadas dentro de la misma solicitud: si el layout y la página
+// llaman a getSettings(), Sanity se consulta una sola vez por renderizado.
 export const getSettings = cache(async (): Promise<SiteSettings> => {
   const settings = await fetchSanityDetail({
     source: 'getSettings',

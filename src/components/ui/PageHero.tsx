@@ -15,23 +15,23 @@ const PAGE_HERO_SIZE = {
 
 type PageHeroSize = (typeof PAGE_HERO_SIZE)[keyof typeof PAGE_HERO_SIZE]
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Tipos ───
 
 export interface PageHeroProps {
-  /** Background image URL */
+  /** URL de la imagen de fondo */
   imageUrl: string
-  /** Overlay opacity — default 0.6 (range 0-1) */
+  /** Opacidad de la superposición — por defecto 0.6 (rango 0-1) */
   overlayOpacity?: number
-  /** Section padding variant */
+  /** Variante de padding de la sección */
   size?: PageHeroSize
-  /** Content to render inside */
+  /** Contenido a renderizar dentro */
   children: ReactNode
-  /** Additional className for the section */
+  /** className adicional para la sección */
   className?: string
 }
 
 export interface PageHeroBreadcrumbProps {
-  /** Items for the breadcrumb. Last item has no href (current page). */
+  /** Elementos del breadcrumb. El último no tiene href (página actual). */
   items: { label: string; href?: string }[]
   currentPath?: string
 }
@@ -52,13 +52,13 @@ export interface PageHeroStatsProps {
 }
 
 export interface PageHeroBackLinkProps {
-  /** URL to navigate back to */
+  /** URL a la que se regresa */
   href: string
-  /** Label text after the arrow, e.g. "Volver a Lugares" */
+  /** Texto de la etiqueta después de la flecha, p. ej. "Volver a Lugares" */
   label: string
 }
 
-// ─── PageHero (root) ─────────────────────────────────────────────────────────
+// ─── PageHero (raíz) ───
 
 export function PageHero({
   imageUrl,
@@ -75,7 +75,7 @@ export function PageHero({
         className,
       )}
     >
-      {/* Background image */}
+      {/* Imagen de fondo */}
       <Image
         src={imageUrl}
         alt=""
@@ -85,14 +85,14 @@ export function PageHero({
         sizes="100vw"
       />
 
-      {/* Dark overlay — opacity controlled via inline style */}
+      {/* Superposición oscura — opacidad controlada con estilo en línea */}
       <div
         className="absolute inset-0"
         style={{ backgroundColor: `rgba(0,0,0,${overlayOpacity})` }}
         aria-hidden="true"
       />
 
-      {/* Content — sits above overlay */}
+      {/* Contenido — por encima de la superposición */}
       <Container className="relative z-10">
         {children}
       </Container>

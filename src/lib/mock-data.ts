@@ -1,11 +1,11 @@
 /**
- * Mock data for Tepexi de Rodríguez, Puebla, México.
- * Used when NEXT_PUBLIC_SANITY_PROJECT_ID is not set.
+ * Datos mock de Tepexi de Rodríguez, Puebla, México.
+ * Se usan cuando NEXT_PUBLIC_SANITY_PROJECT_ID no está definido.
  */
 import { TEPEXI_CENTER } from './constants'
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Funciones auxiliares
 // ---------------------------------------------------------------------------
 
 let _keyCounter = 0
@@ -24,7 +24,7 @@ function portableTextMulti(...paragraphs: string[]) {
 }
 
 // ---------------------------------------------------------------------------
-// Types
+// Tipos
 // ---------------------------------------------------------------------------
 
 export interface MockImage {
@@ -141,7 +141,7 @@ export interface MockSettings {
 }
 
 // ---------------------------------------------------------------------------
-// Helper to build MockImage
+// Función auxiliar para construir MockImage
 // ---------------------------------------------------------------------------
 
 function img(seed: string, alt: string, width = 800, height = 600): MockImage {
@@ -150,7 +150,7 @@ function img(seed: string, alt: string, width = 800, height = 600): MockImage {
 }
 
 // ---------------------------------------------------------------------------
-// Categories
+// Categorías
 // ---------------------------------------------------------------------------
 
 export const mockCategories: MockCategory[] = [
@@ -680,7 +680,7 @@ export const mockEventos: MockEvento[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Settings
+// Configuración
 // ---------------------------------------------------------------------------
 
 export const mockSettings: MockSettings = {

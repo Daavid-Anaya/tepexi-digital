@@ -19,7 +19,7 @@ export async function Footer() {
 
   return (
     <footer>
-      {/* Wave divider */}
+      {/* Divisor en forma de ola */}
       <div className="overflow-hidden leading-[0] bg-sand">
         <svg
           viewBox="0 0 1440 80"
@@ -35,11 +35,11 @@ export async function Footer() {
         </svg>
       </div>
 
-      {/* Main footer body */}
+      {/* Cuerpo principal del footer */}
       <div className="bg-primary-800 text-cream">
         <Container className="pt-8 pb-10 md:pt-10 md:pb-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-            {/* Brand column */}
+            {/* Columna de la marca */}
             <div className="md:col-span-4 space-y-5">
               {/* Logo */}
               <Link href="/" className="inline-flex items-center gap-2.5 group">
@@ -56,7 +56,7 @@ export async function Footer() {
                 {settings.siteDescription}
               </p>
 
-              {/* Social icons */}
+              {/* Íconos de redes sociales */}
               <div className="flex items-center gap-2">
                 {settings.socialLinks?.map((social) => {
                   const Icon = getSocialIcon(social.platform)
@@ -92,7 +92,7 @@ export async function Footer() {
               </div>
             </div>
 
-            {/* Explore column */}
+            {/* Columna de exploración */}
             <div className="md:col-span-4">
               <h3 className="font-heading font-semibold text-cream text-sm uppercase tracking-widest mb-5 pb-3 border-b border-cream/10">
                 Explorar
@@ -112,7 +112,7 @@ export async function Footer() {
               </ul>
             </div>
 
-            {/* Contact column */}
+            {/* Columna de contacto */}
             <div className="md:col-span-4">
               <h3 className="font-heading font-semibold text-cream text-sm uppercase tracking-widest mb-5 pb-3 border-b border-cream/10">
                 Contacto
@@ -157,7 +157,7 @@ export async function Footer() {
                 )}
               </address>
 
-              {/* Map CTA */}
+              {/* CTA del mapa */}
               <div className="mt-6">
                 <Link
                   href="/mapa"
@@ -170,7 +170,7 @@ export async function Footer() {
             </div>
           </div>
 
-          {/* Bottom bar */}
+          {/* Barra inferior */}
           <div className="mt-8 md:mt-12 pt-6 border-t border-cream/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/60">
             <p>
               © {currentYear} {settings.siteName}. Todos los derechos reservados.

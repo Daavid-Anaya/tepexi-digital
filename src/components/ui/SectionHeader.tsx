@@ -2,7 +2,7 @@ interface SectionHeaderProps {
   eyebrow: string
   title: string
   description?: string
-  /** CSS color value passed as inline style, e.g. CATEGORY_COLORS.cultura */
+  /** Valor de color CSS que se pasa como estilo en línea, p. ej. CATEGORY_COLORS.cultura */
   accentColor: string
 }
 

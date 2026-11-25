@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   headers: async () => [
-    // F-37: long-lived immutable cache for static assets in /public/images/
+    // F-37: caché inmutable de larga duración para los recursos estáticos de /public/images/
     {
       source: '/images/(.*)',
       headers: [
@@ -53,9 +53,9 @@ const nextConfig: NextConfig = {
     },
   ],
   images: {
-    // Add 412px breakpoint for mobile viewports (common phone width).
-    // This ensures the hero srcset includes an exact mobile size so the
-    // browser downloads ~80KB instead of ~120KB on throttled connections.
+    // Agrega un breakpoint de 412px para viewports móviles (ancho común de teléfono).
+    // Así el srcset del hero incluye un tamaño exacto para móvil y el
+    // navegador descarga ~80KB en lugar de ~120KB en conexiones lentas.
     imageSizes: [412, 640, 750, 828, 1080, 1200, 1920],
     remotePatterns: [
       {

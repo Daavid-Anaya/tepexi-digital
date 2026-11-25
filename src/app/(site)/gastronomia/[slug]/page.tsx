@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import { getGastronomiaBySlug, getSettings } from '@/lib/data'
 
-// F-21: ISR — detail pages rarely change; revalidate once per day.
+// F-21: ISR — las páginas de detalle cambian poco; se revalidan una vez al día.
 export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { PageHero, PageHeroBackLink, PageHeroBreadcrumb } from '@/components/ui/PageHero'
@@ -28,7 +28,7 @@ import Image from 'next/image'
 import DynamicImageCarousel from '@/components/gallery/DynamicImageCarousel'
 
 // ---------------------------------------------------------------------------
-// Metadata
+// Metadatos
 // ---------------------------------------------------------------------------
 
 interface Props {
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // ---------------------------------------------------------------------------
-// Page
+// Página
 // ---------------------------------------------------------------------------
 
 export default async function GastronomiaDetailPage({ params }: Props) {
@@ -103,7 +103,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
         />
         <PageHeroBackLink href="/gastronomia" label="Volver a Gastronomía" />
 
-        {/* Category + dish type badges */}
+        {/* Insignias de categoría + tipo de platillo */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           {item.category && (
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
@@ -118,12 +118,12 @@ export default async function GastronomiaDetailPage({ params }: Props) {
           ))}
         </div>
 
-        {/* Title */}
+        {/* Título */}
         <h1 className="font-heading font-bold text-3xl md:text-5xl text-white leading-tight mb-3">
           {item.title}
         </h1>
 
-        {/* Origin + season meta */}
+        {/* Metadatos de origen + temporada */}
         {(item.origin || item.season) && (
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-3">
             {item.origin && (
@@ -143,12 +143,12 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       </PageHero>
 
       {/* ================================================================ */}
-      {/* 2. ARTICLE LEAD — intro & description (two-column with image)    */}
+      {/* 2. ENTRADA — intro y descripción (dos columnas con imagen)       */}
       {/* ================================================================ */}
       <section className="py-10 md:py-14 bg-cream">
         <Container>
           <div className={item.descriptionImage ? 'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start' : ''}>
-            {/* Left column: description content */}
+            {/* Columna izquierda: contenido de la descripción */}
             <div className={item.descriptionImage ? '' : 'max-w-3xl mx-auto'}>
               <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-4 text-accent">
                 Gastronomía de la Mixteca
@@ -173,11 +173,11 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Right column: description image (only if present) */}
+            {/* Columna derecha: imagen de la descripción (solo si existe) */}
             {item.descriptionImage && (
               <div className="relative">
                 <div className="w-full rounded-2xl overflow-hidden shadow-lg">
-                  {/* F-09: add sizes so the browser downloads the right resolution */}
+                  {/* F-09: agrega sizes para que el navegador descargue la resolución correcta */}
                   <Image
                     src={item.descriptionImage.url}
                     alt={item.descriptionImage.alt ?? item.title ?? ''}
@@ -195,27 +195,27 @@ export default async function GastronomiaDetailPage({ params }: Props) {
       </section>
 
       {/* ================================================================ */}
-      {/* 3. INGREDIENTES CLAVE — editorial ingredient grid                */}
+      {/* 3. INGREDIENTES CLAVE — cuadrícula editorial de ingredientes     */}
       {/* ================================================================ */}
       {hasKeyIngredients && (
         <KeyIngredientsBento ingredients={item.keyIngredients!} />
       )}
 
       {/* ================================================================ */}
-      {/* 4. PROCESO DE PREPARACIÓN — alternating vertical timeline        */}
+      {/* 4. PROCESO DE PREPARACIÓN — línea de tiempo vertical alternada   */}
       {/* ================================================================ */}
       {hasPreparationSteps && (
         <PreparationTimeline steps={item.preparationSteps!} />
       )}
 
       {/* ================================================================ */}
-      {/* 5. MAIN CONTENT — two-column editorial layout                    */}
+      {/* 5. CONTENIDO PRINCIPAL — diseño editorial de dos columnas        */}
       {/* ================================================================ */}
       <section className="py-10 md:py-14 bg-white">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
 
-            {/* ------- LEFT: main editorial content ------- */}
+            {/* ------- IZQUIERDA: contenido editorial principal ------- */}
             <div className="lg:col-span-2 space-y-14">
               {images.length > 0 && (
                 <div>
@@ -232,10 +232,10 @@ export default async function GastronomiaDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* ------- RIGHT: sidebar ------- */}
+            {/* ------- DERECHA: barra lateral ------- */}
             <aside className="space-y-5">
 
-              {/* Recipe Quick Facts Card */}
+              {/* Tarjeta de datos rápidos de la receta */}
               {hasMagazineContent && (
                 <div className="rounded-2xl overflow-hidden shadow-sm border border-[#E8DDD5]">
                   <div className="px-4 sm:px-5 py-4 bg-accent">
@@ -348,7 +348,7 @@ export default async function GastronomiaDetailPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Standalone quote card */}
+              {/* Tarjeta de cita independiente */}
               {item.quote && (
                 <QuoteCard text={item.quote.text} author={item.quote.author} />
               )}

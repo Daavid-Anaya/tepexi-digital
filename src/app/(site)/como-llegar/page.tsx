@@ -70,7 +70,7 @@ const tips = [
 export default function ComoLlegarPage() {
   return (
     <>
-      {/* Page hero */}
+      {/* Hero de la página */}
       <PageHero imageUrl={HERO_FALLBACKS.comoLlegar}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cómo Llegar' }]} currentPath="/como-llegar" />
         <PageHeroHeader
@@ -78,7 +78,7 @@ export default function ComoLlegarPage() {
           title="Cómo Llegar"
           description="Tepexi de Rodríguez se ubica en el sur del estado de Puebla, aproximadamente a 2 horas de la capital poblana."
         />
-        {/* Distance highlights */}
+        {/* Distancias destacadas */}
         <div className="mt-6 md:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-lg">
           {routes.map((r) => (
             <div key={r.from} className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-white text-center">
@@ -92,7 +92,7 @@ export default function ComoLlegarPage() {
       <section className="py-10 md:py-16">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Route cards */}
+            {/* Tarjetas de rutas */}
             <div className="space-y-6">
               <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Rutas principales
@@ -105,7 +105,7 @@ export default function ComoLlegarPage() {
                     key={route.from}
                     className="bg-cream rounded-2xl border border-stone/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                   >
-                    {/* Route header */}
+                    {/* Encabezado de la ruta */}
                     <div className={`${route.color} px-5 py-4`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -132,7 +132,7 @@ export default function ComoLlegarPage() {
                       </div>
                     </div>
 
-                    {/* Route description */}
+                    {/* Descripción de la ruta */}
                     <div className="px-5 py-4">
                       <p className="text-stone text-sm leading-relaxed">{route.description}</p>
 
@@ -150,7 +150,7 @@ export default function ComoLlegarPage() {
                 )
               })}
 
-              {/* Tips card */}
+              {/* Tarjeta de consejos */}
               <div className="bg-amber-50 rounded-2xl border border-amber-200/60 overflow-hidden">
                 <div className="bg-amber-100 px-5 py-3 flex items-center gap-2">
                   <Lightbulb className="w-4.5 h-4.5 text-amber-600" aria-hidden="true" />
@@ -171,7 +171,7 @@ export default function ComoLlegarPage() {
               </div>
             </div>
 
-            {/* Map */}
+            {/* Mapa */}
             <div className="space-y-4">
               <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Ubicación

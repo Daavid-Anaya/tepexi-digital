@@ -8,17 +8,17 @@ import { navLinks } from '@/lib/navigation'
 export function Navbar() {
   return (
     <>
-      {/* Top accent bar */}
+      {/* Barra de acento superior */}
       <div className="h-[3px] bg-primary sticky top-0 z-50" aria-hidden="true" />
 
-      {/* F-32: reduced blur-sm (was blur-md) + higher opacity bg to avoid GPU cost on every scroll frame */}
+      {/* F-32: blur-sm reducido (antes blur-md) + fondo más opaco para evitar costo de GPU en cada frame de scroll */}
       <header className="sticky top-[3px] z-50 bg-cream/98 backdrop-blur-sm border-b border-stone/15 shadow-[0_1px_12px_rgba(139,69,19,0.06)]">
         <nav
           role="navigation"
           aria-label="Navegación principal"
         >
           <Container className="flex items-center justify-between h-[60px]">
-            {/* Logo / Brand */}
+            {/* Logo / Marca */}
             <Link
               href="/"
               className="flex items-center gap-2 group"
@@ -40,10 +40,10 @@ export function Navbar() {
               </span>
             </Link>
 
-            {/* Desktop nav */}
+            {/* Navegación de escritorio */}
             <NavLinks links={navLinks} />
 
-            {/* Mobile toggle */}
+            {/* Botón del menú móvil */}
             <MobileNavToggle navLinks={navLinks} />
           </Container>
         </nav>

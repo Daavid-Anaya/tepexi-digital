@@ -2,7 +2,7 @@ import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 function isRelativePath(url: string): boolean {
-  // Allow only relative paths starting with "/" but not "//" (protocol-relative)
+  // Permite solo rutas relativas que empiecen con "/" pero no con "//" (relativas al protocolo)
   return url.startsWith('/') && !url.startsWith('//')
 }
 

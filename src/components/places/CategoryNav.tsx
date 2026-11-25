@@ -23,7 +23,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
-    // Track which sections are visible via IntersectionObserver
+    // Rastrea qué secciones son visibles mediante IntersectionObserver
     const sectionEls = categories
       .map((cat) => document.getElementById(cat.id))
       .filter(isElementSection)
@@ -32,7 +32,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // Find the topmost visible section
+        // Encuentra la sección visible más cercana a la parte superior
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
@@ -57,14 +57,14 @@ export function CategoryNav({ categories }: CategoryNavProps) {
   function handleClick(id: string) {
     const el = document.getElementById(id)
     if (!el) return
-    const yOffset = -100 // account for sticky nav + page header
+    const yOffset = -100 // compensa la navegación fija + el encabezado de la página
     const y = el.getBoundingClientRect().top + window.scrollY + yOffset
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     window.scrollTo({ top: y, behavior: prefersReducedMotion ? 'auto' : 'smooth' })
-    // Move focus to the target section for AT users (REQ-C7)
+    // Mueve el foco a la sección destino para usuarios de tecnologías de asistencia (REQ-C7)
     const currentTabIndex = el.getAttribute('tabindex')
     if (!currentTabIndex) el.setAttribute('tabindex', '-1')
     el.focus({ preventScroll: true })

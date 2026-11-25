@@ -21,8 +21,8 @@ export const metadata: Metadata = buildStaticPageMetadata({
 })
 
 export default async function HomePage() {
-  // F-19/F-20: use dedicated home queries that fetch only what the page needs.
-  // No more getAllLugares() + filter/slice — GROQ does the filtering at source.
+  // F-19/F-20: usa consultas dedicadas para el inicio que obtienen solo lo que la página necesita.
+  // Ya no se usa getAllLugares() + filter/slice: GROQ filtra en el origen.
   const [lugaresData, gastronomiaData, eventosData, settings] = await Promise.all([
     getFeaturedLugaresForHome(),
     getLatestGastronomiaForHome(),
@@ -68,10 +68,10 @@ export default async function HomePage() {
     <>
       <EventScheduleRefresh />
       {/* ============================================================
-          HERO — full-width cinematic
+          HERO — cinematográfico a todo lo ancho
           ============================================================ */}
       <section className="relative min-h-[70vh] md:min-h-[88vh] flex flex-col items-center justify-center overflow-hidden bg-primary-900">
-        {/* Background image */}
+        {/* Imagen de fondo */}
         <div className="absolute inset-0">
           <Image
             src={settings.heroImageUrl ?? 'https://picsum.photos/seed/tepexi-nature/1920/1080'}
@@ -82,27 +82,27 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover"
           />
-          {/* Layered gradient overlay */}
+          {/* Superposición de degradados en capas */}
           <div className="absolute inset-0 bg-gradient-to-b from-primary-900/70 via-primary-900/40 to-primary-900/85" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary-900/40 via-transparent to-primary-900/20" />
         </div>
 
-        {/* Decorative top-left diagonal accent */}
+        {/* Acento diagonal decorativo superior izquierdo */}
         <div
           className="hidden sm:block absolute top-0 left-0 w-64 h-1.5 bg-gradient-to-r from-accent via-primary to-transparent origin-top-left -rotate-[30deg] translate-y-8 -translate-x-4 opacity-60"
           aria-hidden="true"
         />
 
-        {/* Content */}
+        {/* Contenido */}
         <Container className="relative z-10 text-center py-12 md:py-24">
-          {/* Eyebrow label */}
+          {/* Etiqueta superior */}
           <p className="inline-flex items-center gap-2 text-cream/90 text-sm font-medium uppercase tracking-[0.2em] mb-6 animate-fade-in">
             <span className="w-6 h-px bg-cream/50" />
             Mixteca Poblana, México
             <span className="w-6 h-px bg-cream/50" />
           </p>
 
-          {/* Main headline */}
+          {/* Titular principal */}
           <h1
             className="font-heading font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-text-primary leading-[1.05] mb-6 animate-fade-in-up"
             style={{ textShadow: '0 2px 24px rgba(0,0,0,0.4)' }}
@@ -124,7 +124,7 @@ export default async function HomePage() {
             )}
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtítulo */}
           <p
             className="text-cream/80 text-lg md:text-xl max-w-2xl mx-auto mb-6 md:mb-10 leading-relaxed animate-fade-in-up"
             style={{ animationDelay: '100ms' }}
@@ -157,7 +157,7 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          {/* Stats strip */}
+          {/* Franja de estadísticas */}
           <dl
             className="mt-8 md:mt-16 flex flex-wrap justify-center gap-8 sm:gap-12 animate-fade-in"
             style={{ animationDelay: '400ms' }}
@@ -178,7 +178,7 @@ export default async function HomePage() {
           </dl>
         </Container>
 
-        {/* Scroll indicator */}
+        {/* Indicador de desplazamiento */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1 text-cream/70 z-10">
           <span className="text-[10px] uppercase tracking-widest">Desliza</span>
           <ChevronDown size={18} className="animate-bounce-slow" aria-hidden="true" />
@@ -186,11 +186,11 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          FEATURED PLACES
+          LUGARES DESTACADOS
           ============================================================ */}
       <section className="py-20 md:py-28 bg-sand">
         <Container>
-          {/* Section header */}
+          {/* Encabezado de la sección */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 md:mb-14">
             <div>
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary mb-3">
@@ -224,10 +224,10 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          EVENTS / AGENDA
+          EVENTOS / AGENDA
           ============================================================ */}
       <section className="py-20 md:py-28 bg-cream relative overflow-hidden">
-        {/* Subtle background pattern */}
+        {/* Patrón de fondo sutil */}
         <div
           className="absolute inset-0 opacity-[0.025]"
           aria-hidden="true"
@@ -281,7 +281,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          GASTRONOMY
+          GASTRONOMÍA
           ============================================================ */}
       <section className="py-20 md:py-28 bg-sand">
         <Container>
@@ -310,7 +310,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {/* Warm introduction paragraph */}
+          {/* Párrafo de introducción cálido */}
           <p className="text-stone text-base leading-relaxed max-w-2xl mb-10 border-l-2 border-primary/30 pl-4">
             La cocina de la Mixteca Poblana es un tesoro vivo: huaxmole, chileatole, tlacoyos y
             el mezcal artesanal, recetas transmitidas de generación en generación. Cada
@@ -324,7 +324,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          EXPLORE CATEGORIES STRIP
+          FRANJA DE CATEGORÍAS PARA EXPLORAR
           ============================================================ */}
       <section className="py-16 bg-primary-800">
         <Container>
@@ -370,13 +370,13 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          CTA BANNER
+          BANNER DE CTA
           ============================================================ */}
       <section className="relative py-20 md:py-28 overflow-hidden bg-cream">
-        {/* Warm gradient background */}
+        {/* Fondo con degradado cálido */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-100 via-cream to-sand" />
 
-        {/* Decorative blob */}
+        {/* Mancha decorativa */}
         <div
           className="absolute -right-20 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-primary/6 blur-3xl"
           aria-hidden="true"

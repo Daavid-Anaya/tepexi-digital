@@ -1,35 +1,35 @@
 /**
- * Sanity CDN image URL transformer.
+ * Transformador de URLs de imágenes del CDN de Sanity.
  *
- * Appends Sanity's image transformation params to any `cdn.sanity.io` URL so
- * the CDN returns an appropriately sized, modern-format image instead of the
- * raw original (which can be 4000–6000 px / 8–12 MB).
+ * Agrega los parámetros de transformación de imágenes de Sanity a cualquier URL de `cdn.sanity.io`
+ * para que el CDN devuelva una imagen del tamaño adecuado y en formato moderno en lugar del
+ * original sin procesar (que puede medir 4000–6000 px / pesar 8–12 MB).
  *
- * Docs: https://www.sanity.io/docs/image-urls
+ * Documentación: https://www.sanity.io/docs/image-urls
  */
 
 export interface SanityImgOptions {
-  /** Target width in pixels */
+  /** Ancho objetivo en píxeles */
   width?: number
-  /** Target height in pixels */
+  /** Alto objetivo en píxeles */
   height?: number
-  /** JPEG/WebP quality 1-100 (default 80) */
+  /** Calidad JPEG/WebP 1-100 (por defecto 80) */
   quality?: number
   /**
-   * Resize mode (default 'crop').
-   * - 'crop'    → crop to exact dimensions
-   * - 'fill'    → fill canvas with letterboxing
-   * - 'fillmax' → like fill but never upscale
-   * - 'max'     → fit inside box, no crop
-   * - 'scale'   → scale to exact dimensions
+   * Modo de redimensionado (por defecto 'crop').
+   * - 'crop'    → recorta a las dimensiones exactas
+   * - 'fill'    → llena el lienzo con bandas (letterboxing)
+   * - 'fillmax' → como fill, pero nunca amplía
+   * - 'max'     → se ajusta dentro del recuadro, sin recortar
+   * - 'scale'   → escala a las dimensiones exactas
    */
   fit?: 'crop' | 'fill' | 'fillmax' | 'max' | 'scale'
-  /** Focal point for crops (default 'center') */
+  /** Punto focal para recortes (por defecto 'center') */
   crop?: 'top' | 'bottom' | 'left' | 'right' | 'center' | 'focalpoint' | 'entropy'
 }
 
 /**
- * Appends Sanity image transformation query params to a CDN URL.
+ * Agrega los parámetros de transformación de imágenes de Sanity a una URL del CDN.
  *
  * @example
  * sanityImgUrl(rawUrl, { width: 800, quality: 75 })
@@ -55,20 +55,20 @@ export function sanityImgUrl(
   return `${url}?${params.toString()}`
 }
 
-// ─── Preset helpers for common use-cases ──────────────────────────────────────
+// ─── Ajustes predefinidos para casos de uso comunes ──────────────────────────────────────
 
-/** Card thumbnail — 600×400, quality 75 */
+/** Miniatura de tarjeta — 600×400, calidad 75 */
 export const sanityCardImg = (url: string | null | undefined) =>
   sanityImgUrl(url, { width: 600, height: 400, quality: 75 })
 
-/** Hero image — 1920 wide, quality 80, no height constraint */
+/** Imagen hero — 1920 de ancho, calidad 80, sin restricción de alto */
 export const sanityHeroImg = (url: string | null | undefined) =>
   sanityImgUrl(url, { width: 1920, quality: 80, fit: 'max' })
 
-/** Detail image — 1200 wide, quality 80 */
+/** Imagen de detalle — 1200 de ancho, calidad 80 */
 export const sanityDetailImg = (url: string | null | undefined) =>
   sanityImgUrl(url, { width: 1200, quality: 80, fit: 'max' })
 
-/** Small thumbnail — 400×300, quality 70 */
+/** Miniatura pequeña — 400×300, calidad 70 */
 export const sanityThumbImg = (url: string | null | undefined) =>
   sanityImgUrl(url, { width: 400, height: 300, quality: 70 })

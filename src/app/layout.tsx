@@ -71,10 +71,10 @@ export default async function RootLayout({
       className={`${inter.variable} ${plusJakartaSans.variable}`}
     >
       <head>
-        {/* Preconnect to Sanity CDN so hero image DNS+TLS is ready before it's requested */}
+        {/* Preconexión al CDN de Sanity para que el DNS+TLS de la imagen hero esté listo antes de solicitarla */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-        {/* F-17: preconnect to OpenStreetMap tile servers used by LeafletMap */}
+        {/* F-17: preconexión a los servidores de teselas de OpenStreetMap que usa LeafletMap */}
         <link rel="preconnect" href="https://a.tile.openstreetmap.org" />
         <link rel="preconnect" href="https://b.tile.openstreetmap.org" />
         <link rel="preconnect" href="https://c.tile.openstreetmap.org" />

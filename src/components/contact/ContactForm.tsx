@@ -79,7 +79,7 @@ export default function ContactForm() {
 
   return (
     <form action={formAction} className="space-y-5">
-      {/* Error state */}
+      {/* Estado de error */}
       {state.error && (
         <div role="alert" className="rounded-xl border border-accent/25 bg-accent/8 px-4 py-3.5 flex items-start gap-3">
           <AlertCircle className="w-4.5 h-4.5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />

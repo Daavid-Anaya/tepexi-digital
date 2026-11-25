@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import 'leaflet/dist/leaflet.css'
-// F-31: Leaflet popup overrides scoped here — only loads when the map is rendered
+// F-31: estilos de los popups de Leaflet acotados aquí; solo se cargan cuando se renderiza el mapa
 import './leaflet-overrides.css'
 import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'

@@ -35,14 +35,14 @@ export default async function AgendaPage() {
     isFeatured: evento.isFeatured,
   }))
 
-  // Group featured events first
+  // Agrupa primero los eventos destacados
   const featured = events.filter((e) => e.isFeatured)
   const regular = events.filter((e) => !e.isFeatured)
 
   return (
     <>
       <EventScheduleRefresh />
-      {/* Page hero — calendar inspired */}
+      {/* Hero de la página — inspirado en un calendario */}
       <PageHero imageUrl={HERO_FALLBACKS.agenda}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Agenda' }]} currentPath="/agenda" />
         <PageHeroHeader
@@ -56,7 +56,7 @@ export default async function AgendaPage() {
       <section className="py-10 md:py-16">
         <Container>
           {events.length === 0 ? (
-            /* Empty state */
+            /* Estado vacío */
             <div className="text-center py-20">
               <div className="relative w-24 h-24 mx-auto mb-6">
                 <div className="absolute inset-0 rounded-2xl bg-secondary/10 rotate-6" />
@@ -75,7 +75,7 @@ export default async function AgendaPage() {
             </div>
           ) : (
             <div className="space-y-8 md:space-y-14">
-              {/* Featured events */}
+              {/* Eventos destacados */}
               {featured.length > 0 && (
                 <div>
                   <div className="flex items-center gap-3 mb-6">
@@ -88,7 +88,7 @@ export default async function AgendaPage() {
                     </span>
                   </div>
 
-                  {/* Featured with subtle background */}
+                  {/* Destacados con fondo sutil */}
                   <div className="bg-secondary/5 rounded-2xl border border-secondary/15 p-4 sm:p-6 space-y-4">
                     {featured.map((event) => (
                       <EventCard key={event.slug} {...event} />
@@ -97,7 +97,7 @@ export default async function AgendaPage() {
                 </div>
               )}
 
-              {/* Regular events with timeline */}
+              {/* Eventos regulares con línea de tiempo */}
               {regular.length > 0 && (
                 <div>
                   <div className="flex items-center gap-3 mb-6">
@@ -110,15 +110,15 @@ export default async function AgendaPage() {
                     </span>
                   </div>
 
-                  {/* Timeline layout */}
+                  {/* Diseño de línea de tiempo */}
                   <div className="relative">
-                    {/* Vertical timeline line */}
+                    {/* Línea vertical de la línea de tiempo */}
                     <div aria-hidden="true" className="absolute left-6 top-0 bottom-0 w-px bg-stone/15 hidden sm:block" />
 
                     <div className="space-y-4">
                       {regular.map((event) => (
                         <div key={event.slug} className="relative sm:pl-14">
-                          {/* Timeline dot */}
+                          {/* Punto de la línea de tiempo */}
                           <div aria-hidden="true" className="absolute left-4 top-6 w-4 h-4 rounded-full border-2 border-stone/30 bg-sand hidden sm:block" />
                           <EventCard {...event} />
                         </div>

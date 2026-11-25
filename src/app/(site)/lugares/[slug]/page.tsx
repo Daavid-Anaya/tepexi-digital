@@ -4,7 +4,7 @@ import { PortableText } from '@portabletext/react'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { getLugarBySlug, getSettings } from '@/lib/data'
 
-// F-21: ISR — detail pages rarely change; revalidate once per day.
+// F-21: ISR — las páginas de detalle cambian poco; se revalidan una vez al día.
 export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { MapPin, Clock, DollarSign, Star, Map } from 'lucide-react'
@@ -135,7 +135,7 @@ export default async function LugarDetailPage({ params }: Props) {
   return (
     <>
       <JsonLd data={touristAttractionJsonLd} />
-      {/* Hero banner */}
+      {/* Banner hero */}
       <PageHero imageUrl={heroImageUrl} size="compact">
         <PageHeroBreadcrumb
           items={[
@@ -147,7 +147,7 @@ export default async function LugarDetailPage({ params }: Props) {
         />
         <PageHeroBackLink href="/lugares" label="Volver a Lugares Turísticos" />
 
-        {/* Category badge */}
+        {/* Insignia de categoría */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           {lugar.category && (
             <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/25">
@@ -172,16 +172,16 @@ export default async function LugarDetailPage({ params }: Props) {
       <section className="py-12">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-            {/* Main content */}
+            {/* Contenido principal */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Image carousel */}
+              {/* Carrusel de imágenes */}
               {images.length > 0 && (
                 <div className="rounded-2xl overflow-hidden shadow-lg">
                   <DynamicImageCarousel images={images} />
                 </div>
               )}
 
-              {/* Description */}
+              {/* Descripción */}
               {lugar.description && (
                 <div className="text-base text-stone">
                   <PortableText
@@ -192,7 +192,7 @@ export default async function LugarDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Sidebar — ficha técnica */}
+            {/* Barra lateral — ficha técnica */}
             <FichaTecnicaCard
               title="Ficha Técnica"
               headerColor="var(--color-primary, #8B4513)"
@@ -211,7 +211,7 @@ export default async function LugarDetailPage({ params }: Props) {
             />
           </div>
 
-          {/* Map section */}
+          {/* Sección del mapa */}
           {markers.length > 0 && (
             <div className="mt-8 md:mt-12 rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
               <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-4 sm:px-6 py-4">

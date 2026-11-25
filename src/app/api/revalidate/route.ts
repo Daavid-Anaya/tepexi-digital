@@ -6,7 +6,7 @@ import { logError, logWarn } from '@/lib/observability'
 import { getClientIpBucket } from '@/lib/client-ip'
 import { RATE_LIMIT_STATUS, rateLimit } from '@/lib/rate-limit'
 
-// Sanity document types mapped to their paths
+// Tipos de documento de Sanity asociados a sus rutas
 const TYPE_TO_PATHS: Record<string, string[]> = {
   lugar: ['/lugares', '/mapa', '/'],
   gastronomia: ['/gastronomia', '/'],
@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     const clientBucket = getClientIpBucket(req.headers)
     const limitResult = await rateLimit(`revalidate:${clientBucket}`, RATE_LIMITS.REVALIDATE)
 
-    // Fail open on `unavailable`: the webhook signature below still guards the
-    // route, and blocking would leave published content stale.
+    // Falla abierto ante `unavailable`: la firma del webhook de abajo sigue protegiendo la
+    // ruta, y bloquear dejaría desactualizado el contenido publicado.
     if (limitResult.status === RATE_LIMIT_STATUS.BLOCKED) {
       logWarn('[revalidate] rate limit exceeded', {
         source: 'revalidateRoute',
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Verify the webhook signature
+    // Verifica la firma del webhook
     const { isValidSignature, body } = await parseBody<{
       _type: string
       slug?: { current: string }
@@ -97,14 +97,14 @@ export async function POST(req: NextRequest) {
 
     const { _type, slug } = body
 
-    // Revalidate the specific paths for this document type
+    // Revalida las rutas específicas de este tipo de documento
     const paths = TYPE_TO_PATHS[_type] ?? ['/']
     
     for (const path of paths) {
       revalidatePath(path)
     }
 
-    // If document has a slug, revalidate its detail page too
+    // Si el documento tiene slug, revalida también su página de detalle
     if (slug?.current) {
       const detailPaths: Record<string, string> = {
         lugar: `/lugares/${slug.current}`,
@@ -118,8 +118,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Expire tagged Sanity data immediately for webhook-driven refreshes.
-    // Next.js local docs recommend `{ expire: 0 }` for third-party route handlers.
+    // Expira de inmediato los datos etiquetados de Sanity en las actualizaciones disparadas por el webhook.
+    // La documentación local de Next.js recomienda `{ expire: 0 }` para route handlers de terceros.
     revalidateTag('sanity', { expire: 0 })
 
     return NextResponse.json({

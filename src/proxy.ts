@@ -6,8 +6,8 @@ export function proxy() {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
   const response = NextResponse.next()
 
-  // In development, Next.js uses eval() for hot reload and React Refresh.
-  // In production, only nonce-based inline scripts are allowed.
+  // En desarrollo, Next.js usa eval() para hot reload y React Refresh.
+  // En producción, solo se permiten scripts inline basados en nonce.
   const scriptSrc = isDev
     ? `script-src 'self' 'unsafe-eval' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com`
     : `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com`
@@ -35,7 +35,7 @@ export function proxy() {
 
 export const config = {
   matcher: [
-    // Match all paths except static files and Next.js internals
+    // Coincide con todas las rutas excepto archivos estáticos e internos de Next.js
     '/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|robots.txt|sitemap.xml).*)',
   ],
 }

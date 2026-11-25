@@ -182,7 +182,7 @@ function parseSchedule(value: unknown): EventSchedule {
   return { scheduleType, timezone, closed, weekly: { seriesStart, seriesEnd, slots, exceptions } }
 }
 
-/** Shared validation for schedule producers and consumers: malformed values fail closed. */
+/** Validación compartida para quienes producen y consumen horarios: los valores mal formados fallan cerrado. */
 export function validateEventSchedule(value: unknown): true | string {
   try {
     parseSchedule(value)
@@ -209,8 +209,8 @@ function wallClock(timezone: string) {
     const wall = `${date}T${time}:00`
     const nominal = Date.parse(`${wall}Z`)
     const candidates = new Set<number>()
-    // Inspect offsets on both sides of DST transitions. Gaps are skipped;
-    // repeated wall times use the earlier instant, independent of server TZ.
+    // Revisa los offsets a ambos lados de los cambios de horario de verano. Los huecos se omiten;
+    // las horas locales repetidas usan el instante más temprano, sin depender de la zona horaria del servidor.
     for (const hours of [-36, -12, 0, 12, 36]) {
       const sample = nominal + hours * 3_600_000
       const offset = Date.parse(`${local(sample)}Z`) - sample
@@ -227,7 +227,7 @@ interface Occurrence {
   end: number | null
 }
 
-/** One ongoing session (earliest start) or the next session; never expand a series. */
+/** Una sesión en curso (la que empezó primero) o la siguiente; nunca expande una serie. */
 export function resolveEventSchedule(value: unknown, now: Date): ResolvedEventSchedule | null {
   let schedule: EventSchedule
   try {
@@ -266,8 +266,8 @@ export function resolveEventSchedule(value: unknown, now: Date): ResolvedEventSc
     return true
   }
   const excluded = new Set(weekly.exceptions.map((item) => `${item.date}/${item.slotKey}`))
-  // Explicit replacements are finite, including old unknown-end sessions and
-  // dates moved outside the series bounds. Original dates remain excluded.
+  // Los reemplazos explícitos son finitos, incluidas las sesiones antiguas sin hora de fin y
+  // las fechas movidas fuera de los límites de la serie. Las fechas originales siguen excluidas.
   for (const exception of weekly.exceptions) {
     if (exception.action === EXCEPTION_ACTION.REPLACE && !exception.closed) {
       consider(exception.replacementDate!, exception.startTime!, exception.endTime, exception.endsNextDay)
@@ -277,8 +277,8 @@ export function resolveEventSchedule(value: unknown, now: Date): ResolvedEventSc
   for (const slot of weekly.slots) {
     const weekday = new Date(`${from}T00:00:00Z`).getUTCDay()
     let date = addDays(from, (slot.weekday - weekday + 7) % 7)
-    // Each exception can remove only one candidate. Extra iterations cover
-    // yesterday's ended slot and a DST gap, without a time-horizon cutoff.
+    // Cada excepción puede eliminar solo un candidato. Las iteraciones extra cubren
+    // el horario de ayer ya terminado y un hueco por horario de verano, sin un límite de horizonte temporal.
     for (let attempt = 0; attempt < weekly.exceptions.length + 4; attempt++, date = addDays(date, 7)) {
       if (weekly.seriesEnd && date > weekly.seriesEnd) break
       if (excluded.has(`${date}/${slot._key}`)) continue

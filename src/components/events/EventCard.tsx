@@ -43,13 +43,13 @@ export function EventCard({
           isFeatured && 'border-l-[3px] border-l-primary bg-primary-50/60',
         )}
       >
-        {/* Date accent box */}
+        {/* Recuadro de fecha destacado */}
         <div className="flex-shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl bg-primary text-white text-center shadow-sm">
           <span className="text-xl font-bold leading-none tabular-nums">{formatted.day}</span>
           <span className="text-[9px] uppercase tracking-wider mt-1 opacity-80 font-medium">{formatted.month}</span>
         </div>
 
-        {/* Content */}
+        {/* Contenido */}
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-2 flex-wrap mb-1">
             <h3 className="font-heading font-semibold text-primary group-hover:text-primary-dark transition-colors duration-200 leading-snug">
