@@ -1,7 +1,7 @@
 import { client } from '@/sanity/lib/client'
 
 /**
- * Fetch all slugs for a Sanity document type — used by generateStaticParams.
+ * Obtiene todos los slugs de un tipo de documento de Sanity; lo usa generateStaticParams.
  */
 export async function fetchStaticSlugs(
   sanityType: string,

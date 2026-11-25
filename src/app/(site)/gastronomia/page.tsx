@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Utensils, Leaf, Flame, Hammer, Sun, Wheat } from 'lucide-react'
 import { getAllGastronomia } from '@/lib/data'
 
-// F-21: ISR — revalidate list pages every hour.
+// F-21: ISR — las páginas de listado se revalidan cada hora.
 export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
@@ -19,7 +19,7 @@ export const metadata: Metadata = buildStaticPageMetadata({
   path: '/gastronomia',
 })
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Datos ───
 
 const timelineItems = [
   {
@@ -94,7 +94,7 @@ const ancientTechniques = [
   },
 ] as const
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Página ───
 
 export default async function GastronomiaPage() {
   const data = await getAllGastronomia()
@@ -111,7 +111,7 @@ export default async function GastronomiaPage() {
 
   return (
     <>
-      {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
+      {/* ── 1. Hero ── */}
       <PageHero imageUrl={HERO_FALLBACKS.gastronomia}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Gastronomía' }]} currentPath="/gastronomia" />
         <PageHeroHeader
@@ -122,10 +122,10 @@ export default async function GastronomiaPage() {
         <PageHeroStats stats={[{ value: places.length, label: 'Platillos' }, { value: 'Mixteca', label: 'cocina' }, { value: 'Artesanal', label: 'tradición' }]} />
       </PageHero>
 
-      {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
+      {/* ── 2. Evolución Histórica — Línea de tiempo ── */}
       <section className="bg-cream py-12 md:py-20">
         <Container>
-          {/* Section header */}
+          {/* Encabezado de la sección */}
           <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-accent rounded-full" />
@@ -138,9 +138,9 @@ export default async function GastronomiaPage() {
             </h2>
           </div>
 
-          {/* Two-column layout */}
+          {/* Diseño de dos columnas */}
           <div className="flex flex-col md:flex-row gap-10 items-start">
-            {/* Left — description + image */}
+            {/* Izquierda — descripción + imagen */}
             <div className="w-full md:w-2/5 flex-shrink-0 flex flex-col gap-6">
               <p className="text-stone text-base leading-relaxed">
                 La Mixteca Poblana es una región donde la aridez del paisaje
@@ -162,15 +162,15 @@ export default async function GastronomiaPage() {
               </div>
             </div>
 
-            {/* Right — timeline */}
+            {/* Derecha — línea de tiempo */}
             <div className="flex-1 relative pl-8">
-              {/* Vertical line */}
+              {/* Línea vertical */}
               <div aria-hidden="true" className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
 
               <div className="space-y-10">
                 {timelineItems.map(({ icon: Icon, title, description, tagLabel, tagItems }, idx) => (
                   <div key={idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 120}ms` }}>
-                    {/* Icon marker */}
+                    {/* Marcador con ícono */}
                     <div aria-hidden="true" className="absolute -left-8 top-1 w-7 h-7 rounded-full bg-accent flex items-center justify-center shadow-sm ring-4 ring-cream">
                       <Icon className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                     </div>
@@ -206,10 +206,10 @@ export default async function GastronomiaPage() {
         </Container>
       </section>
 
-      {/* ── 3. Ingredientes Endémicos — Card Grid ───────────────────────── */}
+      {/* ── 3. Ingredientes Endémicos — Cuadrícula de tarjetas ── */}
       <section className="bg-sand py-12 md:py-20">
         <Container>
-          {/* Section header */}
+          {/* Encabezado de la sección */}
           <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-secondary rounded-full" />
@@ -225,11 +225,11 @@ export default async function GastronomiaPage() {
             </p>
           </div>
 
-          {/* 2×2 → 4 col grid */}
+          {/* Cuadrícula de 2×2 → 4 columnas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {endemicIngredients.map(({ image, title, description }) => (
               <Card key={title} className="flex flex-col">
-                {/* Card image */}
+                {/* Imagen de la tarjeta */}
                 <div className="relative w-full aspect-square overflow-hidden">
                   <Image
                     src={image}
@@ -253,10 +253,10 @@ export default async function GastronomiaPage() {
         </Container>
       </section>
 
-      {/* ── 4. Técnicas Milenarias — Icon Grid ──────────────────────────── */}
+      {/* ── 4. Técnicas Milenarias — Cuadrícula de íconos ──*/}
       <section className="bg-cream py-12 md:py-20">
         <Container>
-          {/* Section header */}
+          {/* Encabezado de la sección */}
           <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-primary rounded-full" />
@@ -275,14 +275,14 @@ export default async function GastronomiaPage() {
             </p>
           </div>
 
-          {/* Icon grid */}
+          {/* Cuadrícula de íconos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {ancientTechniques.map(({ icon: Icon, title, description }) => (
               <div
                 key={title}
                 className="group flex flex-col items-center text-center gap-4 p-5 sm:p-8 rounded-2xl border border-primary-100 bg-primary-50 hover:bg-primary-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
               >
-                {/* Large icon in colored circle */}
+                {/* Ícono grande en un círculo de color */}
                 <div className="w-16 h-16 rounded-full bg-accent/15 border-2 border-accent/25 flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300">
                   <Icon className="w-8 h-8 text-accent" aria-hidden="true" />
                 </div>
@@ -300,10 +300,10 @@ export default async function GastronomiaPage() {
         </Container>
       </section>
 
-      {/* ── 5. Grid section ─────────────────────────────────────────────── */}
+      {/* ── 5. Sección de cuadrícula ──*/}
       <section className="py-12 md:py-20">
         <Container>
-          {/* Section header */}
+          {/* Encabezado de la sección */}
           <div className="mb-8 md:mb-12 animate-fade-in-up">
             <div className="flex items-center gap-3 mb-3">
               <span className="block w-8 h-0.5 bg-accent rounded-full" />

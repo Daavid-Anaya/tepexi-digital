@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { MapPin } from 'lucide-react'
 import { getAllLugares } from '@/lib/data'
 
-// F-21: ISR — revalidate list pages every hour so new entries appear without a full redeploy.
+// F-21: ISR — las páginas de listado se revalidan cada hora para que las nuevas entradas aparezcan sin un redeploy completo.
 export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import { CategoryNav, type CategoryNavItem } from '@/components/places/CategoryNav'
@@ -19,8 +19,8 @@ export const metadata: Metadata = buildStaticPageMetadata({
 })
 
 /**
- * Fixed display order for categories.
- * Categories not listed here appear at the end in the order they're found.
+ * Orden fijo de visualización de las categorías.
+ * Las categorías que no aparecen aquí se muestran al final, en el orden en que se encuentran.
  */
 const CATEGORY_ORDER = [
   'Ecoturismo y Naturaleza',
@@ -30,12 +30,12 @@ const CATEGORY_ORDER = [
   'Gastronomía y Comercio Local',
 ]
 
-/** Slugify a category name into a valid HTML id */
+/** Convierte el nombre de una categoría en un id HTML válido */
 function toSectionId(name: string): string {
   return name
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // strip diacritics
+    .replace(/[\u0300-\u036f]/g, '') // elimina diacríticos
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
 }
@@ -50,7 +50,7 @@ interface CategoryGroup {
 function groupByCategory(
   data: Awaited<ReturnType<typeof getAllLugares>>
 ): CategoryGroup[] {
-  // Build a map: category name → { color, places[] }
+  // Construye un mapa: nombre de categoría → { color, places[] }
   const map = new Map<string, { color: string; places: PlaceCardProps[] }>()
 
   for (const lugar of data) {
@@ -75,7 +75,7 @@ function groupByCategory(
     }
   }
 
-  // Sort categories by CATEGORY_ORDER, then any unlisted at the end
+  // Ordena las categorías según CATEGORY_ORDER y deja las no listadas al final
   const sortedNames = [...map.keys()].sort((a, b) => {
     const idxA = CATEGORY_ORDER.indexOf(a)
     const idxB = CATEGORY_ORDER.indexOf(b)
@@ -100,7 +100,7 @@ export default async function LugaresPage() {
   const groups = groupByCategory(data)
   const totalPlaces = groups.reduce((sum, g) => sum + g.places.length, 0)
 
-  // Build nav items for the sticky CategoryNav
+  // Construye los elementos de navegación para el CategoryNav fijo
   const navItems: CategoryNavItem[] = groups.map((g) => ({
     id: g.sectionId,
     label: g.name,
@@ -110,7 +110,7 @@ export default async function LugaresPage() {
 
   return (
     <>
-      {/* Page hero */}
+      {/* Hero de la página */}
       <PageHero imageUrl={HERO_FALLBACKS.lugares} className="mb-10 md:mb-16">
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Lugares Turísticos' }]} currentPath="/lugares" />
         <PageHeroHeader
@@ -121,7 +121,7 @@ export default async function LugaresPage() {
         <PageHeroStats stats={[{ value: totalPlaces, label: 'lugares' }, { value: groups.length, label: 'categorías' }, { value: 'Mixteca', label: 'región' }]} />
       </PageHero>
 
-      {/* Category nav + grouped sections */}
+      {/* Navegación por categorías + secciones agrupadas */}
       <section className="py-10 md:py-16">
         <Container>
           {totalPlaces === 0 ? (
@@ -138,10 +138,10 @@ export default async function LugaresPage() {
             </div>
           ) : (
             <>
-              {/* Sticky category navigation */}
+              {/* Navegación fija por categorías */}
               <CategoryNav categories={navItems} />
 
-              {/* Category sections */}
+              {/* Secciones por categoría */}
               <div className="mt-8 md:mt-12 flex flex-col gap-10 md:gap-16">
                 {groups.map((group) => (
                   <CategorySection

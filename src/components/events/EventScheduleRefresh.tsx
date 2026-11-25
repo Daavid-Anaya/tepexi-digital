@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-/** Time passes without a CMS mutation. Refresh visible schedules once a minute. */
+/** El tiempo avanza sin cambios en el CMS. Actualiza los horarios visibles una vez por minuto. */
 export function EventScheduleRefresh() {
   const router = useRouter()
   useEffect(() => {

@@ -23,7 +23,7 @@ export function PlaceCard({
   return (
     <Card className={cn(featured && 'md:row-span-2')}>
       <Link href={`${basePath}/${slug}`} className="group block h-full flex flex-col">
-        {/* Image container */}
+        {/* Contenedor de la imagen */}
         <div
           className={cn(
             'relative w-full overflow-hidden bg-sand flex-shrink-0',
@@ -42,9 +42,9 @@ export function PlaceCard({
                 }
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              {/* Bottom gradient overlay for readability */}
+              {/* Degradado inferior para mejorar la legibilidad */}
               <div className="absolute inset-0 bg-gradient-to-t from-primary-900/60 via-transparent to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-300" />
-              {/* Category badge over image */}
+              {/* Insignia de categoría sobre la imagen */}
               <span className="absolute top-3 left-3 inline-flex items-center rounded-full bg-cream/90 backdrop-blur-sm text-primary-dark px-2.5 py-1 text-xs font-semibold shadow-sm">
                 {category}
               </span>
@@ -56,7 +56,7 @@ export function PlaceCard({
           )}
         </div>
 
-        {/* Content */}
+        {/* Contenido */}
         <div className={cn('p-4 flex flex-col gap-2', featured && 'p-5')}>
           <h3
             className={cn(

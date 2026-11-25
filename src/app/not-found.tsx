@@ -14,7 +14,7 @@ export default function NotFound() {
         <Container>
           <div className="max-w-lg mx-auto text-center">
 
-            {/* Icon with layered decorative rings */}
+            {/* Ícono con anillos decorativos en capas */}
             <div className="relative inline-flex items-center justify-center mb-8">
               <div className="absolute w-32 h-32 rounded-full bg-primary/5" />
               <div className="absolute w-24 h-24 rounded-full bg-primary/8" />
@@ -23,23 +23,23 @@ export default function NotFound() {
               </div>
             </div>
 
-            {/* Error code */}
+            {/* Código de error */}
             <p className="font-heading font-bold text-7xl text-primary/20 leading-none mb-2 select-none">
               404
             </p>
 
-            {/* Heading */}
+            {/* Encabezado */}
             <h1 className="font-heading font-bold text-2xl md:text-3xl text-primary mb-3 leading-tight">
               Página no encontrada
             </h1>
 
-            {/* Description */}
+            {/* Descripción */}
             <p className="text-stone text-base leading-relaxed mb-8 max-w-sm mx-auto">
               Parece que este sendero no existe. Quizás fue movido,
               renombrado, o nunca llegó a crearse.
             </p>
 
-            {/* Card with links */}
+            {/* Tarjeta con enlaces */}
             <div className="bg-cream rounded-2xl border border-stone/10 shadow-sm p-6 mb-6 text-left space-y-3">
               <p className="font-heading font-semibold text-primary text-sm uppercase tracking-wide mb-4">
                 Explora el sitio
@@ -61,7 +61,7 @@ export default function NotFound() {
               ))}
             </div>
 
-            {/* Primary CTA */}
+            {/* CTA principal */}
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 bg-primary text-white font-heading font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors text-sm shadow-sm"

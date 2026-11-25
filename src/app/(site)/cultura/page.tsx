@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Palette, Crown, Route, ShieldUser, Users, ChevronDown, Hand, Gem } from 'lucide-react'
 
-// F-21: ISR — static-ish page, revalidate once per day.
+// F-21: ISR — página casi estática; se revalida una vez al día.
 export const revalidate = 86400
 import { Container } from '@/components/ui/Container'
 import { Card } from '@/components/ui/Card'
@@ -17,9 +17,9 @@ export const metadata: Metadata = buildStaticPageMetadata({
   path: '/cultura',
 })
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-// NOTE: This page is intentionally static (no Sanity schema for "cultura" yet).
-// When a "cultura" content type is created in Sanity, connect it here.
+// ─── Datos ───
+// NOTA: esta página es estática a propósito (aún no hay un schema de Sanity para "cultura").
+// Cuando se cree un tipo de contenido "cultura" en Sanity, conéctalo aquí.
 
 const timelineItems = [
   {
@@ -89,12 +89,12 @@ const tradicionesItems = [
   },
 ] as const
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Página ───
 
 export default async function CulturaPage() {
   return (
     <>
-      {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
+      {/* ── 1. Hero ── */}
       <PageHero imageUrl={HERO_FALLBACKS.cultura}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Cultura' }]} currentPath="/cultura" />
         <PageHeroHeader
@@ -105,7 +105,7 @@ export default async function CulturaPage() {
         <PageHeroStats stats={[{ value: 4, label: 'sitios' }, { value: 'Prehispánico', label: 'legado' }, { value: 'Patrimonio', label: 'categoría' }]} />
       </PageHero>
 
-      {/* ── 2. Evolución Histórica — Timeline ───────────────────────────── */}
+      {/* ── 2. Evolución Histórica — Línea de tiempo ── */}
       <section className="bg-cream py-12 md:py-20">
         <Container>
           <SectionHeader
@@ -114,9 +114,9 @@ export default async function CulturaPage() {
             accentColor={CATEGORY_COLORS.cultura}
           />
 
-          {/* Two-column layout */}
+          {/* Diseño de dos columnas */}
           <div className="flex flex-col md:flex-row gap-10 items-start">
-            {/* Left — description + image placeholder */}
+            {/* Izquierda — descripción + marcador de posición de la imagen */}
             <div className="w-full md:w-2/5 flex-shrink-0 flex flex-col gap-6">
               <p className="text-stone text-base leading-relaxed">
                 Tepexi de Rodríguez es un lugar viviente donde cada capa geológica
@@ -135,15 +135,15 @@ export default async function CulturaPage() {
               </div>
             </div>
 
-            {/* Right — timeline */}
+            {/* Derecha — línea de tiempo */}
             <div className="flex-1 relative pl-8">
-              {/* Vertical line */}
+              {/* Línea vertical */}
               <div aria-hidden="true" className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-primary-200 rounded-full" />
 
               <div className="space-y-10">
                 {timelineItems.map(({ icon: Icon, title, description }, idx) => (
                   <div key={idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 120}ms` }}>
-                    {/* Icon marker */}
+                    {/* Marcador con ícono */}
                     <div
                       aria-hidden="true"
                       className="absolute -left-8 top-1 w-7 h-7 rounded-full flex items-center justify-center shadow-sm ring-4 ring-cream"
@@ -168,7 +168,7 @@ export default async function CulturaPage() {
         </Container>
       </section>
 
-      {/* ── 3. Explora Tepexi — Card Grid ───────────────────────────────── */}
+      {/* ── 3. Explora Tepexi — Cuadrícula de tarjetas ── */}
       <section className="bg-sand py-12 md:py-20">
         <Container>
           <SectionHeader
@@ -178,11 +178,11 @@ export default async function CulturaPage() {
             accentColor={CATEGORY_COLORS.cultura}
           />
 
-          {/* 4-col grid */}
+          {/* Cuadrícula de 4 columnas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {exploraCards.map(({ title, description, image }) => (
               <Card key={title} className="flex flex-col">
-                {/* Card image */}
+                {/* Imagen de la tarjeta */}
                 <div className="relative w-full aspect-square overflow-hidden">
                   <Image
                     src={image}
@@ -206,7 +206,7 @@ export default async function CulturaPage() {
         </Container>
       </section>
 
-      {/* ── 4. Tradiciones Vivas — Accordion ────────────────────────────── */}
+      {/* ── 4. Tradiciones Vivas — Acordeón ────────────────────────────── */}
       <section className="bg-cream py-12 md:py-20">
         <Container>
           <SectionHeader
@@ -216,7 +216,7 @@ export default async function CulturaPage() {
             accentColor={CATEGORY_COLORS.cultura}
           />
 
-          {/* Accordion — zero-JS using details/summary */}
+          {/* Acordeón — sin JS, usando details/summary */}
           <div className="max-w-2xl mx-auto">
             {tradicionesItems.map(({ title, content }) => (
               <details
@@ -238,7 +238,7 @@ export default async function CulturaPage() {
         </Container>
       </section>
 
-      {/* ── 5. Manos Tepexanas — Two Columns ────────────────────────────── */}
+      {/* ── 5. Manos Tepexanas — Dos columnas ────────────────────────────── */}
       <section className="bg-sand py-12 md:py-20">
         <Container>
           <SectionHeader
@@ -248,9 +248,9 @@ export default async function CulturaPage() {
             accentColor={CATEGORY_COLORS.cultura}
           />
 
-          {/* Two equal columns */}
+          {/* Dos columnas iguales */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Column 1: El Arte de la Palma */}
+            {/* Columna 1: El Arte de la Palma */}
             <div className="rounded-2xl border border-primary-100 bg-primary-50 p-5 sm:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div
@@ -278,7 +278,7 @@ export default async function CulturaPage() {
               </div>
             </div>
 
-            {/* Column 2: Talla en Piedra */}
+            {/* Columna 2: Talla en Piedra */}
             <div className="rounded-2xl border border-primary-100 bg-primary-50 p-5 sm:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div

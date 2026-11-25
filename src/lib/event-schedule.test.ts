@@ -5,7 +5,7 @@ const monday = { _key: 'mon', weekday: 1, startTime: '10:00', endTime: '12:00' }
 const wednesday = { _key: 'wed', weekday: 3, startTime: '16:00', endTime: '18:00' }
 const weekly = { seriesStart: '2026-01-01', slots: [monday, wednesday] }
 const series = { scheduleType: 'weekly', timezone: DEFAULT_EVENT_TIMEZONE, weekly }
-const now = new Date('2026-09-07T17:00:00Z') // Monday 11:00 in Tepexi.
+const now = new Date('2026-09-07T17:00:00Z') // Lunes 11:00 en Tepexi.
 const resolve = (value: unknown, clock = now) => resolveEventSchedule(value, clock)
 
 describe('single event schedules and legacy compatibility', () => {

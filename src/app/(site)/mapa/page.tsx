@@ -5,7 +5,7 @@ import { getAllMapMarkers } from '@/lib/data'
 import type { MapMarker } from '@/types'
 import { getMapMarkerRoute } from '@/lib/map-marker-route'
 
-// F-21: ISR — map markers change infrequently, revalidate every hour.
+// F-21: ISR — los marcadores del mapa cambian poco; se revalida cada hora.
 export const revalidate = 3600
 import { Container } from '@/components/ui/Container'
 import DynamicLeafletMap from '@/components/map/DynamicLeafletMap'
@@ -111,7 +111,7 @@ export default async function MapaPage() {
 
   return (
     <>
-      {/* Page hero */}
+      {/* Hero de la página */}
       <PageHero imageUrl={HERO_FALLBACKS.mapa}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Mapa Interactivo' }]} currentPath="/mapa" />
         <PageHeroHeader
@@ -142,7 +142,7 @@ export default async function MapaPage() {
       <section className="py-10">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Legend panel */}
+            {/* Panel de leyenda */}
             <aside className="lg:col-span-1 space-y-4 order-2 lg:order-none">
               <h2 className="font-heading font-semibold text-text-primary text-lg">
                 Categorías
@@ -156,14 +156,14 @@ export default async function MapaPage() {
                       key={type.label}
                       className="bg-cream rounded-xl border border-stone/10 overflow-hidden"
                     >
-                      {/* Type header */}
+                      {/* Encabezado del tipo */}
                       <div className="flex items-center gap-2.5 px-4 py-3 border-b border-stone/10">
                         <Icon className="w-4 h-4 text-primary/70 flex-shrink-0" aria-hidden="true" />
                         <span className="font-heading font-semibold text-sm text-primary">
                           {type.label}
                         </span>
                       </div>
-                      {/* Categories */}
+                      {/* Categorías */}
                       <ul className="px-4 py-2.5 space-y-2">
                         {type.categories.map((cat) => (
                           <li key={cat.label} className="flex items-center gap-2.5">
@@ -182,7 +182,7 @@ export default async function MapaPage() {
                 })}
               </div>
 
-              {/* Map tip */}
+              {/* Consejo sobre el mapa */}
               <div className="bg-primary/5 rounded-xl border border-primary/15 p-4">
                 <div className="flex items-start gap-2">
                   <Info className="w-4 h-4 text-primary/70 flex-shrink-0 mt-0.5" aria-hidden="true" />
@@ -195,7 +195,7 @@ export default async function MapaPage() {
 
             </aside>
 
-            {/* Map card */}
+            {/* Tarjeta del mapa */}
             <div className="lg:col-span-3 order-1 lg:order-none">
               <div className="rounded-2xl border border-stone/10 overflow-hidden shadow-md">
                 <div className="flex items-center gap-3 bg-cream border-b border-stone/10 px-5 py-3">

@@ -1,23 +1,23 @@
 /**
- * Fixed-window rate limiter backed by a shared store.
+ * Rate limiter de ventana fija respaldado por un almacén compartido.
  *
- * Algorithm: the window starts with the first request for a key and lasts
- * `windowSeconds`. Every request inside the window increments the counter;
- * once it exceeds `limit`, requests are blocked until the window expires.
- * This is NOT a sliding window: a client can spend its full quota at the end
- * of one window and again at the start of the next one.
+ * Algoritmo: la ventana empieza con la primera solicitud de una clave y dura
+ * `windowSeconds`. Cada solicitud dentro de la ventana incrementa el contador;
+ * cuando supera `limit`, las solicitudes se bloquean hasta que la ventana expira.
+ * NO es una ventana deslizante: un cliente puede gastar toda su cuota al final
+ * de una ventana y otra vez al inicio de la siguiente.
  *
- * Store selection:
- * - Upstash Redis when `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`
- *   (or the Vercel Marketplace `KV_REST_API_URL`/`KV_REST_API_TOKEN`) are set.
- *   Counters are shared across serverless instances and survive restarts.
- * - In production without that configuration, every check reports
- *   `unavailable` so each caller applies its explicit failure policy instead
- *   of silently degrading to per-instance counters.
- * - Outside production (local dev, tests), a per-process in-memory store.
+ * Selección del almacén:
+ * - Upstash Redis cuando están definidos `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`
+ *   (o los de Vercel Marketplace `KV_REST_API_URL`/`KV_REST_API_TOKEN`).
+ *   Los contadores se comparten entre instancias serverless y sobreviven a reinicios.
+ * - En producción sin esa configuración, cada verificación reporta
+ *   `unavailable` para que cada llamador aplique su política de fallo explícita en lugar
+ *   de degradarse en silencio a contadores por instancia.
+ * - Fuera de producción (desarrollo local, pruebas), un almacén en memoria por proceso.
  *
- * Store errors and timeouts never throw: they return `unavailable` and are
- * logged. Callers decide whether that blocks or allows the operation.
+ * Los errores y timeouts del almacén nunca lanzan excepciones: devuelven `unavailable` y se
+ * registran. Quien llama decide si eso bloquea o permite la operación.
  */
 
 import { Redis } from '@upstash/redis'
@@ -32,16 +32,16 @@ export const RATE_LIMIT_STATUS = {
 export type RateLimitStatus = (typeof RATE_LIMIT_STATUS)[keyof typeof RATE_LIMIT_STATUS]
 
 interface RateLimitOptions {
-  /** Max requests allowed in the window */
+  /** Máximo de solicitudes permitidas en la ventana */
   limit: number
-  /** Window duration in seconds */
+  /** Duración de la ventana en segundos */
   windowSeconds: number
 }
 
 export interface RateLimitResult {
   status: RateLimitStatus
   remaining: number
-  /** Seconds until the window resets; 0 unless the request was blocked */
+  /** Segundos hasta que la ventana se reinicia; 0 salvo que la solicitud se haya bloqueado */
   retryAfterSeconds: number
 }
 
@@ -55,12 +55,12 @@ interface RateLimitStore {
 }
 
 const STORE_TIMEOUT_MS = 2_000
-// The abort signal enforces STORE_TIMEOUT_MS. The backstop is slightly longer
-// so the abort settles first and the race only covers work it cannot cancel.
+// La señal de aborto aplica STORE_TIMEOUT_MS. El plazo de respaldo es un poco más largo
+// para que el aborto se resuelva primero y la carrera solo cubra el trabajo que no puede cancelar.
 const STORE_BACKSTOP_TIMEOUT_MS = STORE_TIMEOUT_MS + 250
 
-// Atomic: increments the counter, starts the window on the first hit and
-// repairs a key left without expiry, then returns [count, remaining ttl ms].
+// Atómico: incrementa el contador, inicia la ventana con la primera solicitud y
+// repara una clave que quedó sin expiración; luego devuelve [count, ttl restante en ms].
 const FIXED_WINDOW_SCRIPT = `
 local count = redis.call('INCR', KEYS[1])
 if count == 1 then
@@ -130,8 +130,8 @@ interface StoreCredentials {
   token: string
 }
 
-// URL and token are resolved as a pair so a partial Upstash configuration
-// never combines with Marketplace values, and empty strings count as unset.
+// La URL y el token se resuelven en pareja para que una configuración parcial de Upstash
+// nunca se combine con valores de Marketplace; las cadenas vacías cuentan como no definidas.
 function getStoreCredentials(): StoreCredentials | null {
   const pairs = [
     [process.env.UPSTASH_REDIS_REST_URL, process.env.UPSTASH_REDIS_REST_TOKEN],
@@ -152,12 +152,12 @@ function createDefaultStore(): RateLimitStore | null {
     return createRedisStore(
       new Redis({
         ...credentials,
-        // One retry tolerates transient network errors. The client retries only
-        // when `fetch` throws, so a connection lost after Redis ran the script
-        // can count one request twice; that only overcounts and is accepted.
+        // Un reintento tolera errores de red transitorios. El cliente reintenta solo
+        // cuando `fetch` lanza un error, así que una conexión perdida después de que Redis ejecutó el script
+        // puede contar una solicitud dos veces; eso solo sobrecuenta y se acepta.
         retry: { retries: 1 },
-        // Evaluated per request, so each one gets its own deadline and is
-        // aborted (not retried) when it expires instead of running on.
+        // Se evalúa por solicitud, así que cada una obtiene su propio plazo y se
+        // aborta (sin reintento) cuando vence, en lugar de seguir ejecutándose.
         signal: () => createTimeoutSignal(STORE_TIMEOUT_MS),
       }),
     )
@@ -179,8 +179,8 @@ function timeoutError(timeoutMs: number): Error {
   return new Error(`Rate limit store timed out after ${timeoutMs}ms`)
 }
 
-// Like `AbortSignal.timeout`, but built on `setTimeout` so tests can drive it
-// with fake timers. The timer is unref'd so it never keeps the process alive.
+// Como `AbortSignal.timeout`, pero construido sobre `setTimeout` para que las pruebas lo controlen
+// con temporizadores falsos. El temporizador usa unref para nunca mantener vivo el proceso.
 function createTimeoutSignal(timeoutMs: number): AbortSignal {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(timeoutError(timeoutMs)), timeoutMs)
@@ -188,7 +188,7 @@ function createTimeoutSignal(timeoutMs: number): AbortSignal {
   return controller.signal
 }
 
-// Upper bound for any store, including work the abort signal does not cover.
+// Límite superior para cualquier almacén, incluido el trabajo que la señal de aborto no cubre.
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   const timeout = new Promise<never>((_, reject) => {

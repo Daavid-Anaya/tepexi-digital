@@ -71,7 +71,7 @@ export function buildStaticPageMetadata({ title, description, path }: StaticMeta
 }
 
 /**
- * Build consistent Metadata for any detail/slug page.
+ * Construye Metadata consistente para cualquier página de detalle/slug.
  */
 export function buildSlugMetadata(
   slug: string,

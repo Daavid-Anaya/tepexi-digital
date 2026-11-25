@@ -20,7 +20,7 @@ export function CategorySection({
 
   return (
     <section id={id} className="scroll-mt-28">
-      {/* Category header */}
+      {/* Encabezado de la categoría */}
       <div className="flex items-center gap-3 mb-4 sm:mb-6">
         <span
           className="w-3.5 h-3.5 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-cream"

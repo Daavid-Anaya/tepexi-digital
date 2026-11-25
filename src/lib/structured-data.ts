@@ -122,7 +122,7 @@ function resolveImage(image: ImageAsset | null | undefined, fallbackName: string
 }
 
 export function buildEventJsonLd(evento: EventoDetail, options: { canonicalPath: string }) {
-  // A closed/exhausted series has no representative session to advertise.
+  // Una serie cerrada o agotada no tiene una sesión representativa que anunciar.
   if (!evento.date || evento.scheduleStatus === 'closed') return null
   const image = resolveImage({ url: evento.imageUrl, alt: evento.imageAlt }, evento.title)
   const locationName = evento.location?.title ?? evento.locationText ?? 'Tepexi de Rodríguez'

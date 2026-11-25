@@ -5,9 +5,9 @@ interface FakeEntry {
   expiresAt: number
 }
 
-// In-memory stand-in for the Upstash backend. It is shared across module
-// reloads, which emulates several instances (or a restart) talking to the
-// same Redis database.
+// Sustituto en memoria del backend de Upstash. Se comparte entre recargas
+// del módulo, lo que emula varias instancias (o un reinicio) que usan la
+// misma base de datos Redis.
 const backend = new Map<string, FakeEntry>()
 const evalMock = vi.fn(async (_script: string, keys: string[], args: (string | number)[]) => {
   const [key] = keys
@@ -44,7 +44,7 @@ async function loadRateLimit() {
   return import('@/lib/rate-limit')
 }
 
-// Isolate every test from store variables exported by the developer shell or CI.
+// Aísla cada prueba de las variables del almacén exportadas por la terminal del desarrollador o por CI.
 beforeEach(() => {
   for (const name of STORE_ENV_VARS) vi.stubEnv(name, undefined)
 })

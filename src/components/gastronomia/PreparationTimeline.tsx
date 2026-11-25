@@ -15,7 +15,7 @@ export function PreparationTimeline({ steps }: PreparationTimelineProps) {
   return (
     <section className="py-10 md:py-16 bg-white">
       <Container>
-        {/* Section header */}
+        {/* Encabezado de la sección */}
         <div className="flex items-center gap-3 mb-8 md:mb-12">
           <span className="w-1 h-8 rounded-full inline-block bg-accent" />
           <h2 className="font-heading font-bold text-text-primary text-2xl md:text-3xl">
@@ -23,23 +23,23 @@ export function PreparationTimeline({ steps }: PreparationTimelineProps) {
           </h2>
         </div>
 
-        {/* Timeline — alternating left/right on desktop, stacked on mobile */}
+        {/* Línea de tiempo — alterna izquierda/derecha en escritorio, apilada en móvil */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Central vertical line (desktop only) */}
+          {/* Línea vertical central (solo en escritorio) */}
           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-accent/[0.125]" />
 
           {steps.map((step, index) => {
             const isLeft = index % 2 === 0
             return (
               <div key={index} className="relative mb-12 last:mb-0">
-                {/* Step circle — centered on the line (desktop), left-aligned (mobile) */}
+                {/* Círculo del paso — centrado en la línea (escritorio), alineado a la izquierda (móvil) */}
                 <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 z-10">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center font-heading font-bold text-white text-sm shadow-md bg-accent">
                     {index + 1}
                   </div>
                 </div>
 
-                {/* Content card — alternates sides on desktop */}
+                {/* Tarjeta de contenido — alterna de lado en escritorio */}
                 <div
                   className={[
                     'ml-14 md:ml-0 md:w-[calc(50%-2rem)]',

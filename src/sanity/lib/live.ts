@@ -1,9 +1,9 @@
 import { defineLive } from 'next-sanity/live'
 import { client } from './client'
 
-// serverToken: used server-side for data fetching — never sent to the browser
-// browserToken: used only in draft mode for live preview in the Sanity Studio
-// Each token MUST come from a separate env var — never fall back to the read token
+// serverToken: se usa en el servidor para obtener datos; nunca se envía al navegador
+// browserToken: se usa solo en modo borrador para la vista previa en vivo en Sanity Studio
+// Cada token DEBE venir de una variable de entorno distinta; nunca se recurre al token de lectura
 const serverToken = process.env.SANITY_API_READ_TOKEN
 const browserToken = process.env.SANITY_API_BROWSER_TOKEN
 

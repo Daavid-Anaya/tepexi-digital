@@ -1,8 +1,8 @@
 import { defineQuery } from 'next-sanity'
 import { HOME_PREVIEW_LIMITS } from '@/lib/constants'
 
-// F-06: imageUrl uses Sanity CDN params to avoid serving raw originals (2000–6000 px).
-// Card thumbnails → 600×400 px, quality 75.
+// F-06: imageUrl usa parámetros del CDN de Sanity para no servir originales sin procesar (2000–6000 px).
+// Miniaturas de tarjeta → 600×400 px, calidad 75.
 export const allLugaresQuery = defineQuery(`*[_type == "lugar"] | order(isFeatured desc, _createdAt desc) {
   _id,
   title,
@@ -51,8 +51,8 @@ export const allLugaresMapQuery = defineQuery(`*[_type == "lugar" && defined(coo
   coordinates
 }`)
 
-// F-19: dedicated home query — fetches only featured lugares, max 4, only the fields
-// the home page card needs. Avoids fetching the full collection and slicing in JS.
+// F-19: consulta dedicada para el inicio — obtiene solo lugares destacados, máximo 4, solo los campos
+// que necesita la tarjeta de la página de inicio. Evita obtener toda la colección y recortarla en JS.
 export const featuredLugaresHomeQuery = defineQuery(`*[_type == "lugar" && isFeatured == true] | order(_createdAt desc)[0...${HOME_PREVIEW_LIMITS.FEATURED_LUGARES}] {
   _id,
   title,

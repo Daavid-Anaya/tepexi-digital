@@ -47,7 +47,7 @@ export default async function ContactoPage() {
   ]
   return (
     <>
-      {/* Page hero */}
+      {/* Hero de la página */}
       <PageHero imageUrl={HERO_FALLBACKS.contacto}>
         <PageHeroBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Contacto' }]} currentPath="/contacto" />
         <PageHeroHeader
@@ -60,7 +60,7 @@ export default async function ContactoPage() {
       <section className="py-10 md:py-16">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-            {/* Contact form — takes more space */}
+            {/* Formulario de contacto — ocupa más espacio */}
             <div className="lg:col-span-3">
               <div className="bg-cream rounded-2xl border border-stone/10 overflow-hidden shadow-sm">
                 <div className="bg-primary px-4 sm:px-6 py-4">
@@ -77,7 +77,7 @@ export default async function ContactoPage() {
               </div>
             </div>
 
-            {/* Contact info */}
+            {/* Información de contacto */}
             <div className="lg:col-span-2 space-y-5">
               <h2 className="font-heading font-semibold text-text-primary text-xl sm:text-2xl">
                 Información de contacto
@@ -108,7 +108,7 @@ export default async function ContactoPage() {
                 })}
               </div>
 
-              {/* CTA panel */}
+              {/* Panel de CTA */}
               <div className="bg-primary/5 rounded-2xl border border-primary/15 p-5">
                 <p className="text-sm text-stone leading-relaxed">
                   También puedes explorar nuestra plataforma para conocer los{' '}

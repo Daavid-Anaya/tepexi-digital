@@ -16,13 +16,13 @@ export default async function SiteLayout({
   const headersList = await headers()
   const nonce = headersList.get('x-nonce') ?? undefined
 
-  // F-10/F-33: detect current pathname to scope hero preload to home only.
-  // Injecting it on every route wastes bandwidth competing with page-specific heroes.
+  // F-10/F-33: detecta la ruta actual para limitar la precarga del hero a la página de inicio.
+  // Inyectarla en todas las rutas desperdicia ancho de banda y compite con los heroes de cada página.
   const pathname = headersList.get('x-pathname') ?? headersList.get('x-invoke-path') ?? '/'
   const isHomePage = pathname === '/'
 
-  // F-38: hero preload with full srcset so each device downloads the right size.
-  // F-06: transformation params applied directly on the Sanity CDN URL.
+  // F-38: precarga del hero con srcset completo para que cada dispositivo descargue el tamaño adecuado.
+  // F-06: parámetros de transformación aplicados directamente sobre la URL del CDN de Sanity.
   const heroBaseUrl = settings.heroImageUrl ?? null
   const heroPreloadSrcSet = heroBaseUrl
     ? [
@@ -33,14 +33,14 @@ export default async function SiteLayout({
       ].join(', ')
     : null
   const heroPreloadSizes = '(max-width: 412px) 412px, (max-width: 828px) 828px, (max-width: 1200px) 1200px, 1920px'
-  // Fallback href for browsers that don't support imagesrcset (rare)
+  // href de respaldo para navegadores que no soportan imagesrcset (poco común)
   const heroPreloadHref = heroBaseUrl
     ? `${heroBaseUrl}?w=828&h=560&fit=crop&auto=format&q=80`
     : null
 
   return (
     <>
-      {/* F-10/F-33: Preload LCP hero only on the home page — not on every route */}
+      {/* F-10/F-33: precarga el hero LCP solo en la página de inicio, no en todas las rutas */}
       {isHomePage && heroPreloadSrcSet && heroPreloadHref && (
         <link
           rel="preload"
@@ -62,7 +62,7 @@ export default async function SiteLayout({
       <main id="main-content" tabIndex={-1} className="min-h-screen">{children}</main>
       <Footer />
 
-      {/* Google Analytics — lazyOnload so it never blocks LCP or TBT */}
+      {/* Google Analytics — lazyOnload para que nunca bloquee el LCP ni el TBT */}
       {GA_ID && (
         <>
           <Script

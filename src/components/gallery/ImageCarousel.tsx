@@ -55,14 +55,14 @@ export default function ImageCarousel({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Slides */}
+      {/* Diapositivas */}
       <div
         className="flex h-full transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${activeIndex * 100}%)` }}
       >
         {images.map((image, index) => (
           <div key={index} className="relative min-w-full h-full flex-shrink-0">
-            {/* F-11: only the first slide is eager — the rest lazy-load to save bandwidth */}
+            {/* F-11: solo la primera diapositiva carga de inmediato; el resto se carga en diferido para ahorrar ancho de banda */}
             <Image
               src={image.url}
               alt={image.alt}
@@ -76,7 +76,7 @@ export default function ImageCarousel({
         ))}
       </div>
 
-      {/* Navigation buttons */}
+      {/* Botones de navegación */}
       {images.length > 1 && (
         <>
           <button
@@ -104,7 +104,7 @@ export default function ImageCarousel({
         </>
       )}
 
-      {/* Dot indicators */}
+      {/* Indicadores de puntos */}
       {images.length > 1 && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {images.map((_, index) => (

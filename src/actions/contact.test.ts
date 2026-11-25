@@ -4,7 +4,7 @@ const sendEmailMock = vi.fn()
 const headersMock = vi.fn()
 const rateLimitMock = vi.fn()
 
-// Mirrors the real SDK: the constructor throws when no API key is available.
+// Replica el SDK real: el constructor lanza un error cuando no hay API key disponible.
 vi.mock('resend', () => ({
   Resend: vi.fn((key?: string) => {
     if (!key) throw new Error('Missing API key. Pass it to the constructor `new Resend("re_123")`')

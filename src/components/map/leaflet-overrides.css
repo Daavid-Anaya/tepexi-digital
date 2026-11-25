@@ -1,8 +1,8 @@
 /**
- * F-31: Leaflet popup overrides — scoped to this file and imported only by
- * LeafletMap.tsx so these styles don't load on pages that don't use the map.
+ * F-31: estilos de los popups de Leaflet — acotados a este archivo e importados solo por
+ * LeafletMap.tsx para que no se carguen en páginas que no usan el mapa.
  *
- * Previously these rules lived in globals.css and loaded on every route.
+ * Antes estas reglas vivían en globals.css y se cargaban en todas las rutas.
  */
 
 .leaflet-popup-content-wrapper {

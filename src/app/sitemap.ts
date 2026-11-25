@@ -4,7 +4,7 @@ import { defineQuery } from 'next-sanity'
 import { SITE_URL } from '@/lib/constants'
 import { logError, logWarn } from '@/lib/observability'
 
-// Keep sitemap freshness aligned with the high-churn listing pages and webhook revalidation.
+// Mantiene la frescura del sitemap alineada con las páginas de listado que cambian seguido y con la revalidación por webhook.
 export const revalidate = 3600
 
 const allSlugsQuery = defineQuery(`{

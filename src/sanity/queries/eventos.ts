@@ -1,6 +1,6 @@
 import { defineQuery } from 'next-sanity'
 
-// F-06: imageUrl uses Sanity CDN params — card thumbnails 600×400 px, quality 75.
+// F-06: imageUrl usa parámetros del CDN de Sanity — miniaturas de tarjeta de 600×400 px, calidad 75.
 export const featuredEventosQuery = defineQuery(`*[_type == "evento" && isFeatured == true] | order(date asc) {
   _id,
   title,
@@ -41,7 +41,7 @@ export const eventoBySlugQuery = defineQuery(`*[_type == "evento" && slug.curren
   }
 }`)
 
-// Resolve recurrence before sorting/limiting: original dates cannot rank a series.
+// Resuelve la recurrencia antes de ordenar/limitar: las fechas originales no sirven para ordenar una serie.
 export const upcomingEventosPreviewQuery = defineQuery(`*[_type == "evento" && closed != true] {
   _id,
   title,

@@ -1,15 +1,15 @@
 import { isIP } from 'node:net'
 
 /**
- * Returns the client IP set by the Vercel proxy, or null when it is missing
- * or malformed.
+ * Devuelve la IP del cliente que establece el proxy de Vercel, o null cuando falta
+ * o está mal formada.
  *
- * Vercel overwrites `x-forwarded-for` (and sets the identical `x-real-ip`)
- * with the client's public IP to prevent spoofing, unless an Enterprise
- * trusted proxy is configured. See
- * https://vercel.com/docs/headers/request-headers. Outside Vercel these
- * headers are client-controlled, so callers must not treat the value as an
- * identity, only as a rate limit bucket.
+ * Vercel sobrescribe `x-forwarded-for` (y establece un `x-real-ip` idéntico)
+ * con la IP pública del cliente para evitar suplantaciones, salvo que haya un
+ * proxy de confianza Enterprise configurado. Ver
+ * https://vercel.com/docs/headers/request-headers. Fuera de Vercel estos
+ * headers los controla el cliente, así que quien llame no debe tratar el valor como una
+ * identidad, solo como un bucket de rate limit.
  */
 export function getClientIp(headers: Headers): string | null {
   const candidate =
@@ -18,12 +18,12 @@ export function getClientIp(headers: Headers): string | null {
   return candidate && isIP(candidate) ? candidate : null
 }
 
-/** Key segment for requests without a trusted IP; they share one bucket. */
+/** Segmento de clave para solicitudes sin IP confiable; comparten un mismo bucket. */
 export const UNKNOWN_CLIENT_IP = 'unknown'
 
 const IPV6_HEXTETS = 8
 
-// Converts one side of `::` into hextets; an embedded IPv4 tail adds two.
+// Convierte un lado de `::` en hextetos; una cola IPv4 embebida agrega dos.
 function toHextets(part: string | undefined): number[] {
   if (!part) return []
 
@@ -34,8 +34,8 @@ function toHextets(part: string | undefined): number[] {
   })
 }
 
-// Expands a valid IPv6 address (compressed, with an embedded IPv4 tail or a
-// zone identifier) into its 8 numeric hextets.
+// Expande una dirección IPv6 válida (comprimida, con una cola IPv4 embebida o un
+// identificador de zona) en sus 8 hextetos numéricos.
 function expandIpv6(address: string): number[] {
   const [head, tail] = address.split('%')[0].split('::')
   const headHextets = toHextets(head)
@@ -46,12 +46,12 @@ function expandIpv6(address: string): number[] {
 }
 
 /**
- * Normalizes an IP into its rate limit bucket.
+ * Normaliza una IP a su bucket de rate limit.
  *
- * IPv4 keeps the full address. IPv6 is grouped by its /64 prefix, the usual
- * allocation for a single home or server, so rotating addresses inside it
- * cannot bypass the limits. IPv4-mapped IPv6 (`::ffff:a.b.c.d`) shares the
- * bucket of its IPv4 address.
+ * IPv4 conserva la dirección completa. IPv6 se agrupa por su prefijo /64, la
+ * asignación habitual de un solo hogar o servidor, así que rotar direcciones dentro de él
+ * no permite evadir los límites. Una IPv6 mapeada a IPv4 (`::ffff:a.b.c.d`) comparte el
+ * bucket de su dirección IPv4.
  */
 function toRateLimitBucket(ip: string): string {
   if (isIP(ip) !== 6) return ip
@@ -70,7 +70,7 @@ function toRateLimitBucket(ip: string): string {
     .join(':')}::/64`
 }
 
-/** Rate limit key segment for the client: its IPv4, IPv6 /64, or `unknown`. */
+/** Segmento de clave de rate limit del cliente: su IPv4, su IPv6 /64 o `unknown`. */
 export function getClientIpBucket(headers: Headers): string {
   const ip = getClientIp(headers)
   return ip ? toRateLimitBucket(ip) : UNKNOWN_CLIENT_IP

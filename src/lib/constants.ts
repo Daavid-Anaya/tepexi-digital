@@ -1,8 +1,8 @@
-// ─── Site identity ────────────────────────────────────────────────────────────
+// ─── Identidad del sitio ────────────────────────────────────────────────────────────
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tepexidigital.com.mx'
 
-// ─── Sanity CDN ───────────────────────────────────────────────────────────────
+// ─── CDN de Sanity ───────────────────────────────────────────────────────────────
 const SANITY_PROJECT_ID =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '45s7lmkb'
 const SANITY_DATASET =
@@ -10,8 +10,8 @@ const SANITY_DATASET =
 
 export const SANITY_CDN_BASE = `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}`
 
-// F-07: Hero fallbacks use Sanity CDN transformation params (w=1920, quality=80)
-// to avoid serving raw originals of up to 8–12 MB.
+// F-07: los heroes de respaldo usan parámetros de transformación del CDN de Sanity (w=1920, quality=80)
+// para no servir originales sin procesar de hasta 8–12 MB.
 const heroParams = '?w=1920&q=80&auto=format&fit=max'
 
 export const HERO_FALLBACKS = {
@@ -35,7 +35,7 @@ export const SANITY_FETCH_LIMITS = {
   UPCOMING_EVENTOS: 50,
 } as const
 
-// ─── Form and rate limits ─────────────────────────────────────────────────────
+// ─── Formulario y rate limits ─────────────────────────────────────────────────────
 export const CONTACT_FIELD_LIMITS = {
   NAME: 100,
   EMAIL: 254,
@@ -48,10 +48,10 @@ export const RATE_LIMITS = {
   REVALIDATE: { limit: 30, windowSeconds: 60 },
 } as const
 
-// ─── Map ──────────────────────────────────────────────────────────────────────
+// ─── Mapa ──────────────────────────────────────────────────────────────────────
 export const TEPEXI_CENTER = { lat: 18.5793, lng: -97.9218 } as const
 
-// ─── Category colors ──────────────────────────────────────────────────────────
+// ─── Colores de categoría ──────────────────────────────────────────────────────────
 export const CATEGORY_COLORS = {
   default: '#8B4513',
   servicios: '#37474F',
